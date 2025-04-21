@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { NavigationComponent } from './features/navigation/navigation.component';
+import { SharedUiModule } from './shared/shared-ui.module';
 
 import { NavigationComponent } from '@app/features/navigation/navigation.component';
 import { SharedUiModule } from '@app/shared/shared-ui.module';
