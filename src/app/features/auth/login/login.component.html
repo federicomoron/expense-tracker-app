@@ -1,0 +1,76 @@
+<div class="login-container">
+  <mat-card>
+    <h1 class="login-title">Login</h1>
+    <form (submit)="onSubmit($event)" class="login-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          type="email"
+          [value]="email()"
+          (input)="onEmailInput($event)"
+          placeholder="Enter your email"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [type]="showPassword() ? 'text' : 'password'"
+          [value]="password()"
+          (input)="onPasswordInput($event)"
+          placeholder="Enter your password"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="togglePasswordVisibility()"
+          [attr.aria-label]="'Toggle password visibility'"
+          [attr.aria-pressed]="showPassword()"
+          type="button"
+        >
+          <mat-icon>{{
+            showPassword() ? "visibility_off" : "visibility"
+          }}</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="isFormInvalid()"
+        class="full-width"
+      >
+        Login
+      </button>
+
+      @if (errorMessage()) {
+      <div class="error-message">
+        {{ errorMessage() }}
+      </div>
+      }
+
+      <button
+        mat-stroked-button
+        color="primary"
+        class="full-width google-login-btn"
+        (click)="onGoogleLogin()"
+        type="button"
+      >
+        <img
+          src="https://developers.google.com/identity/images/g-logo.png"
+          alt="Google logo"
+          class="google-icon"
+        />
+        Sign in with Google
+      </button>
+
+      <p class="register-link">
+        Don't have an account?
+        <a routerLink="/register">Register here</a>
+      </p>
+    </form>
+  </mat-card>
+</div>

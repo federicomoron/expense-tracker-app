@@ -1,0 +1,32 @@
+<form (submit)="onSubmit($event)" class="group-form">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Group Name</mat-label>
+    <input
+      matInput
+      [value]="name()"
+      (input)="onNameInput($event)"
+      placeholder="Group Name"
+    />
+    @if (isNameInvalid()) {
+    <mat-error>The name is required</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Group Type</mat-label>
+    <mat-select [value]="type()" (selectionChange)="onTypeChange($event)">
+      @for (option of groupTypeOptions; track option.value) {
+      <mat-option [value]="option.value">{{ option.label }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <button
+    mat-raised-button
+    color="primary"
+    type="submit"
+    [disabled]="isNameInvalid()"
+  >
+    Create
+  </button>
+</form>
