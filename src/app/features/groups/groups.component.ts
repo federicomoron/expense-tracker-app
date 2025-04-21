@@ -20,7 +20,7 @@ export class GroupsComponent implements OnInit {
 
   constructor(
     private groupService: GroupService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
   ) {}
 
   ngOnInit(): void {
@@ -36,14 +36,10 @@ export class GroupsComponent implements OnInit {
       },
       error: (err) => {
         if (!environment.production) {
-          console.error(
-            'Backend message:',
-            err.error?.error?.message || err.message
-          );
+          console.error('Backend message:', err.error?.error?.message || err.message);
         }
 
-        const message =
-          err.error?.error?.message || 'There was an error creating the group';
+        const message = err.error?.error?.message || 'There was an error creating the group';
         this.snackBar.open(message, 'Close', {
           duration: 3000,
         });
