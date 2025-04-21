@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
+
 import { environment } from '../../../environments/environment';
 import { API_ENDPOINTS } from '../constants/api-endpoints';
 import { STORAGE_KEYS } from '../constants/storage-keys';
@@ -19,10 +20,12 @@ export class AuthService {
   isLoggedIn = this._isLoggedIn.asReadonly();
   currentUser = this._currentUser.asReadonly();
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+  ) {
     // Load user session from localStorage if available
-    const isLoggedIn =
-      localStorage.getItem(STORAGE_KEYS.IS_LOGGED_IN) === 'true';
+    const isLoggedIn = localStorage.getItem(STORAGE_KEYS.IS_LOGGED_IN) === 'true';
     const userJson = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
 
     if (isLoggedIn && userJson) {
@@ -34,10 +37,10 @@ export class AuthService {
 
   login(email: string, password: string) {
     return this.http
-      .post<{ success: boolean; data: { user: User; token: string } }>(
-        `${this.apiUrl}${API_ENDPOINTS.LOGIN}`,
-        { email, password }
-      )
+      .post<{
+        success: boolean;
+        data: { user: User; token: string };
+      }>(`${this.apiUrl}${API_ENDPOINTS.LOGIN}`, { email, password })
       .pipe(
         tap((res) => {
           const user = res.data?.user;
@@ -54,7 +57,7 @@ export class AuthService {
           localStorage.setItem(STORAGE_KEYS.IS_LOGGED_IN, 'true');
           localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
           localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
-        })
+        }),
       );
   }
 
