@@ -2,7 +2,7 @@
 
 A simple and modern web application to track personal and group expenses, built with Angular and designed with mobile-first principles in mind. Ideal for tracking your daily, group, or travel expenses with an easy-to-use, clean interface.
 
-✨ Features
+## ✨ Features
 
 - Create and manage expense groups (e.g., Family, Personal, Trips)
 - Add daily expenses with automatic category detection
@@ -13,25 +13,37 @@ A simple and modern web application to track personal and group expenses, built 
 - Simulated login with future plans for Google Sign-In integration
 - Detailed expense report and history
 
-🌐 Tech Stack
+## 🌐 Tech Stack
 
 - Angular (standalone components + signals)
 - Angular Material (UI components)
 - TypeScript
 - RxJS (Reactive Programming)
 - SCSS (for styling)
+- ESLint + Prettier (code quality and formatting)
 
-🏢 Project Architecture
+## 🏢 Project Structure
 
+```txt
 src/
 ├── app/
-│ ├── core/ # Core services, interceptors, global configurations
-│ ├── shared/ # Reusable components and modules (e.g., buttons, headers)
-│ ├── features/ # Feature modules (e.g., groups, expenses)
-│ ├── assets/ # Static assets (images, icons, etc.)
-│ ├── app.config.ts # Angular configuration
-│ └── app.module.ts # Root module
-└── environments/ # Environment-specific configurations (e.g., dev, prod)
+│   ├── core/                 # Global services, interceptors, guards, constants, models
+│   │   ├── services/
+│   │   ├── interceptors/
+│   │   ├── guards/
+│   │   ├── models/
+│   │   └── constants/
+│   ├── shared/               # Reusable components and UI modules
+│   ├── features/             # Feature-based modules (e.g., groups, expenses)
+│   ├── app.config.ts         # Angular standalone configuration (providers, routing, etc.)
+│   ├── app.routes.ts         # Global route definitions
+│   ├── app.component.ts      # Root component (Shell)
+│   ├── app-routing.module.ts # (Temporarily included if needed)
+│   └── app.module.ts         # [Legacy] not used - standalone architecture
+├── environments/             # Environment-specific configs (dev, prod)
+├── main.ts                   # App bootstrap with standalone setup
+├── styles.scss               # Global styles
+└── index.html                # App entry point
 
 🚀 Getting Started
 
@@ -47,6 +59,7 @@ src/
 
    - Open http://localhost:4200 in your browser.
 
-   ✨ Author
+✨ Author
 
 Federico Morón
+```

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, Injectable, signal } from '@angular/core';
 import { tap } from 'rxjs';
+
 import { environment } from '../../../environments/environment';
 import { Group } from '../../core/models/group.model';
 import { API_ENDPOINTS } from '../constants/api-endpoints';
@@ -31,24 +32,22 @@ export class GroupService {
   }
 
   private saveToStorage() {
-    localStorage.setItem(
-      STORAGE_KEYS.GROUPS,
-      JSON.stringify(this._groupsSignal())
-    );
+    localStorage.setItem(STORAGE_KEYS.GROUPS, JSON.stringify(this._groupsSignal()));
   }
 
   // Fetch groups from API and update state
   fetchGroups() {
     return this.http
-      .get<{ success: boolean; data: { groups: Group[] } }>(
-        `${this.apiUrl}${API_ENDPOINTS.GET_GROUPS}`
-      )
+      .get<{
+        success: boolean;
+        data: { groups: Group[] };
+      }>(`${this.apiUrl}${API_ENDPOINTS.GET_GROUPS}`)
       .pipe(
         tap((res) => {
           const groups = res.data.groups;
           this._groupsSignal.set(groups);
           this.saveToStorage();
-        })
+        }),
       );
   }
 
@@ -66,16 +65,13 @@ export class GroupService {
 
   createGroup(group: { name: string; type: GroupType }) {
     return this.http
-      .post<{ success: boolean; data: Group }>(
-        `${this.apiUrl}${API_ENDPOINTS.CREATE_GROUP}`,
-        group
-      )
+      .post<{ success: boolean; data: Group }>(`${this.apiUrl}${API_ENDPOINTS.CREATE_GROUP}`, group)
       .pipe(
         tap((response) => {
           if (response.success) {
             this.addGroup(response.data);
           }
-        })
+        }),
       );
   }
 }

@@ -1,5 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+
 import { AuthService } from '../../../core/services/auth.service';
 import { SharedUiModule } from '../../../shared/shared-ui.module';
 
@@ -16,11 +17,12 @@ export class LoginComponent {
   showPassword = signal(false);
   errorMessage = signal('');
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
-  isFormInvalid = computed(
-    () => this.email().trim() === '' || this.password().trim() === ''
-  );
+  isFormInvalid = computed(() => this.email().trim() === '' || this.password().trim() === '');
 
   onSubmit(event: Event) {
     event.preventDefault();
@@ -69,14 +71,12 @@ export class LoginComponent {
   }
 
   onGoogleLogin() {
-    this.authService
-      .login('google_user@example.com', 'fakepassword')
-      .subscribe((res) => {
-        if (res && res.success) {
-          this.router.navigate(['/group']);
-        } else {
-          alert('Error with Google login');
-        }
-      });
+    this.authService.login('google_user@example.com', 'fakepassword').subscribe((res) => {
+      if (res && res.success) {
+        this.router.navigate(['/group']);
+      } else {
+        alert('Error with Google login');
+      }
+    });
   }
 }

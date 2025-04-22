@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-group-detail',
   imports: [],
   templateUrl: './group-detail.component.html',
-  styleUrl: './group-detail.component.scss'
+  styleUrl: './group-detail.component.scss',
 })
-export class GroupDetailComponent {
-
-}
+export class GroupDetailComponent {}

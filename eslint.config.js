@@ -1,11 +1,29 @@
 // @ts-check
-const eslint = require("@eslint/js");
-const tseslint = require("typescript-eslint");
-const angular = require("angular-eslint");
+const eslint = require('@eslint/js');
+const tseslint = require('typescript-eslint');
+const angular = require('angular-eslint');
+const prettier = require('eslint-plugin-prettier');
+const importPlugin = require('eslint-plugin-import');
+
+// Resolver to make eslint-plugin-import understand TS paths
+const importResolverSettings = {
+  settings: {
+    'import/resolver': {
+      typescript: {
+        project: ['./tsconfig.json'],
+      },
+    },
+  },
+};
 
 module.exports = tseslint.config(
   {
-    files: ["**/*.ts"],
+    files: ['**/*.ts'],
+    ...importResolverSettings,
+    plugins: {
+      prettier,
+      import: importPlugin,
+    },
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.recommended,
@@ -14,30 +32,40 @@ module.exports = tseslint.config(
     ],
     processor: angular.processInlineTemplates,
     rules: {
-      "@angular-eslint/directive-selector": [
-        "error",
+      'prettier/prettier': 'error',
+      'import/no-unresolved': 'error',
+      'import/order': [
+        'warn',
         {
-          type: "attribute",
-          prefix: "app",
-          style: "camelCase",
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+          alphabetize: { order: 'asc', caseInsensitive: true },
+          'newlines-between': 'always',
         },
       ],
-      "@angular-eslint/component-selector": [
-        "error",
+      'import/no-duplicates': 'warn',
+      'import/newline-after-import': 'warn',
+
+      '@angular-eslint/directive-selector': [
+        'error',
         {
-          type: "element",
-          prefix: "app",
-          style: "kebab-case",
+          type: 'attribute',
+          prefix: 'app',
+          style: 'camelCase',
+        },
+      ],
+      '@angular-eslint/component-selector': [
+        'error',
+        {
+          type: 'element',
+          prefix: 'app',
+          style: 'kebab-case',
         },
       ],
     },
   },
   {
-    files: ["**/*.html"],
-    extends: [
-      ...angular.configs.templateRecommended,
-      ...angular.configs.templateAccessibility,
-    ],
+    files: ['**/*.html'],
+    extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
     rules: {},
-  }
+  },
 );

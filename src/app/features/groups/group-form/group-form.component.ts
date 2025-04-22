@@ -1,15 +1,6 @@
-import {
-  Component,
-  computed,
-  EventEmitter,
-  Output,
-  signal,
-} from '@angular/core';
+import { Component, computed, EventEmitter, Output, signal } from '@angular/core';
 
-import {
-  GROUP_TYPE_OPTIONS,
-  GroupType,
-} from '../../../core/models/group-type.enum';
+import { GROUP_TYPE_OPTIONS, GroupType } from '../../../core/models/group-type.enum';
 import { SharedUiModule } from '../../../shared/shared-ui.module';
 
 @Component({
