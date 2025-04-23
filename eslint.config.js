@@ -72,5 +72,5 @@ module.exports = tseslint.config(
       ...angular.configs.templateAccessibility,
     ],
     rules: {},
-  },
+  }
 );
