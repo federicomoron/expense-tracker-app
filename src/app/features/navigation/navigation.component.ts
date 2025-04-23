@@ -23,6 +23,6 @@ export class NavigationComponent {
   private breakpointObserver = inject(BreakpointObserver);
 
   isSmallScreen: Signal<boolean> = computed(() =>
-    this.breakpointObserver.isMatched(Breakpoints.Handset),
+    this.breakpointObserver.isMatched(Breakpoints.Handset)
   );
 }
