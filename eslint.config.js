@@ -5,24 +5,19 @@ const angular = require('angular-eslint');
 const prettier = require('eslint-plugin-prettier');
 const importPlugin = require('eslint-plugin-import');
 
-// Resolver to make eslint-plugin-import understand TS paths
-const importResolverSettings = {
-  settings: {
-    'import/resolver': {
-      typescript: {
-        project: ['./tsconfig.json'],
-      },
-    },
-  },
-};
-
 module.exports = tseslint.config(
   {
     files: ['**/*.ts'],
-    ...importResolverSettings,
     plugins: {
       prettier,
       import: importPlugin,
+    },
+    settings: {
+      'import/resolver': {
+        typescript: {
+          project: ['./tsconfig.json'],
+        },
+      },
     },
     extends: [
       eslint.configs.recommended,
@@ -37,7 +32,14 @@ module.exports = tseslint.config(
       'import/order': [
         'warn',
         {
-          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+          groups: [
+            'builtin',
+            'external',
+            'internal',
+            'parent',
+            'sibling',
+            'index',
+          ],
           alphabetize: { order: 'asc', caseInsensitive: true },
           'newlines-between': 'always',
         },
@@ -65,7 +67,10 @@ module.exports = tseslint.config(
   },
   {
     files: ['**/*.html'],
-    extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
+    extends: [
+      ...angular.configs.templateRecommended,
+      ...angular.configs.templateAccessibility,
+    ],
     rules: {},
-  },
+  }
 );
