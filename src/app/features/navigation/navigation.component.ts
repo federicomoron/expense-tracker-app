@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Component, Signal, computed, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
-import { AuthService } from '../../core/services/auth.service';
-import { SharedUiModule } from '../../shared/shared-ui.module';
+import { AuthService } from '@app/core/services/auth.service';
+import { SharedUiModule } from '@app/shared/shared-ui.module';
 
 @Component({
   selector: 'app-navigation',
@@ -23,6 +23,6 @@ export class NavigationComponent {
   private breakpointObserver = inject(BreakpointObserver);
 
   isSmallScreen: Signal<boolean> = computed(() =>
-    this.breakpointObserver.isMatched(Breakpoints.Handset),
+    this.breakpointObserver.isMatched(Breakpoints.Handset)
   );
 }
