@@ -24,7 +24,9 @@ export class LoginComponent {
     private router: Router,
   ) {}
 
-  isFormInvalid = computed(() => this.email().trim() === '' || this.password().trim() === '');
+  isFormInvalid = computed(
+    () => this.email().trim() === '' || this.password().trim() === ''
+  );
 
   onSubmit(event: Event) {
     event.preventDefault();
@@ -77,12 +79,14 @@ export class LoginComponent {
   }
 
   onGoogleLogin() {
-    this.authService.login('google_user@example.com', 'fakepassword').subscribe((res) => {
-      if (res && res.success) {
-        this.router.navigate(['/group']);
-      } else {
-        alert('Error with Google login');
-      }
-    });
+    this.authService
+      .login('google_user@example.com', 'fakepassword')
+      .subscribe((res) => {
+        if (res && res.success) {
+          this.router.navigate(['/group']);
+        } else {
+          alert('Error with Google login');
+        }
+      });
   }
 }

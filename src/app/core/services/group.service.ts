@@ -41,7 +41,10 @@ export class GroupService {
   }
 
   private saveToStorage() {
-    localStorage.setItem(STORAGE_KEYS.GROUPS, JSON.stringify(this._groupsSignal()));
+    localStorage.setItem(
+      STORAGE_KEYS.GROUPS,
+      JSON.stringify(this._groupsSignal())
+    );
   }
 
   // Fetch groups from API and update state
@@ -56,7 +59,7 @@ export class GroupService {
           const groups = res.data.groups;
           this._groupsSignal.set(groups);
           this.saveToStorage();
-        }),
+        })
       );
   }
 
@@ -83,7 +86,7 @@ export class GroupService {
           if (response.success) {
             this.addGroup(response.data);
           }
-        }),
+        })
       );
   }
 
