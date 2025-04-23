@@ -6,13 +6,16 @@
   >
     <mat-nav-list>
       @if (authService.isLoggedIn()) {
-      <a mat-list-item routerLink="/group" (click)="drawer.close()"> Group </a>
-      <mat-list-item (click)="logout()">
-        <button mat-button>Logout</button>
-      </mat-list-item>
-
+        <a mat-list-item routerLink="/group" (click)="drawer.close()">
+          Group
+        </a>
+        <mat-list-item (click)="logout()">
+          <button mat-button>Logout</button>
+        </mat-list-item>
       } @else {
-      <a mat-list-item routerLink="/login" (click)="drawer.close()"> Login </a>
+        <a mat-list-item routerLink="/login" (click)="drawer.close()">
+          Login
+        </a>
       }
     </mat-nav-list>
   </mat-sidenav>

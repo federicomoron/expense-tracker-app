@@ -1,11 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
-import { UserService } from '../../../core/services/user.service';
-import { SharedUiModule } from '../../../shared/shared-ui.module';
+import { UserService } from '@app/core/services/user.service';
+import { SharedUiModule } from '@app/shared/shared-ui.module';
 
 @Component({
   selector: 'app-register',
@@ -38,15 +43,23 @@ export class RegisterComponent {
     this.userService.register(data).subscribe({
       next: (res) => {
         if (!res.success || !res.data?.email) {
-          this.snackBar.open('There was a problem with the registration.', 'Close', {
-            duration: 3000,
-          });
+          this.snackBar.open(
+            'There was a problem with the registration.',
+            'Close',
+            {
+              duration: 3000,
+            }
+          );
           return;
         }
 
-        this.snackBar.open('Registration successful! Redirecting to login...', 'Close', {
-          duration: 3000,
-        });
+        this.snackBar.open(
+          'Registration successful! Redirecting to login...',
+          'Close',
+          {
+            duration: 3000,
+          }
+        );
         setTimeout(() => this.router.navigateByUrl('/login'), 2000);
       },
       error: (err) => {
@@ -55,9 +68,13 @@ export class RegisterComponent {
             duration: 3000,
           });
         } else {
-          this.snackBar.open('Error during registration. Please try again.', 'Close', {
-            duration: 3000,
-          });
+          this.snackBar.open(
+            'Error during registration. Please try again.',
+            'Close',
+            {
+              duration: 3000,
+            }
+          );
         }
       },
     });
