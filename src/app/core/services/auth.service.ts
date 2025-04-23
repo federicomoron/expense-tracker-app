@@ -31,7 +31,8 @@ export class AuthService {
 
   constructor(private router: Router) {
     // Load user session from localStorage if available
-    const isLoggedIn = localStorage.getItem(STORAGE_KEYS.IS_LOGGED_IN) === 'true';
+    const isLoggedIn =
+      localStorage.getItem(STORAGE_KEYS.IS_LOGGED_IN) === 'true';
     const userJson = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
 
     if (isLoggedIn && userJson) {
@@ -68,7 +69,7 @@ export class AuthService {
           localStorage.setItem(STORAGE_KEYS.IS_LOGGED_IN, 'true');
           localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
           localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
-        }),
+        })
       );
   }
 
