@@ -31,25 +31,24 @@
           type="button"
         >
           <mat-icon>{{
-            showPassword() ? "visibility_off" : "visibility"
+            showPassword() ? 'visibility_off' : 'visibility'
           }}</mat-icon>
         </button>
       </mat-form-field>
 
-      <button
-        mat-raised-button
-        color="primary"
+      <app-exp-button
         type="submit"
+        color="primary"
         [disabled]="isFormInvalid()"
-        class="full-width"
+        [fullWidth]="true"
       >
         Login
-      </button>
+      </app-exp-button>
 
       @if (errorMessage()) {
-      <div class="error-message">
-        {{ errorMessage() }}
-      </div>
+        <div class="error-message">
+          {{ errorMessage() }}
+        </div>
       }
 
       <button

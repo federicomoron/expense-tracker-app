@@ -1,9 +1,9 @@
-import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
-import { API_ENDPOINTS } from '../constants/api-endpoints';
+import { API_ENDPOINTS } from '@app/core/constants/api-endpoints';
+import { HttpService } from '@app/core/services/http.service';
+import { environment } from '@environments/environment';
 
 export interface User {
   email: string;
@@ -14,14 +14,23 @@ export interface RegisterResponse {
   data: User;
 }
 
+interface RegisterPayload {
+  name: string;
+  email: string;
+  password: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private http = inject(HttpClient);
+  private http = inject(HttpService);
   private API_URL = environment.apiUrl;
 
-  register(data: { name: string; email: string; password: string }): Observable<RegisterResponse> {
-    return this.http.post<RegisterResponse>(`${this.API_URL}${API_ENDPOINTS.REGISTER}`, data);
+  register(data: RegisterPayload): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse, RegisterPayload>(
+      `${this.API_URL}${API_ENDPOINTS.REGISTER}`,
+      data
+    );
   }
 }
