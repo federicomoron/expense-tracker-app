@@ -8,7 +8,7 @@
       placeholder="Group Name"
     />
     @if (isNameInvalid()) {
-    <mat-error>The name is required</mat-error>
+      <mat-error>The name is required</mat-error>
     }
   </mat-form-field>
 
@@ -16,7 +16,7 @@
     <mat-label>Group Type</mat-label>
     <mat-select [value]="type()" (selectionChange)="onTypeChange($event)">
       @for (option of groupTypeOptions; track option.value) {
-      <mat-option [value]="option.value">{{ option.label }}</mat-option>
+        <mat-option [value]="option.value">{{ option.label }}</mat-option>
       }
     </mat-select>
   </mat-form-field>

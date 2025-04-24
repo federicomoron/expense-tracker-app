@@ -1,25 +1,33 @@
-import { HttpClient } from '@angular/common/http';
-import { computed, Injectable, signal } from '@angular/core';
-import { tap } from 'rxjs';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { Observable, tap } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
-import { Group } from '../../core/models/group.model';
-import { API_ENDPOINTS } from '../constants/api-endpoints';
-import { STORAGE_KEYS } from '../constants/storage-keys';
-import { GroupType } from '../models/group-type.enum';
+import { Group } from '@app/core/models/group.model';
+import { HttpService } from '@app/core/services/http.service';
+import { API_ENDPOINTS } from '@constants/api-endpoints';
+import { STORAGE_KEYS } from '@constants/storage-keys';
+import { environment } from '@environments/environment';
+import { GroupType } from '@models/group-type.enum';
 
+interface CreateGroupPayload {
+  name: string;
+  type: GroupType;
+}
+
+interface CreateGroupResponse {
+  success: boolean;
+  data: Group;
+}
 @Injectable({
   providedIn: 'root',
 })
 export class GroupService {
   private readonly apiUrl = environment.apiUrl;
   private _groupsSignal = signal<Group[]>(this.loadFromStorage());
+  private http = inject(HttpService);
 
   readonly groups = computed(() => {
     return this._groupsSignal();
   });
-
-  constructor(private http: HttpClient) {}
 
   private loadFromStorage(): Group[] {
     const stored = localStorage.getItem(STORAGE_KEYS.GROUPS);
@@ -63,9 +71,12 @@ export class GroupService {
     this.saveToStorage();
   }
 
-  createGroup(group: { name: string; type: GroupType }) {
+  createGroup(group: CreateGroupPayload): Observable<CreateGroupResponse> {
     return this.http
-      .post<{ success: boolean; data: Group }>(`${this.apiUrl}${API_ENDPOINTS.CREATE_GROUP}`, group)
+      .post<
+        CreateGroupResponse,
+        CreateGroupPayload
+      >(`${this.apiUrl}${API_ENDPOINTS.CREATE_GROUP}`, group)
       .pipe(
         tap((response) => {
           if (response.success) {

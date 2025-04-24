@@ -1,14 +1,22 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
-import { API_ENDPOINTS } from '../constants/api-endpoints';
-import { STORAGE_KEYS } from '../constants/storage-keys';
+import { API_ENDPOINTS } from '@app/core/constants/api-endpoints';
+import { STORAGE_KEYS } from '@app/core/constants/storage-keys';
+import { HttpService } from '@app/core/services/http.service';
+import { environment } from '@environments/environment';
 
 export interface User {
   email: string;
+}
+
+interface LoginResponse {
+  success: boolean;
+  data: {
+    user: User;
+    token: string;
+  };
 }
 
 @Injectable({ providedIn: 'root' })
@@ -16,31 +24,34 @@ export class AuthService {
   private readonly _isLoggedIn = signal(false);
   private readonly _currentUser = signal<User | null>(null);
   private readonly apiUrl = environment.apiUrl;
+  private http = inject(HttpService);
 
   isLoggedIn = this._isLoggedIn.asReadonly();
   currentUser = this._currentUser.asReadonly();
 
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-  ) {
+  constructor(private router: Router) {
     // Load user session from localStorage if available
     const isLoggedIn = localStorage.getItem(STORAGE_KEYS.IS_LOGGED_IN) === 'true';
     const userJson = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
 
     if (isLoggedIn && userJson) {
-      const user = JSON.parse(userJson);
-      this._isLoggedIn.set(true);
-      this._currentUser.set(user);
+      try {
+        const user = JSON.parse(userJson);
+        this._isLoggedIn.set(true);
+        this._currentUser.set(user);
+      } catch (e) {
+        console.error('Error parsing user JSON from localStorage', e);
+      }
     }
   }
 
   login(email: string, password: string) {
+    const loginRequest = { email, password };
     return this.http
-      .post<{
-        success: boolean;
-        data: { user: User; token: string };
-      }>(`${this.apiUrl}${API_ENDPOINTS.LOGIN}`, { email, password })
+      .post<
+        LoginResponse,
+        { email: string; password: string }
+      >(`${this.apiUrl}${API_ENDPOINTS.LOGIN}`, loginRequest)
       .pipe(
         tap((res) => {
           const user = res.data?.user;

@@ -2,6 +2,8 @@
 
 A simple and modern web application to track personal and group expenses, built with Angular and designed with mobile-first principles in mind. Ideal for tracking your daily, group, or travel expenses with an easy-to-use, clean interface.
 
+![Angular CI Pipeline](https://github.com/federicomoron/expense-tracker-app/actions/workflows/ci.yml/badge.svg)
+
 ## ✨ Features
 
 - Create and manage expense groups (e.g., Family, Personal, Trips)
@@ -21,6 +23,7 @@ A simple and modern web application to track personal and group expenses, built 
 - RxJS (Reactive Programming)
 - SCSS (for styling)
 - ESLint + Prettier (code quality and formatting)
+- Husky (git hooks)
 
 ## 🏢 Project Structure
 
@@ -44,6 +47,7 @@ src/
 ├── main.ts                   # App bootstrap with standalone setup
 ├── styles.scss               # Global styles
 └── index.html                # App entry point
+```
 
 🚀 Getting Started
 
@@ -52,14 +56,34 @@ src/
    cd expense-tracker-app
 
 2. Install dependencies:
-   npm install
+   yarn install
 
 3. Run the app locally:
-   ng serve
+   yarn start
 
    - Open http://localhost:4200 in your browser.
 
-✨ Author
+🔧 Available Scripts
 
-Federico Morón
-```
+# Lint the code
+
+yarn lint
+
+# Lint and auto-fix
+
+yarn lint:fix
+
+# Format code with Prettier
+
+yarn format
+
+# Check formatting only
+
+yarn format:check
+
+## ✨ Author
+
+**Federico Morón**
+
+📧 [federicomoron8@gmail.com](mailto:federicomoron8@gmail.com)  
+🔗 [LinkedIn](https://www.linkedin.com/in/federicomoron/)
