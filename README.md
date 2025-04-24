@@ -2,6 +2,8 @@
 
 A simple and modern web application to track personal and group expenses, built with Angular and designed with mobile-first principles in mind. Ideal for tracking your daily, group, or travel expenses with an easy-to-use, clean interface.
 
+![Angular CI Pipeline](https://github.com/federicomoron/expense-tracker-app/actions/workflows/ci.yml/badge.svg)
+
 ## ✨ Features
 
 - Create and manage expense groups (e.g., Family, Personal, Trips)

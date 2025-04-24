@@ -1,8 +1,8 @@
 name: Angular CI Pipeline
 
 on:
-  push: # Se ejecuta en cualquier push a cualquier rama
-  pull_request: # Se ejecuta en cualquier PR (a cualquier rama)
+  push:            # Corre en cualquier push a cualquier rama
+  pull_request:    # Corre en cualquier PR hacia cualquier rama
 
 jobs:
   lint:
@@ -22,8 +22,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
       - run: yarn install --frozen-lockfile
-      - run: yarn lint
-      - run: yarn format --check
+      - run: yarn check
 
   build:
     name: 🔧 Build Angular App
