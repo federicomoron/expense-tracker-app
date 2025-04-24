@@ -11,20 +11,16 @@ export const routes: Routes = [
   {
     path: 'group',
     canActivate: [authGuard],
-    loadChildren: () =>
-      import('./features/groups/groups.routes').then((m) => m.groupsRoutes),
+    loadChildren: () => import('./features/groups/groups.routes').then((m) => m.groupsRoutes),
   },
   {
     path: 'login',
-    loadChildren: () =>
-      import('./features/auth/login/login.routes').then((m) => m.loginRoutes),
+    loadChildren: () => import('./features/auth/login/login.routes').then((m) => m.loginRoutes),
   },
   {
     path: 'register',
     loadChildren: () =>
-      import('./features/auth/register/register.routes').then(
-        (m) => m.registerRoutes
-      ),
+      import('./features/auth/register/register.routes').then((m) => m.registerRoutes),
   },
   {
     path: '**',

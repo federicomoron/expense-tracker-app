@@ -1,10 +1,4 @@
-import {
-  Component,
-  computed,
-  EventEmitter,
-  Output,
-  signal,
-} from '@angular/core';
+import { Component, computed, EventEmitter, Output, signal } from '@angular/core';
 
 import {
   GROUP_TYPE_OPTIONS,
