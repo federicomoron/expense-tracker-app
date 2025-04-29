@@ -1,5 +1,4 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { CommonModule } from '@angular/common';
 import { Component, Signal, computed, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
@@ -9,7 +8,7 @@ import { SharedUiModule } from '@app/shared/shared-ui.module';
 @Component({
   selector: 'app-navigation',
   standalone: true,
-  imports: [CommonModule, RouterModule, SharedUiModule],
+  imports: [RouterModule, SharedUiModule],
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss'],
 })

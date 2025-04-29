@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import {
   FormBuilder,
@@ -15,7 +14,7 @@ import { SharedUiModule } from '@app/shared/shared-ui.module';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, SharedUiModule, ReactiveFormsModule],
+  imports: [SharedUiModule, ReactiveFormsModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
