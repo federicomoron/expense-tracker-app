@@ -4,9 +4,6 @@ import { RouterOutlet } from '@angular/router';
 import { NavigationComponent } from '@app/features/navigation/navigation.component';
 import { SharedUiModule } from '@app/shared/shared-ui.module';
 
-import { NavigationComponent } from '@app/features/navigation/navigation.component';
-import { SharedUiModule } from '@app/shared/shared-ui.module';
-
 @Component({
   selector: 'app-root',
   standalone: true,
