@@ -3,6 +3,8 @@ export const API_ENDPOINTS = {
   REGISTER: '/users/register',
   CREATE_GROUP: '/groups/create',
   GET_GROUPS: '/groups',
-  CREATE_EXPENSE: '/expense/create',
-  GET_EXPENSES: '/expenses',
+  GET_GROUP_DETAIL: (groupId: number) => `/groups/${groupId}`,
+  CREATE_EXPENSE: '/expenses/create',
+  // GET_EXPENSES_BY_GROUP: (groupId: number) => `/expenses/group/${groupId}`,
 };
+
