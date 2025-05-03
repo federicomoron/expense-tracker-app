@@ -12,5 +12,5 @@ export class ExpButtonComponent {
   @Input() type: 'button' | 'submit' = 'button';
   @Input() color: 'primary' | 'accent' | 'warn' = 'primary';
   @Input() disabled = false;
-  @Input() fullWidth = false;
+  @Input() fullWidth = true;
 }
