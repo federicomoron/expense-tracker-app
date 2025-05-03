@@ -1,5 +1,6 @@
 <div class="login-container">
   <mat-card>
+    <img src="assets/spendly.png" alt="App Logo" class="logo" />
     <h1 class="login-title">Login</h1>
     <form (submit)="onSubmit($event)" class="login-form">
       <mat-form-field appearance="outline" class="full-width">
@@ -30,19 +31,21 @@
           [attr.aria-pressed]="showPassword()"
           type="button"
         >
-          <mat-icon>{{
-            showPassword() ? 'visibility_off' : 'visibility'
-          }}</mat-icon>
+          <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
       </mat-form-field>
 
-      <app-exp-button
-        type="submit"
-        color="primary"
-        [disabled]="isFormInvalid()"
-        [fullWidth]="true"
-      >
-        Login
+      <app-exp-button type="submit" color="primary" [disabled]="isFormInvalid() || isLoading()">
+        @if (isLoading()) {
+          <mat-progress-spinner
+            mode="indeterminate"
+            diameter="20"
+            color="accent"
+            class="spinner"
+          ></mat-progress-spinner>
+        } @else {
+          Login
+        }
       </app-exp-button>
 
       @if (errorMessage()) {
