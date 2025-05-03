@@ -1,15 +1,9 @@
-import {
-  Component,
-  computed,
-  EventEmitter,
-  Output,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
-import {
-  GROUP_TYPE_OPTIONS,
-  GroupType,
-} from '@app/core/models/group-type.enum';
+import { GROUP_TYPE_OPTIONS, GroupType } from '@app/core/models/group-type.enum';
+import { GroupService } from '@app/core/services/group.service';
 import { SharedUiModule } from '@app/shared/shared-ui.module';
 
 @Component({
@@ -23,26 +17,35 @@ export class GroupFormComponent {
   name = signal('');
   type = signal<GroupType>(GroupType.TRIP);
   isNameInvalid = computed(() => this.name().trim() === '');
-
   groupTypeOptions = GROUP_TYPE_OPTIONS;
 
-  // Emits the new group's data to the parent component
-  @Output() groupCreated = new EventEmitter<{
-    name: string;
-    type: GroupType;
-  }>();
+  private groupService = inject(GroupService);
+  private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
 
   onSubmit(event: Event) {
     event.preventDefault();
     if (this.isNameInvalid()) return;
 
-    this.groupCreated.emit({
-      name: this.name(),
-      type: this.type(),
-    });
+    this.groupService
+      .createGroup({
+        name: this.name(),
+        type: this.type(),
+      })
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/group']);
+        },
+        error: () => {
+          this.snackBar.open('Error creating group', 'Close', {
+            duration: 3000,
+          });
+        },
+      });
+  }
 
-    this.name.set('');
-    this.type.set(GroupType.TRIP);
+  onCancel() {
+    this.router.navigate(['/group']);
   }
 
   onNameInput(event: Event) {

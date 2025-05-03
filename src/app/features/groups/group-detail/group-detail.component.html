@@ -1,1 +1,39 @@
-<p>group-detail works!</p>
+<h2>{{ group()?.name }} (ID: {{ groupId() }})</h2>
+
+@if (group()) {
+  <section class="summary-section">
+    <h3>Balance Summary</h3>
+    <ul>
+      @for (balance of group()!.balanceSummary; track balance.currency) {
+        <li>
+          @if (balance.amount > 0) {
+            💵 Te deben {{ balance.amount }} {{ balance.currency }}
+          } @else if (balance.amount < 0) {
+            💸 Debés {{ -balance.amount }} {{ balance.currency }}
+          } @else {
+            ✔ Sin deudas en {{ balance.currency }}
+          }
+        </li>
+      }
+    </ul>
+
+    <h3>Member Balances</h3>
+    <ul>
+      @for (mb of group()!.memberBalances; track mb.userId) {
+        <li>
+          @if (mb.amount < 0) {
+            Debés a {{ mb.name }} {{ -mb.amount }} {{ mb.currency }}
+          } @else if (mb.amount > 0) {
+            {{ mb.name }} te debe {{ mb.amount }} {{ mb.currency }}
+          } @else {
+            ✔ Estás saldado con {{ mb.name }} ({{ mb.currency }})
+          }
+        </li>
+      }
+    </ul>
+  </section>
+}
+
+<app-expense-form [groupId]="groupId()"></app-expense-form>
+<!-- <app-expenses [groupId]="groupId()"></app-expenses> -->
+<app-expenses [expenses]="group()?.expenses ?? []"></app-expenses>

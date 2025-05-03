@@ -1,12 +1,7 @@
 <form (submit)="onSubmit($event)" class="group-form">
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Group Name</mat-label>
-    <input
-      matInput
-      [value]="name()"
-      (input)="onNameInput($event)"
-      placeholder="Group Name"
-    />
+    <input matInput [value]="name()" (input)="onNameInput($event)" placeholder="Group Name" />
     @if (isNameInvalid()) {
       <mat-error>The name is required</mat-error>
     }
@@ -21,12 +16,11 @@
     </mat-select>
   </mat-form-field>
 
-  <button
-    mat-raised-button
-    color="primary"
-    type="submit"
-    [disabled]="isNameInvalid()"
-  >
-    Create
-  </button>
+  <div class="button-row">
+    <button mat-stroked-button type="button" (click)="onCancel()">Cancel</button>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="isNameInvalid()">
+      Create
+    </button>
+  </div>
 </form>

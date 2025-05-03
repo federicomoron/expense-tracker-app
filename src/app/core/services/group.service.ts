@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { map, Observable, tap } from 'rxjs';
 
 import { Group } from '@app/core/models/group.model';
 import { HttpService } from '@app/core/services/http.service';
@@ -7,6 +7,7 @@ import { API_ENDPOINTS } from '@constants/api-endpoints';
 import { STORAGE_KEYS } from '@constants/storage-keys';
 import { environment } from '@environments/environment';
 import { GroupType } from '@models/group-type.enum';
+import { GroupDetail } from '../models/group-detail.model';
 
 interface CreateGroupPayload {
   name: string;
@@ -87,5 +88,14 @@ export class GroupService {
           }
         })
       );
+  }
+
+  getGroupDetail(groupId: number): Observable<GroupDetail> {
+    return this.http
+      .get<{
+        success: boolean;
+        data: GroupDetail;
+      }>(`${this.apiUrl}${API_ENDPOINTS.GET_GROUP_DETAIL(groupId)}`)
+      .pipe(map((res) => res.data));
   }
 }

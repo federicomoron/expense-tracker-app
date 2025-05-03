@@ -1,8 +1,9 @@
 import { GroupType } from './group-type.enum';
 
 export interface Group {
-  id: string;
+  id: number;
   name: string;
   type: GroupType;
-  total: number;
+  createdAt: string;
 }
+
