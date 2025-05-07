@@ -28,4 +28,3 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   ],
 })
 export class SharedUiModule {}
-

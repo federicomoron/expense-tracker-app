@@ -1,24 +1,26 @@
-<form [formGroup]="expenseForm" (ngSubmit)="submitExpense()">
-  <mat-form-field appearance="outline">
-    <mat-label>Description</mat-label>
-    <input matInput formControlName="description" required />
-  </mat-form-field>
+<section class="expense-form">
+  <form [formGroup]="expenseForm" (ngSubmit)="submitExpense()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <input matInput formControlName="description" required />
+    </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Total</mat-label>
-    <input matInput type="number" formControlName="total" required />
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Total</mat-label>
+      <input matInput type="number" formControlName="total" required />
+    </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Currency</mat-label>
-    <mat-select formControlName="currency" required>
-      <mat-option value="USD">USD</mat-option>
-      <mat-option value="ARS">ARS</mat-option>
-      <mat-option value="EUR">EUR</mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Currency</mat-label>
+      <mat-select formControlName="currency" required>
+        <mat-option value="USD">USD</mat-option>
+        <mat-option value="ARS">ARS</mat-option>
+        <mat-option value="EUR">EUR</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <button mat-raised-button color="primary" type="submit" [disabled]="expenseForm.invalid">
-    Create Expense
-  </button>
-</form>
+    <button mat-raised-button color="primary" type="submit" [disabled]="expenseForm.invalid">
+      Create Expense
+    </button>
+  </form>
+</section>
