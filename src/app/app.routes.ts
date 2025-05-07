@@ -14,6 +14,13 @@ export const routes: Routes = [
     loadChildren: () => import('./features/groups/groups.routes').then((m) => m.groupsRoutes),
   },
   {
+    path: 'expenses/new/:groupId',
+    loadComponent: () =>
+      import('@app/features/expenses/expense-form/expense-form.component').then(
+        (m) => m.ExpenseFormComponent,
+      ),
+  },
+  {
     path: 'login',
     loadChildren: () => import('./features/auth/login/login.routes').then((m) => m.loginRoutes),
   },

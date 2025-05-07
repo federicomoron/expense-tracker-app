@@ -32,14 +32,7 @@ module.exports = tseslint.config(
       'import/order': [
         'warn',
         {
-          groups: [
-            'builtin',
-            'external',
-            'internal',
-            'parent',
-            'sibling',
-            'index',
-          ],
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
           alphabetize: { order: 'asc', caseInsensitive: true },
           'newlines-between': 'always',
         },
@@ -63,14 +56,32 @@ module.exports = tseslint.config(
           style: 'kebab-case',
         },
       ],
+      '@angular-eslint/no-empty-lifecycle-method': 'warn',
+      '@angular-eslint/use-lifecycle-interface': 'warn',
+      '@angular-eslint/no-host-metadata-property': 'error',
+      '@angular-eslint/prefer-standalone-component': 'warn',
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/explicit-function-return-type': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-misused-promises': [
+        'error',
+        {
+          checksVoidReturn: false,
+        },
+      ],
+      '@typescript-eslint/consistent-type-imports': 'warn',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      eqeqeq: ['error', 'always'],
+      'no-duplicate-imports': 'error',
+      'no-shadow': 'error',
+      'prefer-const': 'error',
+      'no-var': 'error',
     },
   },
   {
     files: ['**/*.html'],
-    extends: [
-      ...angular.configs.templateRecommended,
-      ...angular.configs.templateAccessibility,
-    ],
+    extends: [...angular.configs.templateRecommended, ...angular.configs.templateAccessibility],
     rules: {},
-  },
+  }
 );

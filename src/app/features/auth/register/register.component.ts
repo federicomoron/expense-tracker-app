@@ -1,6 +1,10 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
@@ -10,7 +14,7 @@ import { SharedUiModule } from '@app/shared/shared-ui.module';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, SharedUiModule, ReactiveFormsModule],
+  imports: [SharedUiModule, ReactiveFormsModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
@@ -38,9 +42,13 @@ export class RegisterComponent {
     this.userService.register(data).subscribe({
       next: (res) => {
         if (!res.success || !res.data?.email) {
-          this.snackBar.open('There was a problem with the registration.', 'Close', {
-            duration: 3000,
-          });
+          this.snackBar.open(
+            'There was a problem with the registration.',
+            'Close',
+            {
+              duration: 3000,
+            }
+          );
           return;
         }
 

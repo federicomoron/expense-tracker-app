@@ -8,7 +8,9 @@ import { HttpService } from '@app/core/services/http.service';
 import { environment } from '@environments/environment';
 
 export interface User {
+  id: number;
   email: string;
+  name?: string;
 }
 
 interface LoginResponse {

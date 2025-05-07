@@ -17,13 +17,16 @@ export class LoginComponent {
   password = signal('');
   showPassword = signal(false);
   errorMessage = signal('');
+  isLoading = signal(false);
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {}
 
-  isFormInvalid = computed(() => this.email().trim() === '' || this.password().trim() === '');
+  isFormInvalid = computed(
+    () => this.email().trim() === '' || this.password().trim() === ''
+  );
 
   onSubmit(event: Event) {
     event.preventDefault();
@@ -34,8 +37,11 @@ export class LoginComponent {
       return;
     }
 
+    this.isLoading.set(true);
+
     this.authService.login(this.email(), this.password()).subscribe({
       next: (res) => {
+        this.isLoading.set(false);
         if (res && res.success) {
           this.router.navigate(['/group']);
         } else {
@@ -43,6 +49,7 @@ export class LoginComponent {
         }
       },
       error: (err) => {
+        this.isLoading.set(false);
         if (err.status === 0) {
           // Network error or unreachable server
           this.errorMessage.set('Unable to connect. Please try again later.');
@@ -72,12 +79,14 @@ export class LoginComponent {
   }
 
   onGoogleLogin() {
-    this.authService.login('google_user@example.com', 'fakepassword').subscribe((res) => {
-      if (res && res.success) {
-        this.router.navigate(['/group']);
-      } else {
-        alert('Error with Google login');
-      }
-    });
+    this.authService
+      .login('google_user@example.com', 'fakepassword')
+      .subscribe((res) => {
+        if (res && res.success) {
+          this.router.navigate(['/group']);
+        } else {
+          alert('Error with Google login');
+        }
+      });
   }
 }

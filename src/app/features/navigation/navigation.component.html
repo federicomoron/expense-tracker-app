@@ -1,32 +1,20 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav
-    #drawer
-    [mode]="isSmallScreen() ? 'over' : 'side'"
-    [opened]="!isSmallScreen()"
-  >
+  <mat-sidenav #drawer [mode]="isSmallScreen() ? 'over' : 'side'" [opened]="!isSmallScreen()">
     <mat-nav-list>
       @if (authService.isLoggedIn()) {
-        <a mat-list-item routerLink="/group" (click)="drawer.close()">
-          Group
-        </a>
+        <a mat-list-item routerLink="/group" (click)="drawer.close()"> Group </a>
         <mat-list-item (click)="logout()">
           <button mat-button>Logout</button>
         </mat-list-item>
       } @else {
-        <a mat-list-item routerLink="/login" (click)="drawer.close()">
-          Login
-        </a>
+        <a mat-list-item routerLink="/login" (click)="drawer.close()"> Login </a>
       }
     </mat-nav-list>
   </mat-sidenav>
 
   <mat-sidenav-content class="main-content-bg">
     <mat-toolbar color="primary">
-      <button
-        mat-icon-button
-        (click)="drawer.toggle()"
-        aria-label="Toggle menu"
-      >
+      <button mat-icon-button (click)="drawer.toggle()" aria-label="Toggle menu">
         <mat-icon>menu</mat-icon>
       </button>
       <span>Expense Tracker</span>

@@ -1,0 +1,17 @@
+<!-- @if (loading()) {
+  <div>Loading expenses...</div>
+} @else { -->
+@if (expenses.length === 0) {
+  <div>No expenses recorded.</div>
+} @else {
+  @for (exp of expenses; track exp.id) {
+    <mat-card>
+      <mat-card-title>{{ exp.description }}</mat-card-title>
+      <mat-card-content>
+        Total: {{ exp.total }} {{ exp.currency }}<br />
+        Date: {{ exp.createdAt | date: 'short' }}
+      </mat-card-content>
+    </mat-card>
+  }
+}
+<!-- } -->

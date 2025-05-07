@@ -1,6 +1,8 @@
 import { Component, computed, OnInit, signal } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router, RouterModule } from '@angular/router';
 
+import { MatDialog } from '@angular/material/dialog';
 import { GroupType } from '@app/core/models/group-type.enum';
 import { GroupService } from '@app/core/services/group.service';
 import { GroupFormComponent } from '@app/features/groups/group-form/group-form.component';
@@ -10,7 +12,7 @@ import { environment } from '@environments/environment';
 @Component({
   selector: 'app-groups',
   standalone: true,
-  imports: [SharedUiModule, GroupFormComponent],
+  imports: [SharedUiModule, RouterModule],
   templateUrl: './groups.component.html',
   styleUrl: './groups.component.scss',
 })
@@ -21,6 +23,8 @@ export class GroupsComponent implements OnInit {
   constructor(
     private groupService: GroupService,
     private snackBar: MatSnackBar,
+    private router: Router,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -48,6 +52,19 @@ export class GroupsComponent implements OnInit {
   }
 
   openGroupForm() {
-    this.showForm.set(true);
+    const dialogRef = this.dialog.open(GroupFormComponent, {
+      width: '90%',
+      maxWidth: '400px',
+    });
+
+    dialogRef.afterClosed().subscribe((data) => {
+      if (data) {
+        this.addGroup(data);
+      }
+    });
+  }
+
+  goToGroup(id: number) {
+    this.router.navigate(['/group', id]);
   }
 }
