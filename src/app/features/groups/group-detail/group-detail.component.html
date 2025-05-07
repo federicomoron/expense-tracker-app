@@ -7,11 +7,11 @@
       @for (balance of group()!.balanceSummary; track balance.currency) {
         <li>
           @if (balance.amount > 0) {
-            💵 Te deben {{ balance.amount }} {{ balance.currency }}
+            💵 They owe you {{ balance.amount }} {{ balance.currency }}
           } @else if (balance.amount < 0) {
-            💸 Debés {{ -balance.amount }} {{ balance.currency }}
+            💸 You owe {{ -balance.amount }} {{ balance.currency }}
           } @else {
-            ✔ Sin deudas en {{ balance.currency }}
+            ✔ No debts in {{ balance.currency }}
           }
         </li>
       }
@@ -22,11 +22,11 @@
       @for (mb of group()!.memberBalances; track mb.userId) {
         <li>
           @if (mb.amount < 0) {
-            Debés a {{ mb.name }} {{ -mb.amount }} {{ mb.currency }}
+            You owe {{ mb.name }} {{ -mb.amount }} {{ mb.currency }}
           } @else if (mb.amount > 0) {
-            {{ mb.name }} te debe {{ mb.amount }} {{ mb.currency }}
+            {{ mb.name }} owes you {{ mb.amount }} {{ mb.currency }}
           } @else {
-            ✔ Estás saldado con {{ mb.name }} ({{ mb.currency }})
+            ✔ You are settled with {{ mb.name }} ({{ mb.currency }})
           }
         </li>
       }
@@ -34,6 +34,10 @@
   </section>
 }
 
-<app-expense-form [groupId]="groupId()"></app-expense-form>
-<!-- <app-expenses [groupId]="groupId()"></app-expenses> -->
-<app-expenses [expenses]="group()?.expenses ?? []"></app-expenses>
+@if (group()) {
+  <app-expenses></app-expenses>
+}
+
+<button mat-fab color="primary" class="new-expense-button" (click)="goToNewExpense()">
+  <mat-icon>add</mat-icon>
+</button>

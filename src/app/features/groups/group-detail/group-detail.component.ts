@@ -1,27 +1,25 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GroupDetailWithExpenses } from '@app/core/models/group-detail.model';
 
 import { GroupService } from '@app/core/services/group.service';
-import { ExpenseFormComponent } from '@app/features/expenses/expense-form/expense-form.component';
 import { ExpensesComponent } from '@app/features/expenses/expenses/expenses.component';
+import { SharedUiModule } from '@app/shared/shared-ui.module';
 
 @Component({
   selector: 'app-group-detail',
   standalone: true,
-  imports: [ExpenseFormComponent, ExpensesComponent, CommonModule],
+  imports: [ExpensesComponent, CommonModule, SharedUiModule],
   templateUrl: './group-detail.component.html',
   styleUrls: ['./group-detail.component.scss'],
 })
 export class GroupDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private groupService = inject(GroupService);
 
   groupId = signal(Number(this.route.snapshot.paramMap.get('id')));
-  // group = signal<GroupDetail | null>(null);
-
-  //se agrega el detalle del grupo con los gastos, hasta que este el endpoint terminado
   group = signal<GroupDetailWithExpenses | null>(null);
 
   ngOnInit() {
@@ -32,16 +30,8 @@ export class GroupDetailComponent implements OnInit {
       },
     });
   }
-  // readonly group = this.groupService
-  //   .getGroupDetail(this.groupId())
-  //   .pipe(map((detail) => detail as GroupDetailWithExpenses));
 
-  // ngOnInit() {
-  //   this.groupService.getGroupDetail(this.groupId()).subscribe({
-  //     next: (data) => this.group.set(data),
-  //     error: (err) => {
-  //       console.error('Error loading group detail', err);
-  //     },
-  //   });
-  // }
+  goToNewExpense() {
+    this.router.navigate(['/expenses/new', this.groupId()]);
+  }
 }

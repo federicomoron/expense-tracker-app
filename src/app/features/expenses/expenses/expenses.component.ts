@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 
 import { Expense } from '@app/core/models/expenses.model';
 import { SharedUiModule } from '@app/shared/shared-ui.module';
@@ -7,17 +8,21 @@ import { SharedUiModule } from '@app/shared/shared-ui.module';
 @Component({
   selector: 'app-expenses',
   standalone: true,
-  imports: [CommonModule, SharedUiModule],
+  imports: [CommonModule, SharedUiModule, RouterModule],
   templateUrl: './expenses.component.html',
 })
 export class ExpensesComponent {
+  readonly route = inject(ActivatedRoute);
+  groupId = Number(this.route.snapshot.paramMap.get('id'));
+
+  expenses: Expense[] = [];
   // @Input() groupId!: number;
 
   // expenses = signal<Expense[]>([]);
 
   // loading = signal(true);
 
-  @Input() expenses: Expense[] = [];
+  // @Input() expenses: Expense[] = [];
 
   // private readonly expenseService = inject(ExpenseService);
 

@@ -17,5 +17,11 @@ export const groupsRoutes: Routes = [
     canActivate: [groupGuard],
     loadComponent: () =>
       import('./group-detail/group-detail.component').then((m) => m.GroupDetailComponent),
+    children: [
+      {
+        path: 'expenses',
+        loadChildren: () => import('../expenses/expenses.routes').then((m) => m.expensesRoutes),
+      },
+    ],
   },
 ];

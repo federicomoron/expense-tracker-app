@@ -1,0 +1,37 @@
+.expense-form {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  gap: 1rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.split-summary {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #f1f1f1;
+  border-radius: 8px;
+}
+
+.split-summary p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.split-summary ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+.split-summary li {
+  text-align: center;
+  padding: 0.25rem 0;
+}
+
