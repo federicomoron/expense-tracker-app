@@ -2,36 +2,68 @@
   display: flex;
   flex-direction: column;
   padding: 1.5rem;
-  gap: 1rem;
+  gap: 1.5rem;
   max-width: 400px;
   margin: 0 auto;
 }
 
-.full-width {
-  width: 100%;
+.field-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-.split-summary {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background-color: #f1f1f1;
+.field-row button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
   border-radius: 8px;
+  background-color: #f8f8f8;
+  border: 1px solid #dcdcdc;
+  min-width: 40px;
+  height: 40px;
 }
 
-.split-summary p {
-  margin: 0.5rem 0;
-  font-size: 1rem;
-  text-align: center;
+.field-row button:hover {
+  background-color: #e0e0e0;
 }
 
-.split-summary ul {
-  list-style: none;
-  padding: 0;
-  margin-top: 1rem;
+.category-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.split-summary li {
-  text-align: center;
-  padding: 0.25rem 0;
+.category-icon,
+.currency-icon {
+  font-size: 20px;
+  color: #6c6c6c;
+}
+
+.category-text,
+.currency-text {
+  margin-left: 8px;
+  font-size: 14px;
+  color: #6c6c6c;
+}
+
+.mat-form-field {
+  flex-grow: 1;
+}
+
+.mat-form-field input {
+  font-size: 16px;
+}
+
+.description-field .mat-form-field-infix,
+.total-field .mat-form-field-infix {
+  padding-left: 0;
+}
+
+button.mat-raised-button {
+  align-self: center;
+  width: 100%;
 }
 

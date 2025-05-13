@@ -1,0 +1,19 @@
+<div class="dialog-container">
+  <div class="header">
+    <button mat-icon-button (click)="closeDialog()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h2>Select who paid</h2>
+  </div>
+
+  <mat-nav-list>
+    @for (member of members(); track member.userId) {
+      <mat-list-item
+        (click)="choose(member)"
+        [class.selected]="selected()?.userId === member.userId"
+      >
+        <span class="member-name">{{ member.name }}</span>
+      </mat-list-item>
+    }
+  </mat-nav-list>
+</div>
