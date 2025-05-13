@@ -1,11 +1,8 @@
 <div class="groups-container">
   @for (group of groups(); track $index) {
-    <mat-card>
+    <mat-card (click)="goToGroup(group.id)" class="group-card">
       <h2>{{ group.name }}</h2>
     </mat-card>
-  }
-  @if (showForm()) {
-    <app-group-form (groupCreated)="addGroup($event)" />
   }
 </div>
 
@@ -14,7 +11,7 @@
   color="primary"
   class="fab-button"
   aria-label="New Group"
-  (click)="openGroupForm()"
+  [routerLink]="['/group/new']"
 >
   <mat-icon>add</mat-icon>
 </button>
