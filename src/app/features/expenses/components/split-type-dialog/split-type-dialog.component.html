@@ -1,0 +1,16 @@
+<div class="dialog-container">
+  <div class="header">
+    <button mat-icon-button (click)="closeDialog()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h2>Split Type</h2>
+  </div>
+
+  <mat-nav-list>
+    @for (option of options(); track option) {
+      <mat-list-item (click)="choose(option)">
+        <span class="option-name">{{ option }}</span>
+      </mat-list-item>
+    }
+  </mat-nav-list>
+</div>

@@ -1,0 +1,19 @@
+<div class="dialog-container">
+  <div class="header">
+    <button mat-icon-button (click)="closeDialog()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h2>Select Category</h2>
+  </div>
+
+  <mat-nav-list>
+    @for (category of categories(); track category) {
+      <mat-list-item
+        (click)="chooseCategory(category)"
+        [class.selected]="selectedCategory() === category"
+      >
+        <span class="category-name">{{ category }}</span>
+      </mat-list-item>
+    }
+  </mat-nav-list>
+</div>

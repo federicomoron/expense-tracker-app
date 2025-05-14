@@ -1,0 +1,9 @@
+<!-- Sección Pagado por -->
+<button mat-button (click)="openPaidByDialog()">
+  Paid by: {{ selectedPayer()?.name || 'Select' }}
+</button>
+
+<!-- Sección Dividido -->
+<button mat-button (click)="openSplitTypeDialog()">
+  Split: {{ selectedSplitType() || 'Select' }}
+</button>

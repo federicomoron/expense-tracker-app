@@ -1,0 +1,41 @@
+.dialog-container {
+  padding: 16px;
+  max-height: 100vh;
+  overflow: auto;
+  background: white;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+
+  h2 {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+  }
+}
+
+mat-list-item {
+  cursor: pointer;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+
+  .option-name,
+  .member-name {
+    font-weight: 600;
+  }
+
+  &.selected {
+    background-color: #e0f7fa;
+  }
+}
+
+:ng-deep .mat-mdc-dialog-surface {
+  border-radius: 0px !important;
+}
+

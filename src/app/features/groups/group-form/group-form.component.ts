@@ -1,7 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-
 import { GROUP_TYPE_OPTIONS, GroupType } from '@app/core/models/group-type.enum';
 import { GroupService } from '@app/core/services/group.service';
 import { SharedUiModule } from '@app/shared/shared-ui.module';

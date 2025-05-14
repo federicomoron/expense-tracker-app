@@ -1,0 +1,20 @@
+<div class="dialog-container">
+  <div class="header">
+    <button mat-icon-button (click)="closeDialog()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h2>Select currency</h2>
+  </div>
+
+  <mat-nav-list>
+    @for (currency of currencies; track currency) {
+      <mat-list-item
+        (click)="chooseCurrency(currency)"
+        [class.selected]="selectedCurrency === currency"
+      >
+        <span class="currency-code">{{ currency }}</span>
+        <span class="currency-desc">{{ currencyDescription(currency) }}</span>
+      </mat-list-item>
+    }
+  </mat-nav-list>
+</div>

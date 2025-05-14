@@ -26,6 +26,17 @@ export class GroupService {
   private _groupsSignal = signal<Group[]>(this.loadFromStorage());
   private http = inject(HttpService);
 
+  private _activeGroupId = signal<number | null>(null);
+
+  readonly activeGroup = computed(() => {
+    const groupId = this._activeGroupId();
+    return this.groups().find((group) => group.id === groupId) ?? null;
+  });
+
+  setActiveGroup(groupId: number) {
+    this._activeGroupId.set(groupId);
+  }
+
   readonly groups = computed(() => {
     return this._groupsSignal();
   });
@@ -41,10 +52,7 @@ export class GroupService {
   }
 
   private saveToStorage() {
-    localStorage.setItem(
-      STORAGE_KEYS.GROUPS,
-      JSON.stringify(this._groupsSignal())
-    );
+    localStorage.setItem(STORAGE_KEYS.GROUPS, JSON.stringify(this._groupsSignal()));
   }
 
   // Fetch groups from API and update state
@@ -59,7 +67,7 @@ export class GroupService {
           const groups = res.data.groups;
           this._groupsSignal.set(groups);
           this.saveToStorage();
-        })
+        }),
       );
   }
 
@@ -86,7 +94,7 @@ export class GroupService {
           if (response.success) {
             this.addGroup(response.data);
           }
-        })
+        }),
       );
   }
 
