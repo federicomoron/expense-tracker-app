@@ -1,10 +1,16 @@
 export interface Expense {
   id: number;
-  groupId: number;
   description: string;
-  total: number;
+  total: number | string;
   currency: string;
   createdAt: string;
+  updatedAt: string;
+  participants: {
+    userId: number;
+    amount: number;
+  }[];
+  category?: string;
+  iconUrl?: string;
 }
 
 export interface ExpenseRequest {

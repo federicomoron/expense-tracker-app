@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GroupDetailWithExpenses } from '@app/core/models/group-detail.model';
 
+import { AuthService } from '@app/core/services/auth.service';
 import { GroupService } from '@app/core/services/group.service';
 import { ExpensesComponent } from '@app/features/expenses/expenses/expenses.component';
 import { SharedUiModule } from '@app/shared/shared-ui.module';
@@ -18,9 +19,28 @@ export class GroupDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private groupService = inject(GroupService);
+  private authService = inject(AuthService);
 
   groupId = signal(Number(this.route.snapshot.paramMap.get('id')));
   group = signal<GroupDetailWithExpenses | null>(null);
+
+  currentUser = this.authService.currentUser;
+
+  filteredMemberBalances = computed(() => {
+    const group = this.group();
+    const userId = this.currentUser()?.id;
+    if (!group || !userId) return [];
+
+    return group.memberBalances.filter((mb) => mb.userId === userId);
+  });
+
+  filteredSummary = computed(() => {
+    const group = this.group();
+    const userId = this.currentUser()?.id;
+    if (!group || !userId) return [];
+
+    return group.balanceSummary.filter((b) => b.amount !== 0);
+  });
 
   ngOnInit() {
     this.groupService.getGroupDetail(this.groupId()).subscribe({

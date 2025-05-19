@@ -7,7 +7,7 @@ import { API_ENDPOINTS } from '@constants/api-endpoints';
 import { STORAGE_KEYS } from '@constants/storage-keys';
 import { environment } from '@environments/environment';
 import { GroupType } from '@models/group-type.enum';
-import { GroupDetail } from '../models/group-detail.model';
+import { GroupDetailWithExpenses } from '../models/group-detail.model';
 
 interface CreateGroupPayload {
   name: string;
@@ -98,11 +98,11 @@ export class GroupService {
       );
   }
 
-  getGroupDetail(groupId: number): Observable<GroupDetail> {
+  getGroupDetail(groupId: number): Observable<GroupDetailWithExpenses> {
     return this.http
       .get<{
         success: boolean;
-        data: GroupDetail;
+        data: GroupDetailWithExpenses;
       }>(`${this.apiUrl}${API_ENDPOINTS.GET_GROUP_DETAIL(groupId)}`)
       .pipe(map((res) => res.data));
   }
