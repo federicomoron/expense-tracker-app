@@ -1,13 +1,13 @@
 import { Component, computed, OnInit, signal } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterModule } from '@angular/router';
 
-import { MatDialog } from '@angular/material/dialog';
-import { GroupType } from '@app/core/models/group-type.enum';
-import { GroupService } from '@app/core/services/group.service';
-import { GroupFormComponent } from '@app/features/groups/group-form/group-form.component';
-import { SharedUiModule } from '@app/shared/shared-ui.module';
 import { environment } from '@environments/environment';
+import { GroupFormComponent } from '@features/groups/group-form/group-form.component';
+import { GroupType } from '@models/group-type.enum';
+import { GroupService } from '@services/group.service';
+import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
   selector: 'app-groups',
@@ -65,6 +65,6 @@ export class GroupsComponent implements OnInit {
   }
 
   goToGroup(id: number) {
-    this.router.navigate(['/group', id]);
+    void this.router.navigate(['/group', id]);
   }
 }

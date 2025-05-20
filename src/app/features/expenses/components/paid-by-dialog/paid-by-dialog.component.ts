@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { GroupMember } from '@app/core/models/group-detail.model';
-import { SharedUiModule } from '@app/shared/shared-ui.module';
+
+import { GroupMember } from '@models/group-detail.model';
+import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
   standalone: true,

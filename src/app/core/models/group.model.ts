@@ -6,4 +6,3 @@ export interface Group {
   type: GroupType;
   createdAt: string;
 }
-

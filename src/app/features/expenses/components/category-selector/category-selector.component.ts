@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { SharedUiModule } from '@app/shared/shared-ui.module';
-import { CurrencySelectorComponent } from '../currency-selector/currency-selector.component';
+
+import { CurrencySelectorComponent } from '@features/expenses/components/currency-selector/currency-selector.component';
+import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
   standalone: true,

@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { authGuard } from '@app/core/guards/auth.guard';
+import { authGuard } from '@core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -11,30 +11,30 @@ export const routes: Routes = [
   {
     path: 'group',
     canActivate: [authGuard],
-    loadChildren: () => import('./features/groups/groups.routes').then((m) => m.groupsRoutes),
+    loadChildren: () => import('@features/groups/groups.routes').then((m) => m.groupsRoutes),
   },
   {
     path: 'expenses/new/:groupId',
     loadComponent: () =>
-      import('@app/features/expenses/expense-form/expense-form.component').then(
+      import('@features/expenses/expense-form/expense-form.component').then(
         (m) => m.ExpenseFormComponent,
       ),
   },
   {
     path: 'expenses/new/:groupId',
     loadComponent: () =>
-      import('@app/features/expenses/expense-form/expense-form.component').then(
+      import('@features/expenses/expense-form/expense-form.component').then(
         (m) => m.ExpenseFormComponent,
       ),
   },
   {
     path: 'login',
-    loadChildren: () => import('./features/auth/login/login.routes').then((m) => m.loginRoutes),
+    loadChildren: () => import('@features/auth/login/login.routes').then((m) => m.loginRoutes),
   },
   {
     path: 'register',
     loadChildren: () =>
-      import('./features/auth/register/register.routes').then((m) => m.registerRoutes),
+      import('@features/auth/register/register.routes').then((m) => m.registerRoutes),
   },
   {
     path: '**',

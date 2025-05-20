@@ -1,10 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_ENDPOINTS } from '@app/core/constants/api-endpoints';
-import { ExpenseRequest, ExpenseResponse } from '@app/core/models/expenses.model';
-import { HttpService } from '@app/core/services/http.service';
+import { API_ENDPOINTS } from '@constants/api-endpoints';
 import { environment } from '@environments/environment';
+import { ExpenseRequest, ExpenseResponse } from '@models/expenses.model';
+import { HttpService } from '@services/http.service';
 
 @Injectable({ providedIn: 'root' })
 export class ExpenseService {

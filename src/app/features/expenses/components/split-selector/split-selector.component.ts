@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { SharedUiModule } from '@app/shared/shared-ui.module';
-import { PaidByDialogComponent } from '../paid-by-dialog/paid-by-dialog.component';
-import { SplitTypeDialogComponent } from '../split-type-dialog/split-type-dialog.component';
+
+import { PaidByDialogComponent } from '@features/expenses/components/paid-by-dialog/paid-by-dialog.component';
+import { SplitTypeDialogComponent } from '@features/expenses/components/split-type-dialog/split-type-dialog.component';
+import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
   standalone: true,

@@ -1,9 +1,9 @@
 import { Component, computed, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
-import { AuthService } from '@app/core/services/auth.service';
-import { ExpButtonComponent } from '@app/shared/components/exp-button/exp-button.component';
-import { SharedUiModule } from '@app/shared/shared-ui.module';
+import { AuthService } from '@services/auth.service';
+import { ExpButtonComponent } from '@shared/components/exp-button/exp-button.component';
+import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
   selector: 'app-login',
@@ -24,9 +24,7 @@ export class LoginComponent {
     private router: Router,
   ) {}
 
-  isFormInvalid = computed(
-    () => this.email().trim() === '' || this.password().trim() === ''
-  );
+  isFormInvalid = computed(() => this.email().trim() === '' || this.password().trim() === '');
 
   onSubmit(event: Event) {
     event.preventDefault();
@@ -43,7 +41,7 @@ export class LoginComponent {
       next: (res) => {
         this.isLoading.set(false);
         if (res && res.success) {
-          this.router.navigate(['/group']);
+          void this.router.navigate(['/group']);
         } else {
           this.errorMessage.set('Incorrect email or password.');
         }
@@ -79,14 +77,12 @@ export class LoginComponent {
   }
 
   onGoogleLogin() {
-    this.authService
-      .login('google_user@example.com', 'fakepassword')
-      .subscribe((res) => {
-        if (res && res.success) {
-          this.router.navigate(['/group']);
-        } else {
-          alert('Error with Google login');
-        }
-      });
+    this.authService.login('google_user@example.com', 'fakepassword').subscribe((res) => {
+      if (res && res.success) {
+        void this.router.navigate(['/group']);
+      } else {
+        alert('Error with Google login');
+      }
+    });
   }
 }

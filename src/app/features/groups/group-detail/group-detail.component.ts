@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GroupDetailWithExpenses } from '@app/core/models/group-detail.model';
 
-import { AuthService } from '@app/core/services/auth.service';
-import { GroupService } from '@app/core/services/group.service';
-import { ExpensesComponent } from '@app/features/expenses/expenses/expenses.component';
-import { SharedUiModule } from '@app/shared/shared-ui.module';
+import { ExpensesComponent } from '@features/expenses/expenses/expenses.component';
+import { GroupDetailWithExpenses } from '@models/group-detail.model';
+import { AuthService } from '@services/auth.service';
+import { GroupService } from '@services/group.service';
+import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
   selector: 'app-group-detail',
@@ -52,6 +52,6 @@ export class GroupDetailComponent implements OnInit {
   }
 
   goToNewExpense() {
-    this.router.navigate(['/expenses/new', this.groupId()]);
+    void this.router.navigate(['/expenses/new', this.groupId()]);
   }
 }

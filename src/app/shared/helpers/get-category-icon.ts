@@ -21,4 +21,3 @@ export function getCategoryIcon(description: string): string {
 
   return 'assets/default.svg';
 }
-

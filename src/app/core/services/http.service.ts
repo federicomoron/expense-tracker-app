@@ -11,7 +11,7 @@ export class HttpService {
       catchError((error: HttpErrorResponse) => {
         console.error('[HTTP GET error]', error);
         return throwError(() => error);
-      })
+      }),
     );
   }
 
@@ -20,7 +20,7 @@ export class HttpService {
       catchError((error: HttpErrorResponse) => {
         console.error('[HTTP POST error]', error);
         return throwError(() => error);
-      })
+      }),
     );
   }
 }

@@ -1,8 +1,8 @@
 name: Angular CI Pipeline
 
 on:
-  push:            # Corre en cualquier push a cualquier rama
-  pull_request:    # Corre en cualquier PR hacia cualquier rama
+  push: # Corre en cualquier push a cualquier rama
+  pull_request: # Corre en cualquier PR hacia cualquier rama
 
 jobs:
   lint:
