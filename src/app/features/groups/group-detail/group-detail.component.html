@@ -1,42 +1,28 @@
-<h2>{{ group()?.name }} (ID: {{ groupId() }})</h2>
+<h2>{{ group()?.name }}</h2>
 
-@if (group()) {
-  <section class="summary-section">
-    <h3>Balance Summary</h3>
-    <ul>
-      @for (balance of group()!.balanceSummary; track balance.currency) {
-        <li>
-          @if (balance.amount > 0) {
-            💵 They owe you {{ balance.amount }} {{ balance.currency }}
-          } @else if (balance.amount < 0) {
-            💸 You owe {{ -balance.amount }} {{ balance.currency }}
-          } @else {
-            ✔ No debts in {{ balance.currency }}
-          }
-        </li>
+<ul class="balances-list">
+  @for (b of filteredSummary(); track b.currency) {
+    <li>
+      @if (b.amount > 0) {
+        💵 They owe you {{ b.amount }} {{ b.currency }}
+      } @else if (b.amount < 0) {
+        💸 You owe {{ -b.amount }} {{ b.currency }}
       }
-    </ul>
+    </li>
+  }
 
-    <h3>Member Balances</h3>
-    <ul>
-      @for (mb of group()!.memberBalances; track mb.userId) {
-        <li>
-          @if (mb.amount < 0) {
-            You owe {{ mb.name }} {{ -mb.amount }} {{ mb.currency }}
-          } @else if (mb.amount > 0) {
-            {{ mb.name }} owes you {{ mb.amount }} {{ mb.currency }}
-          } @else {
-            ✔ You are settled with {{ mb.name }} ({{ mb.currency }})
-          }
-        </li>
+  @for (mb of filteredMemberBalances(); track mb.userId) {
+    <li>
+      @if (mb.amount > 0) {
+        {{ mb.name }} owes you {{ mb.amount }} {{ mb.currency }}
+      } @else if (mb.amount < 0) {
+        You owe {{ mb.name }} {{ -mb.amount }} {{ mb.currency }}
       }
-    </ul>
-  </section>
-}
+    </li>
+  }
+</ul>
 
-@if (group()) {
-  <app-expenses></app-expenses>
-}
+<app-expenses></app-expenses>
 
 <button mat-fab color="primary" class="new-expense-button" (click)="goToNewExpense()">
   <mat-icon>add</mat-icon>

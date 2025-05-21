@@ -24,7 +24,6 @@ export interface GroupDetail {
   updatedAt: string;
 }
 
-//se agrega el detalle del grupo con los gastos, hasta que este el endpoint terminado
 export interface GroupDetailWithExpenses extends GroupDetail {
   expenses?: Expense[];
 }
