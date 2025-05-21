@@ -4,15 +4,15 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ExpenseRequest } from '@app/core/models/expenses.model';
-import { GroupDetail } from '@app/core/models/group-detail.model';
-import { AuthService } from '@app/core/services/auth.service';
-import { ExpenseService } from '@app/core/services/expenses.service';
-import { GroupService } from '@app/core/services/group.service';
-import { SharedUiModule } from '@app/shared/shared-ui.module';
-import { CategorySelectorComponent } from '../components/category-selector/category-selector.component';
-import { CurrencySelectorComponent } from '../components/currency-selector/currency-selector.component';
-import { SplitSelectorComponent } from '../components/split-selector/split-selector.component';
+import { CategorySelectorComponent } from '@features/expenses/components/category-selector/category-selector.component';
+import { CurrencySelectorComponent } from '@features/expenses/components/currency-selector/currency-selector.component';
+import { SplitSelectorComponent } from '@features/expenses/components/split-selector/split-selector.component';
+import { ExpenseRequest } from '@models/expenses.model';
+import { GroupDetail } from '@models/group-detail.model';
+import { AuthService } from '@services/auth.service';
+import { ExpenseService } from '@services/expenses.service';
+import { GroupService } from '@services/group.service';
+import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
   selector: 'app-expense-form',
@@ -59,7 +59,6 @@ export class ExpenseFormComponent implements OnInit {
     this.groupService.getGroupDetail(this.groupId).subscribe({
       next: (group) => {
         this.group = group;
-        console.log('✅ Group loaded:', group);
       },
       error: (err) => {
         console.error('❌ Error loading group:', err);
@@ -101,10 +100,9 @@ export class ExpenseFormComponent implements OnInit {
     this.isSubmitting = true;
     this.expenseService.createExpense(expense).subscribe({
       next: () => {
-        this.router.navigate(['/group', this.groupId, 'expenses']);
+        void this.router.navigate(['/group', this.groupId, 'expenses']);
       },
       error: (error) => {
-        console.error('❌ Error creating expense:', error.error);
         console.error('❌ Validation errors:', error.error.error.details.errors);
         this.isSubmitting = false;
       },

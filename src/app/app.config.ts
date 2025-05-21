@@ -3,8 +3,9 @@ import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } fr
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 
+import { authTokenInterceptor } from '@core/interceptors/auth-token.interceptor';
+
 import { routes } from './app.routes';
-import { authTokenInterceptor } from './core/interceptors/auth-token.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [

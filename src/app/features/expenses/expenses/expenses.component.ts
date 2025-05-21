@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { Expense } from '@app/core/models/expenses.model';
-import { GroupService } from '@app/core/services/group.service';
-import { getCategoryIcon } from '@app/shared/helpers/get-category-icon';
-import { SharedUiModule } from '@app/shared/shared-ui.module';
+
+import { Expense } from '@models/expenses.model';
+import { GroupService } from '@services/group.service';
+import { getCategoryIcon } from '@shared/helpers/get-category-icon';
+import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
   selector: 'app-expenses',

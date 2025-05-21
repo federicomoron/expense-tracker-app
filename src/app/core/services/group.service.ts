@@ -1,13 +1,13 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 
-import { Group } from '@app/core/models/group.model';
-import { HttpService } from '@app/core/services/http.service';
 import { API_ENDPOINTS } from '@constants/api-endpoints';
 import { STORAGE_KEYS } from '@constants/storage-keys';
 import { environment } from '@environments/environment';
+import { GroupDetailWithExpenses } from '@models/group-detail.model';
 import { GroupType } from '@models/group-type.enum';
-import { GroupDetailWithExpenses } from '../models/group-detail.model';
+import { Group } from '@models/group.model';
+import { HttpService } from '@services/http.service';
 
 interface CreateGroupPayload {
   name: string;

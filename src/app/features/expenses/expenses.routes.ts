@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
-import { ExpensesComponent } from './expenses/expenses.component';
+
+import { ExpensesComponent } from '@features/expenses/expenses/expenses.component';
 
 export const expensesRoutes: Routes = [
   {
@@ -12,4 +13,3 @@ export const expensesRoutes: Routes = [
       import('./expense-form/expense-form.component').then((m) => m.ExpenseFormComponent),
   },
 ];
-

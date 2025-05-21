@@ -23,8 +23,8 @@
       "@core/*": ["src/app/core/*"],
       "@shared/*": ["src/app/shared/*"],
       "@environments/*": ["src/environments/*"],
-      "@services/": ["src/app/core/services"],
-      "@features/": ["src/app/core/features"],
+      "@services/*": ["src/app/core/services/*"],
+      "@features/*": ["src/app/features/*"],
       "@models/*": ["src/app/core/models/*"],
       "@constants/*": ["src/app/core/constants/*"]
     }
