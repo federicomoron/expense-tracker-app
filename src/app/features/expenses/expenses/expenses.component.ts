@@ -1,38 +1,37 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Component, Input } from '@angular/core';
 
 import { Expense } from '@models/expenses.model';
-import { GroupService } from '@services/group.service';
 import { getCategoryIcon } from '@shared/helpers/get-category-icon';
 import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
   selector: 'app-expenses',
   standalone: true,
-  imports: [CommonModule, SharedUiModule, RouterModule],
+  imports: [CommonModule, SharedUiModule],
   templateUrl: './expenses.component.html',
   styleUrls: ['./expenses.component.scss'],
 })
-export class ExpensesComponent implements OnInit {
-  private readonly route = inject(ActivatedRoute);
-  private readonly groupService = inject(GroupService);
+export class ExpensesComponent {
+  @Input() expenses: Expense[] = [];
+  @Input() loading = false;
+
   getCategoryIcon = getCategoryIcon;
 
-  groupId = Number(this.route.snapshot.paramMap.get('id'));
-  expenses = signal<Expense[]>([]);
-  loading = signal(true);
+  get groupedExpenses() {
+    const map = new Map<string, Expense[]>();
 
-  ngOnInit(): void {
-    this.groupService.getGroupDetail(this.groupId).subscribe({
-      next: (groupDetail) => {
-        this.expenses.set(groupDetail.expenses ?? []);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.expenses.set([]);
-        this.loading.set(false);
-      },
-    });
+    for (const exp of this.expenses) {
+      const month = new Date(exp.createdAt).toLocaleString('default', {
+        month: 'long',
+        year: 'numeric',
+      });
+      if (!map.has(month)) {
+        map.set(month, []);
+      }
+      map.get(month)!.push(exp);
+    }
+
+    return Array.from(map.entries());
   }
 }

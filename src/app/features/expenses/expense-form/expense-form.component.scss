@@ -1,20 +1,38 @@
+.expense-form-wrapper {
+  padding: 2rem 1.5rem;
+  max-width: 500px;
+  margin: 2rem auto;
+  background-color: #f9f9f9;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.form-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: var(--text-primary, #1a1a1a);
+}
+
 .expense-form {
   display: flex;
   flex-direction: column;
-  padding: 1.5rem;
   gap: 1.5rem;
-  max-width: 400px;
-  margin: 0 auto;
 }
 
 .field-row {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 1rem;
 }
 
-.field-row button {
+.full-width {
+  width: 100%;
+}
+
+.category-button,
+.currency-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -24,16 +42,12 @@
   border: 1px solid #dcdcdc;
   min-width: 40px;
   height: 40px;
+  transition: background 0.2s;
 }
 
-.field-row button:hover {
+.category-button:hover,
+.currency-button:hover {
   background-color: #e0e0e0;
-}
-
-.category-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .category-icon,
@@ -49,20 +63,8 @@
   color: #6c6c6c;
 }
 
-.mat-form-field {
-  flex-grow: 1;
-}
-
-.mat-form-field input {
-  font-size: 16px;
-}
-
-.description-field .mat-form-field-infix,
-.total-field .mat-form-field-infix {
-  padding-left: 0;
-}
-
-button.mat-raised-button {
-  align-self: center;
-  width: 100%;
+.button-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
 }

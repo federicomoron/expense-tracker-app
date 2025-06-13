@@ -27,3 +27,8 @@ export interface GroupDetail {
 export interface GroupDetailWithExpenses extends GroupDetail {
   expenses?: Expense[];
 }
+
+export interface GroupDetailResponse {
+  success: boolean;
+  data: GroupDetailWithExpenses;
+}

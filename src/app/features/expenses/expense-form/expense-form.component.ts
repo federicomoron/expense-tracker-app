@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CategorySelectorComponent } from '@features/expenses/components/category-selector/category-selector.component';
 import { CurrencySelectorComponent } from '@features/expenses/components/currency-selector/currency-selector.component';
 import { SplitSelectorComponent } from '@features/expenses/components/split-selector/split-selector.component';
-import { ExpenseRequest } from '@models/expenses.model';
+import { ExpenseRequest, ExpenseUser } from '@models/expenses.model';
 import { GroupDetail } from '@models/group-detail.model';
 import { AuthService } from '@services/auth.service';
 import { ExpenseService } from '@services/expenses.service';
@@ -78,8 +78,7 @@ export class ExpenseFormComponent implements OnInit {
     const { description, currency } = this.expenseForm.value;
     const total = Number(this.expenseForm.value.total);
     const groupMembers = this.group.members.map((m) => m.userId);
-    const splitAmount = Number((total / groupMembers.length).toFixed(2));
-    const splits = groupMembers.map((userId) => ({ userId, amount: splitAmount }));
+    const splits = this.buildSplits(groupMembers, total);
 
     const selectedPayer = this.splitSelectorComponent.selectedPayer();
 
@@ -103,7 +102,13 @@ export class ExpenseFormComponent implements OnInit {
         void this.router.navigate(['/group', this.groupId, 'expenses']);
       },
       error: (error) => {
-        console.error('❌ Validation errors:', error.error.error.details.errors);
+        const validationErrors = error?.error?.error?.details?.errors;
+        if (validationErrors) {
+          console.error('Validation errors:', validationErrors);
+        } else {
+          console.error('Error al crear el gasto:', error);
+        }
+
         this.isSubmitting = false;
       },
     });
@@ -151,5 +156,21 @@ export class ExpenseFormComponent implements OnInit {
       default:
         this.selectedCategoryIcon = '';
     }
+  }
+
+  private buildSplits(userIds: number[], total: number): ExpenseUser[] {
+    const baseAmount = Math.floor((total / userIds.length) * 100) / 100;
+    const splits: ExpenseUser[] = [];
+    let accumulated = 0;
+    for (let i = 0; i < userIds.length; i++) {
+      if (i === userIds.length - 1) {
+        const adjustedAmount = Math.round((total - accumulated) * 100) / 100;
+        splits.push({ userId: userIds[i], amount: adjustedAmount });
+      } else {
+        splits.push({ userId: userIds[i], amount: baseAmount });
+        accumulated += baseAmount;
+      }
+    }
+    return splits;
   }
 }

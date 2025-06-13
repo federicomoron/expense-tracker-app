@@ -23,7 +23,7 @@ export class GroupDetailComponent implements OnInit {
 
   groupId = signal(Number(this.route.snapshot.paramMap.get('id')));
   group = signal<GroupDetailWithExpenses | null>(null);
-
+  loading = signal(true);
   currentUser = this.authService.currentUser;
 
   filteredMemberBalances = computed(() => {
@@ -42,11 +42,17 @@ export class GroupDetailComponent implements OnInit {
     return group.balanceSummary.filter((b) => b.amount !== 0);
   });
 
+  expenses = computed(() => this.group()?.expenses ?? []);
+
   ngOnInit() {
     this.groupService.getGroupDetail(this.groupId()).subscribe({
-      next: (data) => this.group.set(data as GroupDetailWithExpenses),
+      next: (data) => {
+        this.group.set(data as GroupDetailWithExpenses);
+        this.loading.set(false);
+      },
       error: (err) => {
         console.error('Error loading group detail', err);
+        this.loading.set(false);
       },
     });
   }
