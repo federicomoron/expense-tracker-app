@@ -1,29 +1,55 @@
-<h2>{{ group()?.name }}</h2>
+<div class="group-detail-container">
+  <h2 class="group-title">{{ group()?.name }}</h2>
 
-<ul class="balances-list">
-  @for (b of filteredSummary(); track b.currency) {
-    <li>
-      @if (b.amount > 0) {
-        💵 They owe you {{ b.amount }} {{ b.currency }}
-      } @else if (b.amount < 0) {
-        💸 You owe {{ -b.amount }} {{ b.currency }}
+  <section class="balance-summary">
+    <ul class="summary-list no-card">
+      @for (b of filteredSummary(); track b.currency) {
+        <li class="summary-item">
+          <span class="chip" [ngClass]="{ positive: b.amount > 0, negative: b.amount < 0 }">
+            @if (b.amount > 0) {
+              They owe you
+            } @else {
+              You owe
+            }
+          </span>
+          <span class="summary-amount">
+            <strong>{{ b.amount > 0 ? b.amount : (-b.amount | number: '1.2-2') }}</strong>
+            {{ b.currency }}
+          </span>
+        </li>
       }
-    </li>
-  }
+    </ul>
+  </section>
 
-  @for (mb of filteredMemberBalances(); track mb.userId) {
-    <li>
-      @if (mb.amount > 0) {
-        {{ mb.name }} owes you {{ mb.amount }} {{ mb.currency }}
-      } @else if (mb.amount < 0) {
-        You owe {{ mb.name }} {{ -mb.amount }} {{ mb.currency }}
+  <section class="member-balances">
+    <ul class="members-list no-card">
+      @for (mb of filteredMemberBalances(); track mb.userId) {
+        <li class="member-item">
+          <span class="chip" [ngClass]="{ positive: mb.amount > 0, negative: mb.amount < 0 }">
+            @if (mb.amount > 0) {
+              {{ mb.name }} owes you
+            } @else {
+              You owe {{ mb.name }}
+            }
+          </span>
+          <span class="member-amount">
+            <strong>{{ mb.amount > 0 ? mb.amount : (-mb.amount | number: '1.2-2') }}</strong>
+            {{ mb.currency }}
+          </span>
+        </li>
       }
-    </li>
-  }
-</ul>
+    </ul>
+  </section>
 
-<app-expenses></app-expenses>
+  <app-expenses [expenses]="group()?.expenses ?? []" [loading]="loading()"></app-expenses>
 
-<button mat-fab color="primary" class="new-expense-button" (click)="goToNewExpense()">
-  <mat-icon>add</mat-icon>
-</button>
+  <button
+    mat-fab
+    color="primary"
+    class="new-expense-button"
+    aria-label="Add new expense"
+    (click)="goToNewExpense()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

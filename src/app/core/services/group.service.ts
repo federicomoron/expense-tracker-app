@@ -4,7 +4,7 @@ import { map, Observable, tap } from 'rxjs';
 import { API_ENDPOINTS } from '@constants/api-endpoints';
 import { STORAGE_KEYS } from '@constants/storage-keys';
 import { environment } from '@environments/environment';
-import { GroupDetailWithExpenses } from '@models/group-detail.model';
+import { GroupDetailResponse, GroupDetailWithExpenses } from '@models/group-detail.model';
 import { GroupType } from '@models/group-type.enum';
 import { Group } from '@models/group.model';
 import { HttpService } from '@services/http.service';
@@ -55,7 +55,6 @@ export class GroupService {
     localStorage.setItem(STORAGE_KEYS.GROUPS, JSON.stringify(this._groupsSignal()));
   }
 
-  // Fetch groups from API and update state
   fetchGroups() {
     return this.http
       .get<{
@@ -100,10 +99,7 @@ export class GroupService {
 
   getGroupDetail(groupId: number): Observable<GroupDetailWithExpenses> {
     return this.http
-      .get<{
-        success: boolean;
-        data: GroupDetailWithExpenses;
-      }>(`${this.apiUrl}${API_ENDPOINTS.GET_GROUP_DETAIL(groupId)}`)
+      .get<GroupDetailResponse>(`${this.apiUrl}${API_ENDPOINTS.GET_GROUP_DETAIL(groupId)}`)
       .pipe(map((res) => res.data));
   }
 }

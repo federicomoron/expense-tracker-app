@@ -1,12 +1,37 @@
+.group-form-wrapper {
+  padding: 2rem 1.5rem;
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: #f9f9f9;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.form-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  color: var(--text-primary, #1a1a1a);
+}
+
 .group-form {
   display: flex;
   flex-direction: column;
-  padding: 1.5rem;
-  gap: 1rem;
-  max-width: 400px;
-  margin: 0 auto;
+  gap: 1.5rem;
 }
 
 .full-width {
   width: 100%;
+}
+
+.button-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  button:first-child {
+    color: var(--text-secondary, #666);
+  }
 }

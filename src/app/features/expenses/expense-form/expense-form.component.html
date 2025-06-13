@@ -1,5 +1,6 @@
-<section class="expense-form">
-  <form [formGroup]="expenseForm" (ngSubmit)="submitExpense()">
+<section class="expense-form-wrapper">
+  <h2 class="form-title">New Expense</h2>
+  <form [formGroup]="expenseForm" (ngSubmit)="submitExpense()" class="expense-form">
     <div class="field-row">
       <button
         type="button"
@@ -7,20 +8,15 @@
         (click)="openCategorySelector()"
         class="category-button"
       >
-        <img
-          *ngIf="selectedCategoryIcon"
-          [src]="selectedCategoryIcon"
-          alt="Category"
-          width="16"
-          height="16"
-        />
-        <mat-icon *ngIf="!selectedCategoryIcon" class="category-icon">category</mat-icon>
-        <span *ngIf="selectedCategoryIcon" class="category-text">
-          {{ selectedCategoryLabel }}
-        </span>
+        @if (selectedCategoryIcon) {
+          <img [src]="selectedCategoryIcon" alt="Category" width="16" height="16" />
+          <span class="category-text">{{ selectedCategoryLabel }}</span>
+        } @else {
+          <mat-icon class="category-icon">category</mat-icon>
+        }
       </button>
 
-      <mat-form-field appearance="outline" class="description-field">
+      <mat-form-field appearance="outline" class="description-field full-width">
         <mat-label>Description</mat-label>
         <input matInput formControlName="description" placeholder="Enter description" required />
       </mat-form-field>
@@ -33,13 +29,14 @@
         (click)="openCurrencySelector()"
         class="currency-button"
       >
-        <mat-icon *ngIf="!expenseForm.value.currency" class="currency-icon">attach_money</mat-icon>
-        <span *ngIf="expenseForm.value.currency" class="currency-text">{{
-          expenseForm.value.currency
-        }}</span>
+        @if (expenseForm.value.currency) {
+          <span class="currency-text">{{ expenseForm.value.currency }}</span>
+        } @else {
+          <mat-icon class="currency-icon">attach_money</mat-icon>
+        }
       </button>
 
-      <mat-form-field appearance="outline" class="total-field">
+      <mat-form-field appearance="outline" class="total-field full-width">
         <mat-label>Total</mat-label>
         <input matInput type="number" formControlName="total" placeholder="0.00" required />
       </mat-form-field>
@@ -47,13 +44,16 @@
 
     <app-split-selector [groupMembers]="group?.members || []"></app-split-selector>
 
-    <button
-      mat-raised-button
-      color="primary"
-      type="submit"
-      [disabled]="expenseForm.invalid || isSubmitting"
-    >
-      Create Expense
-    </button>
+    <div class="button-row">
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="expenseForm.invalid || isSubmitting"
+        class="full-width"
+      >
+        Create Expense
+      </button>
+    </div>
   </form>
 </section>

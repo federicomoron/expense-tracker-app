@@ -49,13 +49,10 @@ export class LoginComponent {
       error: (err) => {
         this.isLoading.set(false);
         if (err.status === 0) {
-          // Network error or unreachable server
           this.errorMessage.set('Unable to connect. Please try again later.');
         } else if (err.status === 401 || err.status === 400) {
-          // Invalid credentials
           this.errorMessage.set('Incorrect email or password.');
         } else {
-          // Unexpected error
           this.errorMessage.set('An unexpected error occurred.');
         }
       },

@@ -1,8 +1,12 @@
-import { Component, computed, OnInit, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterModule } from '@angular/router';
+import { forkJoin } from 'rxjs';
 
+import { GroupDetailWithExpenses } from '@app/core/models/group-detail.model';
+import { AuthService } from '@app/core/services/auth.service';
 import { environment } from '@environments/environment';
 import { GroupFormComponent } from '@features/groups/group-form/group-form.component';
 import { GroupType } from '@models/group-type.enum';
@@ -12,13 +16,26 @@ import { SharedUiModule } from '@shared/shared-ui.module';
 @Component({
   selector: 'app-groups',
   standalone: true,
-  imports: [SharedUiModule, RouterModule],
+  imports: [SharedUiModule, RouterModule, CommonModule],
   templateUrl: './groups.component.html',
   styleUrl: './groups.component.scss',
 })
 export class GroupsComponent implements OnInit {
   readonly showForm = signal(false);
   readonly groups = computed(() => this.groupService.groups());
+
+  private _groupDetails = signal<Record<number, GroupDetailWithExpenses>>({});
+  readonly groupDetailsMap = this._groupDetails;
+
+  private authService = inject(AuthService);
+  readonly currentUser = this.authService.currentUser;
+  readonly currentUserId = this.currentUser()?.id ?? 0;
+
+  getGroupDetails = (id: number) =>
+    computed(() => {
+      const detail = this._groupDetails()[id];
+      return detail ?? undefined;
+    });
 
   constructor(
     private groupService: GroupService,
@@ -27,8 +44,28 @@ export class GroupsComponent implements OnInit {
     private dialog: MatDialog,
   ) {}
 
+  loadGroupDetails() {
+    const groups = this.groups();
+    if (groups.length === 0) return;
+    const requests = groups.map((g) => this.groupService.getGroupDetail(g.id));
+    forkJoin(requests).subscribe((details) => {
+      const detailsMap: Record<number, GroupDetailWithExpenses> = {};
+      details.forEach((detail) => {
+        detailsMap[detail.id] = detail;
+      });
+      this._groupDetails.set(detailsMap);
+    });
+  }
+
   ngOnInit(): void {
-    this.groupService.fetchGroups().subscribe();
+    this.groupService.fetchGroups().subscribe({
+      next: () => {
+        this.loadGroupDetails();
+      },
+      error: (err) => {
+        console.error('Error fetching groups', err);
+      },
+    });
   }
 
   addGroup(data: { name: string; type: GroupType }) {

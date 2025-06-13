@@ -17,10 +17,4 @@ export class ExpenseService {
       expense,
     );
   }
-
-  // getExpensesByGroupId(groupId: number): Observable<ExpenseResponse[]> {
-  //   return this.http.get<ExpenseResponse[]>(
-  //     `${this.apiUrl}${API_ENDPOINTS.GET_EXPENSES_BY_GROUP(groupId)}`
-  //   );
-  // }
 }
