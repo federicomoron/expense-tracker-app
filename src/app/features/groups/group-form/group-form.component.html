@@ -1,36 +1,52 @@
-<div class="group-form-wrapper">
-  <h2 class="form-title">Create a new group</h2>
+<div class="group-screen">
+  <div class="main-content-bg">
+    <mat-toolbar color="primary" class="group-form-toolbar">
+      <button mat-icon-button (click)="onCancel()" aria-label="Back">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+
+      <span class="toolbar-title">Create group</span>
+
+      <span class="spacer"></span>
+
+      <button
+        mat-icon-button
+        (click)="onSubmit($event)"
+        [disabled]="isNameInvalid()"
+        aria-label="Save"
+      >
+        <mat-icon>check</mat-icon>
+      </button>
+    </mat-toolbar>
+  </div>
+
   <form (submit)="onSubmit($event)" class="group-form" autocomplete="off">
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Group Name</mat-label>
-      <mat-icon matPrefix>group</mat-icon>
+    <div class="field-row">
+      <button type="button" class="icon-button" disabled>
+        <mat-icon>group</mat-icon>
+      </button>
+
       <input
-        matInput
+        type="text"
         [value]="name()"
         (input)="onNameInput($event)"
-        placeholder="e.g. Friends Trip"
+        class="flat-input full-width"
+        placeholder="Group Name"
       />
-      @if (isNameInvalid()) {
-        <mat-error>The name is required</mat-error>
-      }
-    </mat-form-field>
+    </div>
 
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Group Type</mat-label>
-      <mat-icon matPrefix>category</mat-icon>
-      <mat-select [value]="type()" (selectionChange)="onTypeChange($event)">
-        @for (option of groupTypeOptions; track option.value) {
-          <mat-option [value]="option.value">{{ option.label }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-
-    <div class="button-row">
-      <button mat-button type="button" (click)="onCancel()">Cancel</button>
-
-      <button mat-flat-button color="primary" type="submit" [disabled]="isNameInvalid()">
-        Create
+    <div class="field-row">
+      <button type="button" class="icon-button" disabled>
+        <mat-icon>category</mat-icon>
       </button>
+
+      <mat-form-field appearance="fill" class="flat-select full-width">
+        <mat-select [value]="type()" (selectionChange)="onTypeChange($event)">
+          @for (option of groupTypeOptions; track option.value) {
+            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
     </div>
   </form>
 </div>

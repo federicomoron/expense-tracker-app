@@ -14,8 +14,10 @@ import { SharedUiModule } from '@shared/shared-ui.module';
 export class SplitTypeDialogComponent {
   private dialogRef = inject(MatDialogRef<SplitTypeDialogComponent>);
   options = signal(['Equally', 'Unequally']);
+  selectedOption = signal<string | null>(null);
 
   choose(option: string): void {
+    this.selectedOption.set(option);
     this.dialogRef.close(option);
   }
 

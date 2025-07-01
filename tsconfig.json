@@ -26,6 +26,7 @@
       "@services/*": ["src/app/core/services/*"],
       "@features/*": ["src/app/features/*"],
       "@models/*": ["src/app/core/models/*"],
+      "@routes/*": ["src/app/routes/*"],
       "@constants/*": ["src/app/core/constants/*"]
     }
   },

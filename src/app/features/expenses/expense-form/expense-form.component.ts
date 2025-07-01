@@ -83,7 +83,7 @@ export class ExpenseFormComponent implements OnInit {
     const selectedPayer = this.splitSelectorComponent.selectedPayer();
 
     if (!selectedPayer) {
-      console.error('❌ No hay pagador seleccionado');
+      // console.error('❌ No hay pagador seleccionado');
       return;
     }
 
@@ -172,5 +172,15 @@ export class ExpenseFormComponent implements OnInit {
       }
     }
     return splits;
+  }
+
+  goBack() {
+    if (!this.groupId || isNaN(this.groupId)) {
+      console.error('❌ groupId is invalid:', this.groupId);
+      void this.router.navigate(['/group']);
+      return;
+    }
+
+    void this.router.navigate(['/group', this.groupId]);
   }
 }

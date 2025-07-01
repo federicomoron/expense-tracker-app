@@ -104,4 +104,8 @@ export class GroupsComponent implements OnInit {
   goToGroup(id: number) {
     void this.router.navigate(['/group', id]);
   }
+
+  goToNewGroup() {
+    void this.router.navigateByUrl('/group/new');
+  }
 }

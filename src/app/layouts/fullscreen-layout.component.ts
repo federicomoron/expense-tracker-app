@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
   standalone: true,
+  selector: 'fullscreen-layout',
   imports: [RouterOutlet],
-  template: `<router-outlet />`,
+  template: ` <router-outlet /> `,
 })
-export class AppComponent {}
+export class FullscreenLayoutComponent {}
