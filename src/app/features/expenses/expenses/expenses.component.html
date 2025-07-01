@@ -1,22 +1,31 @@
 @if (loading) {
-  <div>Loading expenses...</div>
+  <div class="loading">Loading expenses...</div>
 } @else {
   @if (expenses.length === 0) {
-    <div>No expenses recorded.</div>
+    <div class="empty">No expenses recorded.</div>
   } @else {
     <div class="expenses-list">
-      @for (exp of expenses; track exp.id) {
-        <div class="expense-item">
-          <div class="expense-date">
-            {{ exp.createdAt | date: 'dd' }}<br />
-            {{ exp.createdAt | date: 'MMM' }}
+      @for (entry of groupedExpenses; track entry[0]) {
+        <div class="month-header">{{ entry[0] }}</div>
+
+        @for (exp of entry[1]; track exp.id) {
+          <div class="expense-row">
+            <div class="expense-date">
+              {{ exp.createdAt | date: 'dd' }}<br />
+              {{ exp.createdAt | date: 'MMM' }}
+            </div>
+
+            <div class="expense-icon">
+              <img [src]="getCategoryIcon(exp.description || '')" alt="icon" />
+            </div>
+
+            <div class="expense-info">
+              <div class="expense-description">{{ exp.description }}</div>
+            </div>
+
+            <div class="expense-amount">{{ exp.total | number: '1.2-2' }} {{ exp.currency }}</div>
           </div>
-          <img [src]="getCategoryIcon(exp.description || '')" class="expense-icon" alt="icon" />
-          <div class="expense-info">
-            <div class="expense-name">{{ exp.description }}</div>
-          </div>
-          <div class="expense-amount">{{ exp.total | number: '1.2-2' }} {{ exp.currency }}</div>
-        </div>
+        }
       }
     </div>
   }

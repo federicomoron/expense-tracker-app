@@ -24,7 +24,6 @@ export class ExpensesComponent {
     for (const exp of this.expenses) {
       const month = new Date(exp.createdAt).toLocaleString('default', {
         month: 'long',
-        year: 'numeric',
       });
       if (!map.has(month)) {
         map.set(month, []);

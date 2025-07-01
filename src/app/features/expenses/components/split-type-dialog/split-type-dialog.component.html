@@ -8,7 +8,7 @@
 
   <mat-nav-list>
     @for (option of options(); track option) {
-      <mat-list-item (click)="choose(option)">
+      <mat-list-item (click)="choose(option)" [class.selected]="selectedOption() === option">
         <span class="option-name">{{ option }}</span>
       </mat-list-item>
     }

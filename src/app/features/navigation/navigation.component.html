@@ -17,11 +17,8 @@
       <button mat-icon-button (click)="drawer.toggle()" aria-label="Toggle menu">
         <mat-icon>menu</mat-icon>
       </button>
-      <!-- <span>Expense Tracker</span> -->
     </mat-toolbar>
 
-    <div class="content">
-      <router-outlet></router-outlet>
-    </div>
+    <ng-content></ng-content>
   </mat-sidenav-content>
 </mat-sidenav-container>

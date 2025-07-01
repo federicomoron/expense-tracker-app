@@ -13,7 +13,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
   styleUrls: ['./navigation.component.scss'],
 })
 export class NavigationComponent {
-  constructor(public authService: AuthService) {}
+  public authService = inject(AuthService);
 
   logout() {
     this.authService.logout();

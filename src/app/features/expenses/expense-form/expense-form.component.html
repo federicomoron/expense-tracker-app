@@ -1,59 +1,53 @@
-<section class="expense-form-wrapper">
-  <h2 class="form-title">New Expense</h2>
-  <form [formGroup]="expenseForm" (ngSubmit)="submitExpense()" class="expense-form">
-    <div class="field-row">
-      <button
-        type="button"
-        mat-icon-button
-        (click)="openCategorySelector()"
-        class="category-button"
-      >
-        @if (selectedCategoryIcon) {
-          <img [src]="selectedCategoryIcon" alt="Category" width="16" height="16" />
-          <span class="category-text">{{ selectedCategoryLabel }}</span>
-        } @else {
-          <mat-icon class="category-icon">category</mat-icon>
-        }
+<div class="expense-screen">
+  <div class="expense-header-wrapper">
+    <mat-toolbar color="primary" class="expense-form-toolbar">
+      <button mat-icon-button (click)="goBack()" aria-label="Back">
+        <mat-icon>arrow_back</mat-icon>
       </button>
 
-      <mat-form-field appearance="outline" class="description-field full-width">
-        <mat-label>Description</mat-label>
-        <input matInput formControlName="description" placeholder="Enter description" required />
-      </mat-form-field>
+      <span class="toolbar-title">Add Expense</span>
+
+      <span class="spacer"></span>
+
+      <button
+        mat-icon-button
+        (click)="submitExpense()"
+        [disabled]="expenseForm.invalid || isSubmitting"
+        aria-label="Save"
+      >
+        <mat-icon>check</mat-icon>
+      </button>
+    </mat-toolbar>
+  </div>
+
+  <form [formGroup]="expenseForm" class="expense-form" (ngSubmit)="submitExpense()">
+    <div class="field-row">
+      <button type="button" class="icon-button" (click)="openCategorySelector()">
+        <mat-icon>receipt</mat-icon>
+      </button>
+
+      <input
+        type="text"
+        formControlName="description"
+        class="flat-input full-width"
+        placeholder="Enter a description"
+      />
     </div>
 
     <div class="field-row">
-      <button
-        mat-icon-button
-        type="button"
-        (click)="openCurrencySelector()"
-        class="currency-button"
-      >
-        @if (expenseForm.value.currency) {
-          <span class="currency-text">{{ expenseForm.value.currency }}</span>
-        } @else {
-          <mat-icon class="currency-icon">attach_money</mat-icon>
-        }
+      <button type="button" class="icon-button" (click)="openCurrencySelector()">
+        <span class="currency-label">{{ expenseForm.value.currency || '$' }}</span>
       </button>
 
-      <mat-form-field appearance="outline" class="total-field full-width">
-        <mat-label>Total</mat-label>
-        <input matInput type="number" formControlName="total" placeholder="0.00" required />
-      </mat-form-field>
+      <input
+        type="number"
+        inputmode="numeric"
+        formControlName="total"
+        class="flat-input full-width"
+        placeholder="0.00"
+      />
     </div>
 
     <app-split-selector [groupMembers]="group?.members || []"></app-split-selector>
-
-    <div class="button-row">
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="expenseForm.invalid || isSubmitting"
-        class="full-width"
-      >
-        Create Expense
-      </button>
-    </div>
   </form>
-</section>
+</div>

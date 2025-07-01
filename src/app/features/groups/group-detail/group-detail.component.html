@@ -13,7 +13,7 @@
             }
           </span>
           <span class="summary-amount">
-            <strong>{{ b.amount > 0 ? b.amount : (-b.amount | number: '1.2-2') }}</strong>
+            <strong>{{ (b.amount > 0 ? b.amount : -b.amount) | number: '1.2-2' }}</strong>
             {{ b.currency }}
           </span>
         </li>
