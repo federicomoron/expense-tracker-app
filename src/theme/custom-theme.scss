@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+@use 'sass:map';
 
 $primary: mat.m2-define-palette(mat.$m2-teal-palette);
 $accent: mat.m2-define-palette(mat.$m2-blue-palette);
@@ -15,3 +16,9 @@ $theme: mat.m2-define-light-theme(
 );
 
 @include mat.all-component-themes($theme);
+
+:root {
+  --app-primary: #{map.get($primary, 500)};
+  --app-accent: #{map.get($accent, 500)};
+  --app-warn: #{map.get($warn, 500)};
+}
