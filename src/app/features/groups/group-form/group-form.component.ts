@@ -34,7 +34,7 @@ export class GroupFormComponent {
       })
       .subscribe({
         next: () => {
-          void this.router.navigate(['/group']);
+          void this.router.navigate(['/groups']);
         },
         error: () => {
           this.snackBar.open('Error creating group', 'Close', {
@@ -45,7 +45,7 @@ export class GroupFormComponent {
   }
 
   onCancel() {
-    void this.router.navigate(['/group']);
+    void this.router.navigate(['/groups']);
   }
 
   onNameInput(event: Event) {

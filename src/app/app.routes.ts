@@ -7,7 +7,7 @@ import { FullscreenLayoutComponent } from './layouts/fullscreen-layout.component
 
 export const routes: Routes = [
   {
-    path: 'group/new',
+    path: 'groups/new',
     component: FullscreenLayoutComponent,
     children: [
       {
@@ -23,30 +23,25 @@ export const routes: Routes = [
     path: '',
     component: AppLayoutComponent,
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'group' },
+      { path: '', pathMatch: 'full', redirectTo: 'groups' },
       {
-        path: 'group',
+        path: 'groups',
         canActivate: [authGuard],
         loadChildren: () => import('@features/groups/groups.routes').then((m) => m.default),
       },
       {
-        path: 'login',
-        loadChildren: () => import('@features/auth/login/login.routes').then((m) => m.default),
-      },
-      {
-        path: 'register',
-        loadChildren: () =>
-          import('@features/auth/register/register.routes').then((m) => m.default),
+        path: '',
+        loadChildren: () => import('@features/auth/auth.routes').then((m) => m.default),
       },
     ],
   },
   {
-    path: 'expenses',
+    path: 'groups/:groupId/expenses',
     component: FullscreenLayoutComponent,
     loadChildren: () => import('@features/expenses/expenses.routes').then((m) => m.default),
   },
   {
     path: '**',
-    redirectTo: 'group',
+    redirectTo: 'groups',
   },
 ];

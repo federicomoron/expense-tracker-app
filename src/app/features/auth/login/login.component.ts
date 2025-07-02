@@ -41,7 +41,7 @@ export class LoginComponent {
       next: (res) => {
         this.isLoading.set(false);
         if (res && res.success) {
-          void this.router.navigate(['/group']);
+          void this.router.navigate(['/groups']);
         } else {
           this.errorMessage.set('Incorrect email or password.');
         }
@@ -76,7 +76,7 @@ export class LoginComponent {
   onGoogleLogin() {
     this.authService.login('google_user@example.com', 'fakepassword').subscribe((res) => {
       if (res && res.success) {
-        void this.router.navigate(['/group']);
+        void this.router.navigate(['/groups']);
       } else {
         alert('Error with Google login');
       }

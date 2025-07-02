@@ -16,7 +16,7 @@ export const groupGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   const groupId = idParam ? Number(idParam) : NaN;
 
   if (!userEmail || isNaN(groupId)) {
-    void router.navigate(['/group']);
+    void router.navigate(['/groups']);
     return of(false);
   }
 
@@ -26,13 +26,13 @@ export const groupGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
       const belongsToGroup = groups.some((g) => g.id === groupId);
 
       if (!belongsToGroup) {
-        void router.navigate(['/group']);
+        void router.navigate(['/groups']);
       }
 
       return belongsToGroup;
     }),
     catchError(() => {
-      void router.navigate(['/group']);
+      void router.navigate(['/groups']);
       return of(false);
     }),
   );
