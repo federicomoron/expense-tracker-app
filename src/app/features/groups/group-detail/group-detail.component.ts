@@ -58,6 +58,6 @@ export class GroupDetailComponent implements OnInit {
   }
 
   goToNewExpense() {
-    void this.router.navigate(['/expenses/new', this.groupId()]);
+    void this.router.navigate(['/groups', this.groupId(), 'expenses', 'new']);
   }
 }

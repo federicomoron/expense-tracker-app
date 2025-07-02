@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'new/:groupId',
+    path: 'new',
     loadComponent: () =>
       import('./expense-form/expense-form.component').then((m) => m.ExpenseFormComponent),
   },

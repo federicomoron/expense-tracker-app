@@ -83,7 +83,7 @@ export class ExpenseFormComponent implements OnInit {
     const selectedPayer = this.splitSelectorComponent.selectedPayer();
 
     if (!selectedPayer) {
-      // console.error('❌ No hay pagador seleccionado');
+      console.warn('⚠️ No payer selected – expense not submitted');
       return;
     }
 
@@ -99,7 +99,7 @@ export class ExpenseFormComponent implements OnInit {
     this.isSubmitting = true;
     this.expenseService.createExpense(expense).subscribe({
       next: () => {
-        void this.router.navigate(['/group', this.groupId, 'expenses']);
+        void this.router.navigate(['/groups', this.groupId, 'expenses']);
       },
       error: (error) => {
         const validationErrors = error?.error?.error?.details?.errors;
@@ -175,12 +175,11 @@ export class ExpenseFormComponent implements OnInit {
   }
 
   goBack() {
-    if (!this.groupId || isNaN(this.groupId)) {
-      console.error('❌ groupId is invalid:', this.groupId);
-      void this.router.navigate(['/group']);
+    if (isNaN(this.groupId)) {
+      console.warn('⚠️ Invalid groupId on goBack');
+      void this.router.navigate(['/groups']);
       return;
     }
-
-    void this.router.navigate(['/group', this.groupId]);
+    void this.router.navigate(['/groups', this.groupId]);
   }
 }
