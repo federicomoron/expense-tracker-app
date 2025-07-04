@@ -8,7 +8,7 @@ import { CategorySelectorComponent } from '@features/expenses/components/categor
 import { CurrencySelectorComponent } from '@features/expenses/components/currency-selector/currency-selector.component';
 import { SplitSelectorComponent } from '@features/expenses/components/split-selector/split-selector.component';
 import { ExpenseRequest, ExpenseUser } from '@models/expenses.model';
-import { GroupDetail } from '@models/group-detail.model';
+import { GroupDetail, GroupMember } from '@models/group-detail.model';
 import { AuthService } from '@services/auth.service';
 import { ExpenseService } from '@services/expenses.service';
 import { GroupService } from '@services/group.service';
@@ -35,12 +35,19 @@ export class ExpenseFormComponent implements OnInit {
 
   groupId!: number;
   group: GroupDetail | null = null;
+  expenseId: number | null = null;
+  isEditMode = false;
 
   expenseForm: FormGroup = this.fb.group({
     description: ['', Validators.required],
     total: [null, [Validators.required, Validators.min(0.01)]],
     currency: ['USD', Validators.required],
+    date: [new Date(), Validators.required],
   });
+
+  get members(): GroupMember[] {
+    return this.group?.members ?? [];
+  }
 
   selectedCategory: string = '';
   selectedCategoryIcon: string = '';
@@ -48,11 +55,24 @@ export class ExpenseFormComponent implements OnInit {
   isSubmitting = false;
 
   ngOnInit() {
-    const groupIdParam = this.route.snapshot.paramMap.get('groupId');
+    const expenseIdParam = this.route.snapshot.paramMap.get('expenseId');
+    this.expenseId = expenseIdParam ? +expenseIdParam : null;
+    this.isEditMode = !!this.expenseId;
+
+    if (this.isEditMode) {
+      console.warn('🛠 Edit mode enabled – waiting API support for GET + PUT');
+    }
+
+    let parentRoute = this.route;
+    let groupIdParam: string | null = null;
+    while (parentRoute && !groupIdParam) {
+      groupIdParam = parentRoute.snapshot.paramMap.get('groupId');
+      parentRoute = parentRoute.parent!;
+    }
     this.groupId = groupIdParam ? +groupIdParam : NaN;
 
     if (isNaN(this.groupId)) {
-      console.error('❌ Invalid groupId');
+      console.warn('⚠️ Invalid groupId');
       return;
     }
 
@@ -61,7 +81,7 @@ export class ExpenseFormComponent implements OnInit {
         this.group = group;
       },
       error: (err) => {
-        console.error('❌ Error loading group:', err);
+        console.error('[ExpenseForm] Error loading group:', err);
       },
     });
   }
@@ -75,7 +95,17 @@ export class ExpenseFormComponent implements OnInit {
       return;
     }
 
-    const { description, currency } = this.expenseForm.value;
+    const { description, currency, date } = this.expenseForm.value;
+    let isoDate: string | undefined;
+    if (typeof date === 'string') {
+      const [year, month, day] = date.split('-').map(Number);
+      const localDate = new Date(year, month - 1, day, 12, 0, 0);
+      isoDate = localDate.toISOString();
+    } else if (date instanceof Date) {
+      isoDate = date.toISOString();
+    } else {
+      isoDate = undefined;
+    }
     const total = Number(this.expenseForm.value.total);
     const groupMembers = this.group.members.map((m) => m.userId);
     const splits = this.buildSplits(groupMembers, total);
@@ -92,14 +122,19 @@ export class ExpenseFormComponent implements OnInit {
       description,
       total,
       currency,
+      date: isoDate,
       paidBy: [{ userId: selectedPayer.userId, amount: total }],
       splits,
     };
 
     this.isSubmitting = true;
-    this.expenseService.createExpense(expense).subscribe({
+    const obs$ = this.isEditMode
+      ? this.expenseService.updateExpense(this.expenseId!, expense)
+      : this.expenseService.createExpense(expense);
+
+    obs$.subscribe({
       next: () => {
-        void this.router.navigate(['/groups', this.groupId, 'expenses']);
+        void this.router.navigate(['/groups', this.groupId]);
       },
       error: (error) => {
         const validationErrors = error?.error?.error?.details?.errors;
@@ -147,7 +182,7 @@ export class ExpenseFormComponent implements OnInit {
       case 'Food':
         this.selectedCategoryIcon = 'assets/food.svg';
         break;
-      case 'water':
+      case 'Water':
         this.selectedCategoryIcon = 'assets/water.svg';
         break;
       case 'Rent':

@@ -22,6 +22,11 @@ export class SplitSelectorComponent {
   private dialog = inject(MatDialog);
 
   openPaidByDialog() {
+    if (!this.groupMembers || this.groupMembers.length === 0) {
+      console.warn('⚠️ No group members available');
+      return;
+    }
+
     const dialogRef = this.dialog.open(PaidByDialogComponent, {
       width: '100vw',
       height: '100vh',

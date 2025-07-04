@@ -23,4 +23,13 @@ export class HttpService {
       }),
     );
   }
+
+  put<T, U>(url: string, body: U, options = {}): Observable<T> {
+    return this.http.put<T>(url, body, options).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('[HTTP PUT error]', error);
+        return throwError(() => error);
+      }),
+    );
+  }
 }

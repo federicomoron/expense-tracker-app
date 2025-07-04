@@ -1,11 +1,13 @@
 <div class="selector-buttons">
-  <button class="selector-button" (click)="openPaidByDialog()">
-    <mat-icon>person</mat-icon>
-    <span>Paid by: {{ selectedPayer()?.name || 'Select' }}</span>
-  </button>
+  @if (groupMembers && groupMembers.length > 0) {
+    <button class="selector-button" (click)="openPaidByDialog()">
+      <mat-icon>person</mat-icon>
+      <span>Paid by: {{ selectedPayer()?.name || 'Select' }}</span>
+    </button>
 
-  <button class="selector-button" (click)="openSplitTypeDialog()">
-    <mat-icon>call_split</mat-icon>
-    <span>Split: {{ selectedSplitType() || 'Select' }}</span>
-  </button>
+    <button class="selector-button" (click)="openSplitTypeDialog()">
+      <mat-icon>call_split</mat-icon>
+      <span>Split: {{ selectedSplitType() || 'Select' }}</span>
+    </button>
+  }
 </div>
