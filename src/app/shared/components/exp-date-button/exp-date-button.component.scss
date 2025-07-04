@@ -1,0 +1,21 @@
+.hidden-date-field {
+  display: none;
+}
+
+.calendar-fab {
+  position: fixed;
+  bottom: 80px;
+  right: 24px;
+  background-color: white;
+  color: var(--app-primary);
+  border: 1px solid var(--app-border);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  z-index: 10;
+
+  mat-icon {
+    font-size: 24px;
+  }
+}
