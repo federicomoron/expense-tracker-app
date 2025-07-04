@@ -23,7 +23,11 @@
   <form [formGroup]="expenseForm" class="expense-form" (ngSubmit)="submitExpense()">
     <div class="field-row">
       <button type="button" class="icon-button" (click)="openCategorySelector()">
-        <mat-icon>receipt</mat-icon>
+        @if (selectedCategoryIcon) {
+          <img [src]="selectedCategoryIcon" alt="Category Icon" width="24" height="24" />
+        } @else {
+          <mat-icon>receipt</mat-icon>
+        }
       </button>
 
       <input
@@ -50,4 +54,9 @@
 
     <app-split-selector [groupMembers]="group?.members || []"></app-split-selector>
   </form>
+
+  <app-exp-date-button
+    [value]="expenseForm.value.date"
+    (valueChange)="expenseForm.get('date')?.setValue($event)"
+  ></app-exp-date-button>
 </div>
