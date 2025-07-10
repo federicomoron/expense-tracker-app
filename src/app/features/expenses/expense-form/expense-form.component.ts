@@ -4,20 +4,30 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { SnackbarService } from '@app/core/services/snackbar.service';
 import { CategorySelectorComponent } from '@features/expenses/components/category-selector/category-selector.component';
 import { CurrencySelectorComponent } from '@features/expenses/components/currency-selector/currency-selector.component';
 import { SplitSelectorComponent } from '@features/expenses/components/split-selector/split-selector.component';
+import { FooterComponent } from '@features/footer/footer.component';
 import { ExpenseRequest, ExpenseUser } from '@models/expenses.model';
 import { GroupDetail, GroupMember } from '@models/group-detail.model';
 import { AuthService } from '@services/auth.service';
 import { ExpenseService } from '@services/expenses.service';
 import { GroupService } from '@services/group.service';
+import { ExpDateButtonComponent } from '@shared/components/exp-date-button/exp-date-button.component';
 import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
   selector: 'app-expense-form',
   standalone: true,
-  imports: [ReactiveFormsModule, SharedUiModule, CommonModule, SplitSelectorComponent],
+  imports: [
+    ReactiveFormsModule,
+    SharedUiModule,
+    CommonModule,
+    SplitSelectorComponent,
+    FooterComponent,
+    ExpDateButtonComponent,
+  ],
   templateUrl: './expense-form.component.html',
   styleUrl: './expense-form.component.scss',
 })
@@ -29,9 +39,12 @@ export class ExpenseFormComponent implements OnInit {
   private router = inject(Router);
   private dialog = inject(MatDialog);
   private groupService = inject(GroupService);
+  private snackbar = inject(SnackbarService);
 
   @ViewChild(SplitSelectorComponent)
   splitSelectorComponent!: SplitSelectorComponent;
+  @ViewChild('dateButton')
+  dateButtonComponent!: ExpDateButtonComponent;
 
   groupId!: number;
   group: GroupDetail | null = null;
@@ -82,6 +95,7 @@ export class ExpenseFormComponent implements OnInit {
       },
       error: (err) => {
         console.error('[ExpenseForm] Error loading group:', err);
+        this.snackbar.show('Failed to load group. Please try again later.');
       },
     });
   }
@@ -216,5 +230,22 @@ export class ExpenseFormComponent implements OnInit {
       return;
     }
     void this.router.navigate(['/groups', this.groupId]);
+  }
+
+  get expenseDateForFooter(): Date {
+    const val = this.expenseForm.value.date;
+    if (val instanceof Date) return val;
+    if (typeof val === 'string') return new Date(val);
+    return new Date();
+  }
+
+  setExpenseDate(date: Date) {
+    this.expenseForm.get('date')?.setValue(date);
+  }
+
+  openDateSelector() {
+    if (this.dateButtonComponent) {
+      this.dateButtonComponent.openPicker();
+    }
   }
 }

@@ -3,17 +3,19 @@ import { RouterOutlet } from '@angular/router';
 
 import { ApiStatusService } from '@app/core/services/api-status.service';
 import { SnackbarService } from '@app/core/services/snackbar.service';
-import { NavigationComponent } from '@app/features/navigation/navigation.component';
+import { FooterComponent } from '@app/features/footer/footer.component';
 
 @Component({
   standalone: true,
   selector: 'app-layout',
-  imports: [RouterOutlet, NavigationComponent],
+  imports: [RouterOutlet, FooterComponent],
   template: `
-    <app-navigation>
+    <div class="main-content-bg">
       <router-outlet />
-    </app-navigation>
+    </div>
+    <app-footer />
   `,
+  styleUrls: ['./app-layout.component.scss'],
 })
 export class AppLayoutComponent {
   constructor(
