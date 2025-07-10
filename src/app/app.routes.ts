@@ -30,6 +30,12 @@ export const routes: Routes = [
         loadChildren: () => import('@features/groups/groups.routes').then((m) => m.default),
       },
       {
+        path: 'account',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('@features/account/account.component').then((m) => m.AccountComponent),
+      },
+      {
         path: '',
         loadChildren: () => import('@features/auth/auth.routes').then((m) => m.default),
       },

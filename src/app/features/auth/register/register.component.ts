@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
+import { SnackbarService } from '@app/core/services/snackbar.service';
 import { UserService } from '@services/user.service';
 import { SharedUiModule } from '@shared/shared-ui.module';
 
@@ -16,7 +16,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
 export class RegisterComponent {
   private fb = inject(FormBuilder);
   private router = inject(Router);
-  private snackBar = inject(MatSnackBar);
+  private snackbar = inject(SnackbarService);
   private userService = inject(UserService);
 
   form: FormGroup = this.fb.group({
@@ -27,9 +27,7 @@ export class RegisterComponent {
 
   onSubmit(): void {
     if (this.form.invalid) {
-      this.snackBar.open('Please complete all fields correctly.', 'Close', {
-        duration: 3000,
-      });
+      this.snackbar.show('Please complete all fields correctly.');
       return;
     }
 
@@ -37,26 +35,18 @@ export class RegisterComponent {
     this.userService.register(data).subscribe({
       next: (res) => {
         if (!res.success || !res.data?.email) {
-          this.snackBar.open('There was a problem with the registration.', 'Close', {
-            duration: 3000,
-          });
+          this.snackbar.show('There was a problem with the registration.');
           return;
         }
 
-        this.snackBar.open('Registration successful! Redirecting to login...', 'Close', {
-          duration: 3000,
-        });
+        this.snackbar.show('Registration successful! Redirecting to login...');
         setTimeout(() => void this.router.navigateByUrl('/login'), 2000);
       },
       error: (err) => {
         if (err.status === 409) {
-          this.snackBar.open('The email is already registered.', 'Close', {
-            duration: 3000,
-          });
+          this.snackbar.show('The email is already registered.');
         } else {
-          this.snackBar.open('Error during registration. Please try again.', 'Close', {
-            duration: 3000,
-          });
+          this.snackbar.show('Error during registration. Please try again.');
         }
       },
     });

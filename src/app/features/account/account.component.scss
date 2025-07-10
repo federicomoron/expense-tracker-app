@@ -1,0 +1,85 @@
+.account-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 3.5rem;
+}
+
+.account-panel {
+  width: 100%;
+  max-width: 400px;
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.account-header {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 1.2rem;
+}
+
+.account-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #e3e6ea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.account-header-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.account-name {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 0.2rem;
+}
+
+.account-email {
+  font-size: 0.98rem;
+  color: #666;
+  word-break: break-all;
+}
+
+.account-divider {
+  margin: 0.5rem 0 0.7rem 0;
+}
+
+.account-list {
+  background: transparent;
+  .mat-list-item {
+    border-radius: 8px;
+    margin-bottom: 0.2rem;
+    transition: background 0.15s;
+    &:hover {
+      background: #f0f4fa;
+    }
+    .mat-icon {
+      color: var(--app-primary, #1976d2);
+    }
+    &.logout-list-item {
+      color: #c62828;
+      .mat-icon {
+        color: #c62828;
+      }
+    }
+  }
+}

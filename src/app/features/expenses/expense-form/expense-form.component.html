@@ -53,10 +53,13 @@
     </div>
 
     <app-split-selector [groupMembers]="group?.members || []"></app-split-selector>
+
+    <app-exp-date-button
+      #dateButton
+      [value]="expenseForm.value.date"
+      (valueChange)="expenseForm.get('date')?.setValue($event)"
+    ></app-exp-date-button>
   </form>
 
-  <app-exp-date-button
-    [value]="expenseForm.value.date"
-    (valueChange)="expenseForm.get('date')?.setValue($event)"
-  ></app-exp-date-button>
+  <app-footer [calendarOnly]="true" (calendarClick)="openDateSelector()"></app-footer>
 </div>

@@ -22,3 +22,12 @@ $theme: mat.m2-define-light-theme(
   --app-accent: #{map.get($accent, 500)};
   --app-warn: #{map.get($warn, 500)};
 }
+
+.app-snackbar {
+  background-color: var(--app-primary);
+  color: white;
+  font-weight: 500;
+  font-size: 0.875rem;
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow);
+}

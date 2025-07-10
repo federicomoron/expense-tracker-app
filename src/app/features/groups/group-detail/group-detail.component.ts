@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { SnackbarService } from '@app/core/services/snackbar.service';
 import { ExpensesComponent } from '@features/expenses/expenses/expenses.component';
 import { GroupDetailWithExpenses } from '@models/group-detail.model';
 import { AuthService } from '@services/auth.service';
@@ -20,6 +21,7 @@ export class GroupDetailComponent implements OnInit {
   private router = inject(Router);
   private groupService = inject(GroupService);
   private authService = inject(AuthService);
+  private snackbar = inject(SnackbarService);
 
   groupId = signal(Number(this.route.snapshot.paramMap.get('id')));
   group = signal<GroupDetailWithExpenses | null>(null);
@@ -53,6 +55,7 @@ export class GroupDetailComponent implements OnInit {
       error: (err) => {
         console.error('Error loading group detail', err);
         this.loading.set(false);
+        this.snackbar.show('Could not load group details. Try again later.');
       },
     });
   }

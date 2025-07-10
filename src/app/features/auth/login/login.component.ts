@@ -1,6 +1,7 @@
 import { Component, computed, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
+import { SnackbarService } from '@app/core/services/snackbar.service';
 import { AuthService } from '@services/auth.service';
 import { ExpButtonComponent } from '@shared/components/exp-button/exp-button.component';
 import { SharedUiModule } from '@shared/shared-ui.module';
@@ -22,6 +23,7 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
+    private snackbar: SnackbarService,
   ) {}
 
   isFormInvalid = computed(() => this.email().trim() === '' || this.password().trim() === '');
@@ -40,20 +42,20 @@ export class LoginComponent {
     this.authService.login(this.email(), this.password()).subscribe({
       next: (res) => {
         this.isLoading.set(false);
-        if (res && res.success) {
+        if (res?.success) {
           void this.router.navigate(['/groups']);
         } else {
-          this.errorMessage.set('Incorrect email or password.');
+          this.snackbar.show('Incorrect email or password.');
         }
       },
       error: (err) => {
         this.isLoading.set(false);
         if (err.status === 0) {
-          this.errorMessage.set('Unable to connect. Please try again later.');
+          this.snackbar.show('🚨 API is not reachable. Please try again later.');
         } else if (err.status === 401 || err.status === 400) {
-          this.errorMessage.set('Incorrect email or password.');
+          this.snackbar.show('Incorrect email or password.');
         } else {
-          this.errorMessage.set('An unexpected error occurred.');
+          this.snackbar.show('An unexpected error occurred.');
         }
       },
     });
