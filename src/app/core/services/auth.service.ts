@@ -60,7 +60,7 @@ export class AuthService {
           const token = res.data?.token;
 
           if (!res.success || !user || !token) {
-            throw new Error('Respuesta inválida del servidor');
+            throw new Error('Invalid response from server');
           }
 
           // Save login state and user info in memory and localStorage

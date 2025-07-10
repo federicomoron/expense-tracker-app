@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterModule } from '@angular/router';
 import { forkJoin } from 'rxjs';
 
 import { GroupDetailWithExpenses } from '@app/core/models/group-detail.model';
 import { AuthService } from '@app/core/services/auth.service';
+import { SnackbarService } from '@app/core/services/snackbar.service';
 import { environment } from '@environments/environment';
 import { GroupFormComponent } from '@features/groups/group-form/group-form.component';
 import { GroupType } from '@models/group-type.enum';
@@ -39,7 +39,7 @@ export class GroupsComponent implements OnInit {
 
   constructor(
     private groupService: GroupService,
-    private snackBar: MatSnackBar,
+    private snackbar: SnackbarService,
     private router: Router,
     private dialog: MatDialog,
   ) {}
@@ -59,11 +59,10 @@ export class GroupsComponent implements OnInit {
 
   ngOnInit(): void {
     this.groupService.fetchGroups().subscribe({
-      next: () => {
-        this.loadGroupDetails();
-      },
+      next: () => this.loadGroupDetails(),
       error: (err) => {
         console.error('Error fetching groups', err);
+        this.snackbar.show('Error fetching groups. Please try again.');
       },
     });
   }
@@ -71,19 +70,14 @@ export class GroupsComponent implements OnInit {
   addGroup(data: { name: string; type: GroupType }) {
     this.groupService.createGroup(data).subscribe({
       next: (res) => {
-        if (res.success) {
-          this.showForm.set(false);
-        }
+        if (res.success) this.showForm.set(false);
       },
       error: (err) => {
-        if (!environment.production) {
-          console.error('Backend message:', err.error?.error?.message || err.message);
-        }
-
         const message = err.error?.error?.message || 'There was an error creating the group';
-        this.snackBar.open(message, 'Close', {
-          duration: 3000,
-        });
+        if (!environment.production) {
+          console.error('Backend message:', message);
+        }
+        this.snackbar.show(message);
       },
     });
   }
