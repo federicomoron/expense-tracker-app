@@ -41,7 +41,11 @@
     </ul>
   </section>
 
-  <app-expenses [expenses]="group()?.expenses ?? []" [loading]="loading()"></app-expenses>
+  <app-expenses
+    [expenses]="group()?.expenses ?? []"
+    [groupMembers]="group()?.members ?? []"
+    [loading]="loading()"
+  />
 
   <button
     mat-fab
