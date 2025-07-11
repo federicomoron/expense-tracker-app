@@ -32,3 +32,8 @@ export interface ExpenseResponse {
   success: boolean;
   data: Expense;
 }
+
+export interface ExpenseExtended extends Expense {
+  paidBy?: ExpenseUser[];
+  splits?: ExpenseUser[];
+}

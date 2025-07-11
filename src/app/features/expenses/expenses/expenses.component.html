@@ -21,9 +21,15 @@
 
             <div class="expense-info">
               <div class="expense-description">{{ exp.description }}</div>
+              <div class="expense-paid-by">{{ getPaidByText(exp) }}</div>
             </div>
 
-            <div class="expense-amount">{{ exp.total | number: '1.2-2' }} {{ exp.currency }}</div>
+            <div class="expense-lend">
+              <div class="expense-lend-label">{{ getLendLabel(exp) }}</div>
+              <div class="expense-lend-amount">
+                {{ Math.abs(getUserLent(exp)) | number: '1.2-2' }} {{ exp.currency }}
+              </div>
+            </div>
           </div>
         }
       }
