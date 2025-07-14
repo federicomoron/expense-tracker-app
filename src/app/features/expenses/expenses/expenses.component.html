@@ -25,7 +25,16 @@
             </div>
 
             <div class="expense-lend">
-              <div class="expense-lend-label">{{ getLendLabel(exp) }}</div>
+              <div
+                class="expense-lend-label"
+                [ngClass]="{
+                  positive: getUserLent(exp) > 0,
+                  negative: getUserLent(exp) < 0,
+                }"
+              >
+                {{ getLendLabel(exp) }}
+              </div>
+
               <div class="expense-lend-amount">
                 {{ Math.abs(getUserLent(exp)) | number: '1.2-2' }} {{ exp.currency }}
               </div>

@@ -5,6 +5,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { SnackbarService } from '@app/core/services/snackbar.service';
+import { EXPENSE_CATEGORIES } from '@app/shared/data/expense-categories';
+import { getCategoryIcon } from '@app/shared/helpers/get-category-icon';
 import { CategorySelectorComponent } from '@features/expenses/components/category-selector/category-selector.component';
 import { CurrencySelectorComponent } from '@features/expenses/components/currency-selector/currency-selector.component';
 import { SplitSelectorComponent } from '@features/expenses/components/split-selector/split-selector.component';
@@ -54,7 +56,7 @@ export class ExpenseFormComponent implements OnInit {
   expenseForm: FormGroup = this.fb.group({
     description: ['', Validators.required],
     total: [null, [Validators.required, Validators.min(0.01)]],
-    currency: ['USD', Validators.required],
+    currency: ['ARS', Validators.required],
     date: [new Date(), Validators.required],
   });
 
@@ -68,6 +70,12 @@ export class ExpenseFormComponent implements OnInit {
   isSubmitting = false;
 
   ngOnInit() {
+    this.expenseForm.get('description')?.valueChanges.subscribe((desc: string) => {
+      if (!this.selectedCategory) {
+        this.selectedCategoryIcon = getCategoryIcon(desc);
+      }
+    });
+
     const expenseIdParam = this.route.snapshot.paramMap.get('expenseId');
     this.expenseId = expenseIdParam ? +expenseIdParam : null;
     this.isEditMode = !!this.expenseId;
@@ -185,26 +193,18 @@ export class ExpenseFormComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((selectedCategory: string) => {
       if (selectedCategory) {
-        this.expenseForm.patchValue({ category: selectedCategory });
+        this.selectedCategory = selectedCategory;
+        this.selectedCategoryLabel =
+          EXPENSE_CATEGORIES.find((c) => c.key === selectedCategory)?.label || '';
         this.updateCategoryIcon(selectedCategory);
+        this.expenseForm.patchValue({ category: selectedCategory });
       }
     });
   }
 
   updateCategoryIcon(category: string): void {
-    switch (category) {
-      case 'Food':
-        this.selectedCategoryIcon = '/assets/food.svg';
-        break;
-      case 'Water':
-        this.selectedCategoryIcon = '/assets/water.svg';
-        break;
-      case 'Rent':
-        this.selectedCategoryIcon = '/assets/home.svg';
-        break;
-      default:
-        this.selectedCategoryIcon = '';
-    }
+    const found = EXPENSE_CATEGORIES.find((c) => c.key === category);
+    this.selectedCategoryIcon = found?.icon || '/assets/default.svg';
   }
 
   private buildSplits(userIds: number[], total: number): ExpenseUser[] {

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
+import { EXPENSE_CATEGORIES } from '@app/shared/data/expense-categories';
 import { CurrencySelectorComponent } from '@features/expenses/components/currency-selector/currency-selector.component';
 import { SharedUiModule } from '@shared/shared-ui.module';
 
@@ -15,7 +16,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
 export class CategorySelectorComponent {
   private dialogRef = inject(MatDialogRef<CurrencySelectorComponent>);
 
-  categories = signal(['Food', 'Water', 'Rent']);
+  categories = signal(EXPENSE_CATEGORIES);
 
   selectedCategory = signal('');
 
