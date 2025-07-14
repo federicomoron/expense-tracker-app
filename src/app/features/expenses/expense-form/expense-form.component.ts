@@ -194,13 +194,13 @@ export class ExpenseFormComponent implements OnInit {
   updateCategoryIcon(category: string): void {
     switch (category) {
       case 'Food':
-        this.selectedCategoryIcon = 'assets/food.svg';
+        this.selectedCategoryIcon = '/assets/food.svg';
         break;
       case 'Water':
-        this.selectedCategoryIcon = 'assets/water.svg';
+        this.selectedCategoryIcon = '/assets/water.svg';
         break;
       case 'Rent':
-        this.selectedCategoryIcon = 'assets/home.svg';
+        this.selectedCategoryIcon = '/assets/home.svg';
         break;
       default:
         this.selectedCategoryIcon = '';

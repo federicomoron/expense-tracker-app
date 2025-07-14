@@ -38,7 +38,7 @@ export class ExpenseService {
         updatedAt: new Date().toISOString(),
         participants: [],
         category: 'Food',
-        iconUrl: 'assets/food.svg',
+        iconUrl: '/assets/food.svg',
       },
     });
   }
