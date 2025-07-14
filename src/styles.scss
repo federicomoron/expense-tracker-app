@@ -1,9 +1,12 @@
 @use './theme/custom-theme' as *;
 @use './theme/app-variables';
+@use './theme/app-variables-dark';
 
 html,
 body {
   height: 100%;
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
+  background-color: var(--app-bg);
+  color: var(--app-text);
 }
