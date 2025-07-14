@@ -1,0 +1,7 @@
+<div class="theme-toggle">
+  @for (option of options; track option) {
+    <button class="theme-btn" [class.active]="theme() === option" (click)="setTheme(option)">
+      {{ getLabel(option) }}
+    </button>
+  }
+</div>

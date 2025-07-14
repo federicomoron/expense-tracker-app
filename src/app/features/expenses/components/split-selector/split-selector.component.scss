@@ -1,8 +1,8 @@
 .selector-buttons {
   display: flex;
   flex-direction: row;
-  gap: 8px;
-  margin-top: 16px;
+  gap: var(--app-spacing-sm);
+  margin-top: var(--app-spacing-md);
   width: 100%;
   justify-content: center;
 }
@@ -12,9 +12,9 @@
   align-items: center;
   gap: 6px;
   padding: 8px 12px;
-  background-color: white;
+  background-color: var(--app-bg);
   border: 1px solid var(--app-border);
-  border-radius: 8px;
+  border-radius: var(--app-radius);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -27,6 +27,6 @@
   }
 
   &:hover {
-    background-color: #f0f0f0;
+    background-color: rgba(var(--app-text-rgb), 0.05);
   }
 }

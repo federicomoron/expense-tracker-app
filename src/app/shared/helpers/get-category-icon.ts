@@ -1,13 +1,13 @@
 const categories = [
-  { keywords: ['water', 'gas', 'electricity', 'agua'], icon: 'assets/water.svg' },
+  { keywords: ['water', 'gas', 'electricity', 'agua'], icon: '/assets/water.svg' },
   {
     keywords: ['fideos', 'comida', 'cheese', 'pizza', 'food', 'supermarket', 'grocery'],
-    icon: 'assets/food.svg',
+    icon: '/assets/food.svg',
   },
-  { keywords: ['rent', 'alquiler', 'depto'], icon: 'assets/home.svg' },
-  { keywords: ['gasoline', 'fuel', 'car', 'uber', 'bus'], icon: 'assets/transport.svg' },
-  { keywords: ['clothes', 'clothing', 'shoes', 'outfit'], icon: 'assets/ropa.svg' },
-  { keywords: ['pharmacy', 'medicine', 'meds', 'doctor'], icon: 'assets/salud.svg' },
+  { keywords: ['rent', 'alquiler', 'depto'], icon: '/assets/home.svg' },
+  { keywords: ['gasoline', 'fuel', 'car', 'uber', 'bus'], icon: '/assets/transport.svg' },
+  { keywords: ['clothes', 'clothing', 'shoes', 'outfit'], icon: '/assets/ropa.svg' },
+  { keywords: ['pharmacy', 'medicine', 'meds', 'doctor'], icon: '/assets/salud.svg' },
 ];
 
 export function getCategoryIcon(description: string): string {
@@ -19,5 +19,5 @@ export function getCategoryIcon(description: string): string {
     }
   }
 
-  return 'assets/default.svg';
+  return '/assets/default.svg';
 }

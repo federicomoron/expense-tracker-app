@@ -2,19 +2,24 @@
   <div class="account-panel">
     <div class="account-header">
       <div class="account-avatar">
-        <img src="assets/spendly.png" alt="Avatar" />
+        <img src="/assets/spendly.png" alt="Avatar" />
       </div>
+
       <div class="account-header-info">
         <div class="account-name">{{ auth.currentUser()?.name || 'Your Name' }}</div>
         <div class="account-email">{{ auth.currentUser()?.email }}</div>
       </div>
     </div>
+
     <mat-divider class="account-divider"></mat-divider>
-    <mat-nav-list class="account-list">
-      <mat-list-item (click)="logout()" class="logout-list-item">
-        <mat-icon matListIcon>logout</mat-icon>
-        <span matLine>Cerrar sesión</span>
-      </mat-list-item>
-    </mat-nav-list>
+
+    <theme-toggle></theme-toggle>
+
+    <div class="account-list">
+      <button class="logout-button" (click)="logout()" aria-label="Logout">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
+    </div>
   </div>
 </div>

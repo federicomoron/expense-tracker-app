@@ -6,6 +6,7 @@
   box-sizing: border-box;
   width: 100%;
   min-height: calc(100vh - 64px);
+  background-color: var(--app-bg);
 }
 
 .register-form {
@@ -17,6 +18,9 @@
   gap: 16px;
   width: 100%;
   box-sizing: border-box;
+  background-color: var(--app-surface);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow);
 }
 
 .full-width {

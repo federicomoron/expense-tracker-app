@@ -7,9 +7,10 @@
 .currency-code {
   font-weight: 600;
   margin-right: 10px;
+  color: var(--app-text);
 }
 
 .currency-desc {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--app-muted);
 }

@@ -24,16 +24,13 @@
   align-items: center;
   padding: 24px 16px;
   gap: 32px;
+  background-color: var(--app-bg);
+  min-height: 100vh;
 }
 
 .expense-header-wrapper {
-  background-color: #e0e0e0;
+  background-color: var(--app-surface);
   padding: 1rem;
-}
-
-.expense-screen {
-  background-color: #e0e0e0;
-  min-height: 100vh;
 }
 
 .field-row {
@@ -73,12 +70,12 @@
   transition: background-color 0.2s ease;
 
   &:hover {
-    background-color: #f0f0f0;
+    background-color: rgba(var(--app-text-rgb), 0.05);
   }
 
   &.active {
     border-color: var(--app-primary);
-    background-color: #e0f2f1;
+    background-color: rgba(var(--app-primary), 0.1);
   }
 }
 
