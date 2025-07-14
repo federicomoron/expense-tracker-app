@@ -1,5 +1,3 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
   "compileOnSave": false,
   "compilerOptions": {
@@ -23,9 +21,10 @@
       "@core/*": ["src/app/core/*"],
       "@shared/*": ["src/app/shared/*"],
       "@environments/*": ["src/environments/*"],
-      "@services/": ["src/app/core/services"],
-      "@features/": ["src/app/core/features"],
+      "@services/*": ["src/app/core/services/*"],
+      "@features/*": ["src/app/features/*"],
       "@models/*": ["src/app/core/models/*"],
+      "@routes/*": ["src/app/routes/*"],
       "@constants/*": ["src/app/core/constants/*"]
     }
   },
@@ -34,6 +33,6 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
-    "controlFlow": true
+    "enableControlFlow": true
   }
 }

@@ -1,7 +1,51 @@
 <div class="groups-container">
   @for (group of groups(); track $index) {
+    @let detail = getGroupDetails(group.id)();
+
     <mat-card (click)="goToGroup(group.id)" class="group-card">
-      <h2>{{ group.name }}</h2>
+      <mat-card-header>
+        <mat-card-title>{{ group.name }}</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        @if (!detail) {
+          <div class="loading-spinner">
+            <mat-progress-spinner
+              diameter="24"
+              mode="indeterminate"
+              color="primary"
+            ></mat-progress-spinner>
+          </div>
+        } @else {
+          @if (detail.balanceSummary.length === 0 && detail.memberBalances.length === 0) {
+            <p class="placeholder">No pending balances</p>
+          } @else {
+            <div class="group-balances">
+              @for (balance of detail.balanceSummary; track $index) {
+                <small class="balance"
+                  >{{ balance.currency }}: {{ balance.amount | number: '1.2-2' }}</small
+                >
+              }
+            </div>
+            <div class="group-members">
+              @for (member of detail.memberBalances; track $index) {
+                @if (member.amount > 0) {
+                  @if (member.userId === currentUserId) {
+                    <small class="member"
+                      >You owe {{ member.amount | number: '1.2-2' }} {{ member.currency }}</small
+                    >
+                  } @else {
+                    <small class="member">
+                      {{ member.name }} owes you {{ member.amount | number: '1.2-2' }}
+                      {{ member.currency }}
+                    </small>
+                  }
+                }
+              }
+            </div>
+          }
+        }
+      </mat-card-content>
     </mat-card>
   }
 </div>
@@ -11,7 +55,7 @@
   color="primary"
   class="fab-button"
   aria-label="New Group"
-  [routerLink]="['/group/new']"
+  [routerLink]="['/groups/new']"
 >
   <mat-icon>add</mat-icon>
 </button>

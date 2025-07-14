@@ -1,43 +1,59 @@
-<h2>{{ group()?.name }} (ID: {{ groupId() }})</h2>
+<div class="group-detail-container">
+  <h2 class="group-title">{{ group()?.name }}</h2>
 
-@if (group()) {
-  <section class="summary-section">
-    <h3>Balance Summary</h3>
-    <ul>
-      @for (balance of group()!.balanceSummary; track balance.currency) {
-        <li>
-          @if (balance.amount > 0) {
-            💵 They owe you {{ balance.amount }} {{ balance.currency }}
-          } @else if (balance.amount < 0) {
-            💸 You owe {{ -balance.amount }} {{ balance.currency }}
-          } @else {
-            ✔ No debts in {{ balance.currency }}
-          }
-        </li>
-      }
-    </ul>
-
-    <h3>Member Balances</h3>
-    <ul>
-      @for (mb of group()!.memberBalances; track mb.userId) {
-        <li>
-          @if (mb.amount < 0) {
-            You owe {{ mb.name }} {{ -mb.amount }} {{ mb.currency }}
-          } @else if (mb.amount > 0) {
-            {{ mb.name }} owes you {{ mb.amount }} {{ mb.currency }}
-          } @else {
-            ✔ You are settled with {{ mb.name }} ({{ mb.currency }})
-          }
+  <section class="balance-summary">
+    <ul class="summary-list no-card">
+      @for (b of filteredSummary(); track b.currency) {
+        <li class="summary-item">
+          <span class="chip" [ngClass]="{ positive: b.amount > 0, negative: b.amount < 0 }">
+            @if (b.amount > 0) {
+              They owe you
+            } @else {
+              You owe
+            }
+          </span>
+          <span class="summary-amount">
+            <strong>{{ (b.amount > 0 ? b.amount : -b.amount) | number: '1.2-2' }}</strong>
+            {{ b.currency }}
+          </span>
         </li>
       }
     </ul>
   </section>
-}
 
-@if (group()) {
-  <app-expenses></app-expenses>
-}
+  <section class="member-balances">
+    <ul class="members-list no-card">
+      @for (mb of filteredMemberBalances(); track mb.userId) {
+        <li class="member-item">
+          <span class="chip" [ngClass]="{ positive: mb.amount > 0, negative: mb.amount < 0 }">
+            @if (mb.amount > 0) {
+              {{ mb.name }} owes you
+            } @else {
+              You owe {{ mb.name }}
+            }
+          </span>
+          <span class="member-amount">
+            <strong>{{ mb.amount > 0 ? mb.amount : (-mb.amount | number: '1.2-2') }}</strong>
+            {{ mb.currency }}
+          </span>
+        </li>
+      }
+    </ul>
+  </section>
 
-<button mat-fab color="primary" class="new-expense-button" (click)="goToNewExpense()">
-  <mat-icon>add</mat-icon>
-</button>
+  <app-expenses
+    [expenses]="group()?.expenses ?? []"
+    [groupMembers]="group()?.members ?? []"
+    [loading]="loading()"
+  />
+
+  <button
+    mat-fab
+    color="primary"
+    class="new-expense-button"
+    aria-label="Add new expense"
+    (click)="goToNewExpense()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

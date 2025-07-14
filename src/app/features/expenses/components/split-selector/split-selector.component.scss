@@ -1,0 +1,32 @@
+.selector-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: var(--app-spacing-sm);
+  margin-top: var(--app-spacing-md);
+  width: 100%;
+  justify-content: center;
+}
+
+.selector-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background-color: var(--app-bg);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--app-text);
+  transition: background-color 0.2s ease;
+
+  mat-icon {
+    font-size: 18px;
+    color: var(--app-primary);
+  }
+
+  &:hover {
+    background-color: rgba(var(--app-text-rgb), 0.05);
+  }
+}

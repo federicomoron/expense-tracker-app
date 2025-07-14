@@ -1,0 +1,29 @@
+<footer class="app-footer">
+  @if (calendarOnly) {
+    <nav class="footer-nav">
+      <button type="button" (click)="onCalendarClick()">
+        <mat-icon>calendar_today</mat-icon>
+        <span>Fecha</span>
+      </button>
+    </nav>
+  } @else if (!isExpenseForm) {
+    <nav class="footer-nav">
+      <button type="button" (click)="goTo('/account')" [class.active]="isActive('/account')">
+        <mat-icon>person</mat-icon><span>Account</span>
+      </button>
+      <button type="button" (click)="goTo('/groups')" [class.active]="isActive('/groups')">
+        <mat-icon>group</mat-icon><span>Groups</span>
+      </button>
+      <!-- <button type="button" (click)="goTo('/activity')" [class.active]="isActive('/activity')">
+        <mat-icon>history</mat-icon><span>Activity</span>
+      </button> -->
+    </nav>
+  } @else {
+    <div class="footer-actions">
+      <button mat-fab color="primary" aria-label="Calendar">
+        <mat-icon>calendar_today</mat-icon>
+      </button>
+      <button mat-fab color="accent" aria-label="Other"><mat-icon>add</mat-icon></button>
+    </div>
+  }
+</footer>

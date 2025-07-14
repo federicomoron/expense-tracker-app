@@ -1,58 +1,66 @@
 # Expense Tracker App
 
-A simple and modern web application to track personal and group expenses, built with Angular and designed with mobile-first principles in mind. Ideal for tracking your daily, group, or travel expenses with an easy-to-use, clean interface.
+A modern and modular web application to track personal and group expenses, built with Angular using a standalone architecture and designed with mobile-first principles. Ideal for managing your daily, shared, or travel expenses with a clean and responsive UI.
 
 ![Angular CI Pipeline](https://github.com/federicomoron/expense-tracker-app/actions/workflows/ci.yml/badge.svg)
 
 ## ✨ Features
 
+- Auth simulation with routing guards and layout separation
 - Create and manage expense groups (e.g., Family, Personal, Trips)
-- Add daily expenses with automatic category detection
-- Monthly summaries by category (e.g., "Food", "Utilities")
-- Group-level multi-currency support (coming soon)
-- Responsive and mobile-first UI
-- Clean, minimal design with Angular Material
-- Simulated login with future plans for Google Sign-In integration
-- Detailed expense report and history
+- Add expenses with currency, category, and split-type selectors
+- Reusable and dynamic dialog components for form-based inputs
+- Multi-currency group support (coming soon)
+- Fully responsive and mobile-first design using Angular Material
+- Shared layouts for authenticated vs unauthenticated flows
+- Clean architecture with feature-based and core-based structure
+- Configurable theme using SCSS variables and Angular Material theming
 
 ## 🌐 Tech Stack
 
 - Angular (standalone components + signals)
-- Angular Material (UI components)
+- Angular Material (custom theme)
 - TypeScript
 - RxJS (Reactive Programming)
-- SCSS (for styling)
-- ESLint + Prettier (code quality and formatting)
-- Husky (git hooks)
+- SCSS (modular and theme-based)
+- ESLint + Prettier (code formatting & quality)
+- Husky + lint-staged + commitlint (Git hooks)
+- GitHub Actions (CI/CD pipeline)
 
 ## 🏢 Project Structure
 
 ```txt
 src/
 ├── app/
-│   ├── core/                 # Global services, interceptors, guards, constants, models
-│   │   ├── services/
-│   │   ├── interceptors/
+│   ├── core/                  # Global services, interceptors, guards, constants, models
+│   │   ├── constants/
 │   │   ├── guards/
+│   │   ├── interceptors/
 │   │   ├── models/
-│   │   └── constants/
-│   ├── shared/               # Reusable components and UI modules
-│   ├── features/             # Feature-based modules (e.g., groups, expenses)
-│   ├── app.config.ts         # Angular standalone configuration (providers, routing, etc.)
-│   ├── app.routes.ts         # Global route definitions
-│   ├── app.component.ts      # Root component (Shell)
-│   ├── app-routing.module.ts # (Temporarily included if needed)
-│   └── app.module.ts         # [Legacy] not used - standalone architecture
-├── environments/             # Environment-specific configs (dev, prod)
-├── main.ts                   # App bootstrap with standalone setup
-├── styles.scss               # Global styles
-└── index.html                # App entry point
+│   │   └── services/
+│   ├── features/              # Feature-based modules
+│   │   ├── auth/              # Login and register views
+│   │   ├── expenses/          # Expense module (selectors, dialogs, forms)
+│   │   └── groups/            # Group module (form, detail, listing)
+│   ├── layouts/               # App layout (shell) and fullscreen layout
+│   ├── shared/                # Reusable UI components, helpers, styles
+│   │   ├── components/
+│   │   ├── helpers/
+│   │   └── styles/
+│   ├── app.routes.ts          # Global route definitions
+│   ├── app.config.ts          # Standalone providers and router setup
+│   └── app.component.ts       # Root shell component
+├── environments/              # Environment-specific configs (dev, prod)
+├── assets/                    # Static files (icons, images, etc.)
+├── theme/                     # Theme configuration (SCSS variables and overrides)
+├── styles.scss                # Global styles
+└── main.ts                    # Standalone bootstrap entry
 ```
 
 🚀 Getting Started
 
 1. Clone the repository:
-   git clone https://github.com/your-username/expense-tracker-app.git
+   git clone https://github.com/federicomoron/expense-tracker-app.git
    cd expense-tracker-app
 
 2. Install dependencies:

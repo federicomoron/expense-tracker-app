@@ -1,0 +1,90 @@
+.account-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 3.5rem;
+}
+
+.account-panel {
+  width: 100%;
+  max-width: 400px;
+  background: transparent;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.account-header {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 1.2rem;
+}
+
+.account-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--app-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.account-header-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.account-name {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--app-text);
+  margin-bottom: 0.2rem;
+}
+
+.account-email {
+  font-size: 0.98rem;
+  color: var(--app-muted);
+  word-break: break-all;
+}
+
+.account-divider {
+  margin: 0.5rem 0 0.7rem 0;
+}
+
+.account-list {
+  background: transparent;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  width: 100%;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  color: var(--app-text);
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+
+  mat-icon {
+    color: var(--app-error);
+  }
+
+  &:hover {
+    background-color: rgba(var(--app-text-rgb), 0.05);
+  }
+}

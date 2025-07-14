@@ -1,43 +1,53 @@
 import { Routes } from '@angular/router';
 
-import { authGuard } from '@app/core/guards/auth.guard';
+import { authGuard } from '@core/guards/auth.guard';
+
+import { AppLayoutComponent } from './layouts/app-layout.component';
+import { FullscreenLayoutComponent } from './layouts/fullscreen-layout.component';
 
 export const routes: Routes = [
   {
+    path: 'groups/new',
+    component: FullscreenLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('@features/groups/group-form/group-form.component').then(
+            (m) => m.GroupFormComponent,
+          ),
+      },
+    ],
+  },
+  {
     path: '',
-    pathMatch: 'full',
-    redirectTo: 'group',
+    component: AppLayoutComponent,
+    children: [
+      { path: '', pathMatch: 'full', redirectTo: 'groups' },
+      {
+        path: 'groups',
+        canActivate: [authGuard],
+        loadChildren: () => import('@features/groups/groups.routes').then((m) => m.default),
+      },
+      {
+        path: 'account',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('@features/account/account.component').then((m) => m.AccountComponent),
+      },
+      {
+        path: '',
+        loadChildren: () => import('@features/auth/auth.routes').then((m) => m.default),
+      },
+    ],
   },
   {
-    path: 'group',
-    canActivate: [authGuard],
-    loadChildren: () => import('./features/groups/groups.routes').then((m) => m.groupsRoutes),
-  },
-  {
-    path: 'expenses/new/:groupId',
-    loadComponent: () =>
-      import('@app/features/expenses/expense-form/expense-form.component').then(
-        (m) => m.ExpenseFormComponent,
-      ),
-  },
-  {
-    path: 'expenses/new/:groupId',
-    loadComponent: () =>
-      import('@app/features/expenses/expense-form/expense-form.component').then(
-        (m) => m.ExpenseFormComponent,
-      ),
-  },
-  {
-    path: 'login',
-    loadChildren: () => import('./features/auth/login/login.routes').then((m) => m.loginRoutes),
-  },
-  {
-    path: 'register',
-    loadChildren: () =>
-      import('./features/auth/register/register.routes').then((m) => m.registerRoutes),
+    path: 'groups/:groupId/expenses',
+    component: FullscreenLayoutComponent,
+    loadChildren: () => import('@features/expenses/expenses.routes').then((m) => m.default),
   },
   {
     path: '**',
-    redirectTo: '/group',
+    redirectTo: 'groups',
   },
 ];

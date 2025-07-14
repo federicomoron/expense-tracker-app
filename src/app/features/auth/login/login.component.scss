@@ -3,22 +3,32 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  padding: 16px;
+  background-color: var(--app-bg);
 
   mat-card {
     width: 100%;
     max-width: 400px;
-    padding: 32px;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    padding: 32px 24px;
+    border-radius: var(--app-radius);
+    box-shadow: var(--app-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background-color: var(--app-surface);
+  }
+
+  .logo {
+    width: 120px;
+    margin: 0 auto 8px;
+    display: block;
   }
 
   .login-title {
     text-align: center;
-    margin-bottom: 24px;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 600;
-    color: #333;
+    margin-bottom: 8px;
+    color: var(--app-text);
   }
 
   .login-form {
@@ -31,15 +41,15 @@
     width: 100%;
   }
 
-  .icon-margin {
-    margin-right: 8px;
-  }
-
   .google-login-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
+    font-weight: 500;
+    background-color: var(--app-bg);
+    border: 1px solid var(--app-border);
+    color: var(--app-text);
 
     .google-icon {
       width: 18px;
@@ -50,17 +60,11 @@
   .register-link {
     text-align: center;
     font-size: 0.875rem;
-
-    a {
-      color: #1976d2;
-      text-decoration: underline;
-      cursor: pointer;
-    }
+    color: var(--app-muted);
   }
 
   .error-message {
-    color: #d32f2f;
-    margin-top: 10px;
+    color: var(--app-error);
     font-size: 14px;
     text-align: center;
   }
@@ -69,12 +73,5 @@
     display: inline-block;
     vertical-align: middle;
     margin-top: -2px;
-  }
-
-  .logo {
-    width: 150px;
-    height: auto;
-    display: block;
-    margin: 0 auto;
   }
 }

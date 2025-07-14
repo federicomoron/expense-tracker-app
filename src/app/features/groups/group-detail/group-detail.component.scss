@@ -1,7 +1,75 @@
+.group-detail-container {
+  padding: 0;
+}
+
+.group-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--app-text);
+}
+
+.summary-list,
+.members-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summary-item,
+.member-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  border: 1px solid var(--app-border);
+  background-color: var(--app-bg);
+  color: var(--app-text);
+
+  &.positive {
+    background-color: rgba(46, 125, 50, 0.1);
+    color: #2e7d32;
+  }
+
+  &.negative {
+    background-color: rgba(198, 40, 40, 0.1);
+    color: #c62828;
+  }
+}
+
+.chip {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+  font-size: 13px;
+  background-color: var(--app-surface);
+  color: var(--app-muted);
+
+  &.positive {
+    background-color: rgba(46, 125, 50, 0.1);
+    color: #2e7d32;
+  }
+
+  &.negative {
+    background-color: rgba(198, 40, 40, 0.1);
+    color: #c62828;
+  }
+}
+
+.summary-amount,
+.member-amount {
+  margin-left: auto;
+  font-weight: bold;
+}
+
 .new-expense-button {
   position: fixed;
-  bottom: 16px;
+  bottom: 80px;
   right: 16px;
   z-index: 100;
 }
-

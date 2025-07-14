@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { SharedUiModule } from '@app/shared/shared-ui.module';
+
+import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
   standalone: true,
@@ -13,8 +14,10 @@ import { SharedUiModule } from '@app/shared/shared-ui.module';
 export class SplitTypeDialogComponent {
   private dialogRef = inject(MatDialogRef<SplitTypeDialogComponent>);
   options = signal(['Equally', 'Unequally']);
+  selectedOption = signal<string | null>(null);
 
   choose(option: string): void {
+    this.selectedOption.set(option);
     this.dialogRef.close(option);
   }
 

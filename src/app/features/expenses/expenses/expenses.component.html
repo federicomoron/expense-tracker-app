@@ -1,17 +1,47 @@
-<!-- @if (loading()) {
-  <div>Loading expenses...</div>
-} @else { -->
-@if (expenses.length === 0) {
-  <div>No expenses recorded.</div>
+@if (loading) {
+  <div class="loading">Loading expenses...</div>
 } @else {
-  @for (exp of expenses; track exp.id) {
-    <mat-card>
-      <mat-card-title>{{ exp.description }}</mat-card-title>
-      <mat-card-content>
-        Total: {{ exp.total }} {{ exp.currency }}<br />
-        Date: {{ exp.createdAt | date: 'short' }}
-      </mat-card-content>
-    </mat-card>
+  @if (expenses.length === 0) {
+    <div class="empty">No expenses recorded.</div>
+  } @else {
+    <div class="expenses-list">
+      @for (entry of groupedExpenses; track entry[0]) {
+        <div class="month-header">{{ entry[0] }}</div>
+
+        @for (exp of entry[1]; track exp.id) {
+          <div class="expense-row">
+            <div class="expense-date">
+              {{ exp.createdAt | date: 'dd' }}<br />
+              {{ exp.createdAt | date: 'MMM' }}
+            </div>
+
+            <div class="expense-icon">
+              <img [src]="getCategoryIcon(exp.description || '')" alt="icon" />
+            </div>
+
+            <div class="expense-info">
+              <div class="expense-description">{{ exp.description }}</div>
+              <div class="expense-paid-by">{{ getPaidByText(exp) }}</div>
+            </div>
+
+            <div class="expense-lend">
+              <div
+                class="expense-lend-label"
+                [ngClass]="{
+                  positive: getUserLent(exp) > 0,
+                  negative: getUserLent(exp) < 0,
+                }"
+              >
+                {{ getLendLabel(exp) }}
+              </div>
+
+              <div class="expense-lend-amount">
+                {{ Math.abs(getUserLent(exp)) | number: '1.2-2' }} {{ exp.currency }}
+              </div>
+            </div>
+          </div>
+        }
+      }
+    </div>
   }
 }
-<!-- } -->

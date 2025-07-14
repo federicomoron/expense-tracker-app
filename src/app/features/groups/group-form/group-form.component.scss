@@ -1,12 +1,88 @@
+.main-content-bg {
+  background-color: var(--app-bg);
+  padding: 1rem;
+  min-height: auto;
+}
+
+.group-form-toolbar {
+  background-color: var(--app-primary);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  color: white;
+
+  .toolbar-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-left: 16px;
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  mat-icon,
+  button[mat-icon-button] {
+    color: white;
+  }
+}
+
 .group-form {
   display: flex;
   flex-direction: column;
-  padding: 1.5rem;
-  gap: 1rem;
-  max-width: 400px;
-  margin: 0 auto;
+  align-items: center;
+  padding: 24px 16px;
+  gap: 32px;
+  background-color: var(--app-bg);
+  min-height: 100vh;
 }
 
-.full-width {
+.field-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   width: 100%;
+  max-width: 300px;
+}
+
+.flat-input {
+  border: none;
+  border-bottom: 2px solid var(--app-primary);
+  background: transparent;
+  font-size: 16px;
+  padding: 8px 4px;
+  color: var(--app-text);
+  outline: none;
+  flex: 1;
+}
+
+.flat-input::placeholder {
+  color: var(--app-muted);
+}
+
+.flat-select .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.flat-select .mat-mdc-form-field-flex {
+  padding: 0 4px;
+  border-bottom: 2px solid var(--app-primary);
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  border: 1px solid var(--app-border);
+  background-color: var(--app-surface);
+  color: var(--app-text);
+  font-size: 20px;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(var(--app-text-rgb), 0.05);
+  }
 }

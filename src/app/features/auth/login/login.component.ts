@@ -1,9 +1,10 @@
 import { Component, computed, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
-import { AuthService } from '@app/core/services/auth.service';
-import { ExpButtonComponent } from '@app/shared/components/exp-button/exp-button.component';
-import { SharedUiModule } from '@app/shared/shared-ui.module';
+import { SnackbarService } from '@app/core/services/snackbar.service';
+import { AuthService } from '@services/auth.service';
+import { ExpButtonComponent } from '@shared/components/exp-button/exp-button.component';
+import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
   selector: 'app-login',
@@ -22,11 +23,10 @@ export class LoginComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
+    private snackbar: SnackbarService,
   ) {}
 
-  isFormInvalid = computed(
-    () => this.email().trim() === '' || this.password().trim() === ''
-  );
+  isFormInvalid = computed(() => this.email().trim() === '' || this.password().trim() === '');
 
   onSubmit(event: Event) {
     event.preventDefault();
@@ -42,23 +42,20 @@ export class LoginComponent {
     this.authService.login(this.email(), this.password()).subscribe({
       next: (res) => {
         this.isLoading.set(false);
-        if (res && res.success) {
-          this.router.navigate(['/group']);
+        if (res?.success) {
+          void this.router.navigate(['/groups']);
         } else {
-          this.errorMessage.set('Incorrect email or password.');
+          this.snackbar.show('Incorrect email or password.');
         }
       },
       error: (err) => {
         this.isLoading.set(false);
         if (err.status === 0) {
-          // Network error or unreachable server
-          this.errorMessage.set('Unable to connect. Please try again later.');
+          this.snackbar.show('🚨 API is not reachable. Please try again later.');
         } else if (err.status === 401 || err.status === 400) {
-          // Invalid credentials
-          this.errorMessage.set('Incorrect email or password.');
+          this.snackbar.show('Incorrect email or password.');
         } else {
-          // Unexpected error
-          this.errorMessage.set('An unexpected error occurred.');
+          this.snackbar.show('An unexpected error occurred.');
         }
       },
     });
@@ -79,14 +76,12 @@ export class LoginComponent {
   }
 
   onGoogleLogin() {
-    this.authService
-      .login('google_user@example.com', 'fakepassword')
-      .subscribe((res) => {
-        if (res && res.success) {
-          this.router.navigate(['/group']);
-        } else {
-          alert('Error with Google login');
-        }
-      });
+    this.authService.login('google_user@example.com', 'fakepassword').subscribe((res) => {
+      if (res && res.success) {
+        void this.router.navigate(['/groups']);
+      } else {
+        alert('Error with Google login');
+      }
+    });
   }
 }

@@ -7,12 +7,12 @@
   </div>
 
   <mat-nav-list>
-    @for (category of categories(); track category) {
+    @for (category of categories(); track category.key) {
       <mat-list-item
-        (click)="chooseCategory(category)"
-        [class.selected]="selectedCategory() === category"
+        (click)="chooseCategory(category.key)"
+        [class.selected]="selectedCategory() === category.key"
       >
-        <span class="category-name">{{ category }}</span>
+        <span class="option-name">{{ category.label }}</span>
       </mat-list-item>
     }
   </mat-nav-list>

@@ -2,10 +2,10 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 
-import { API_ENDPOINTS } from '@app/core/constants/api-endpoints';
-import { STORAGE_KEYS } from '@app/core/constants/storage-keys';
-import { HttpService } from '@app/core/services/http.service';
+import { API_ENDPOINTS } from '@constants/api-endpoints';
+import { STORAGE_KEYS } from '@constants/storage-keys';
 import { environment } from '@environments/environment';
+import { HttpService } from '@services/http.service';
 
 export interface User {
   id: number;
@@ -60,7 +60,7 @@ export class AuthService {
           const token = res.data?.token;
 
           if (!res.success || !user || !token) {
-            throw new Error('Respuesta inválida del servidor');
+            throw new Error('Invalid response from server');
           }
 
           // Save login state and user info in memory and localStorage
@@ -82,6 +82,6 @@ export class AuthService {
     localStorage.removeItem(STORAGE_KEYS.IS_LOGGED_IN);
     localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
     localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
-    this.router.navigate(['/login']);
+    void this.router.navigate(['/login']);
   }
 }

@@ -1,9 +1,10 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { GROUP_TYPE_OPTIONS, GroupType } from '@app/core/models/group-type.enum';
-import { GroupService } from '@app/core/services/group.service';
-import { SharedUiModule } from '@app/shared/shared-ui.module';
+
+import { GROUP_TYPE_OPTIONS, GroupType } from '@models/group-type.enum';
+import { GroupService } from '@services/group.service';
+import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
   selector: 'app-group-form',
@@ -33,7 +34,7 @@ export class GroupFormComponent {
       })
       .subscribe({
         next: () => {
-          this.router.navigate(['/group']);
+          void this.router.navigate(['/groups']);
         },
         error: () => {
           this.snackBar.open('Error creating group', 'Close', {
@@ -44,7 +45,7 @@ export class GroupFormComponent {
   }
 
   onCancel() {
-    this.router.navigate(['/group']);
+    void this.router.navigate(['/groups']);
   }
 
   onNameInput(event: Event) {

@@ -1,10 +1,16 @@
 export interface Expense {
   id: number;
-  groupId: number;
   description: string;
-  total: number;
+  total: number | string;
   currency: string;
   createdAt: string;
+  updatedAt: string;
+  participants: {
+    userId: number;
+    amount: number;
+  }[];
+  category?: string;
+  iconUrl?: string;
 }
 
 export interface ExpenseRequest {
@@ -12,6 +18,7 @@ export interface ExpenseRequest {
   description: string;
   total: number;
   currency: string;
+  date?: string;
   paidBy: ExpenseUser[];
   splits: ExpenseUser[];
 }
@@ -24,4 +31,9 @@ export interface ExpenseUser {
 export interface ExpenseResponse {
   success: boolean;
   data: Expense;
+}
+
+export interface ExpenseExtended extends Expense {
+  paidBy?: ExpenseUser[];
+  splits?: ExpenseUser[];
 }

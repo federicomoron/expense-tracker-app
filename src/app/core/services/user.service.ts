@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { API_ENDPOINTS } from '@app/core/constants/api-endpoints';
-import { HttpService } from '@app/core/services/http.service';
+import { API_ENDPOINTS } from '@constants/api-endpoints';
 import { environment } from '@environments/environment';
+import { HttpService } from '@services/http.service';
 
 export interface User {
   email: string;
@@ -30,7 +30,7 @@ export class UserService {
   register(data: RegisterPayload): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse, RegisterPayload>(
       `${this.API_URL}${API_ENDPOINTS.REGISTER}`,
-      data
+      data,
     );
   }
 }

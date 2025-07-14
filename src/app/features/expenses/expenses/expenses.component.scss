@@ -1,0 +1,102 @@
+.expenses-list {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 80px;
+  font-size: 14px;
+  color: var(--app-text);
+}
+
+.expense-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--app-border);
+  gap: 12px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.expense-date {
+  width: 40px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--app-muted);
+  line-height: 1.2;
+}
+
+.expense-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--app-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.expense-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.expense-paid-by,
+.expense-lend-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--app-muted);
+  &.positive {
+    color: #2e7d32;
+  }
+  &.negative {
+    color: #c62828;
+  }
+}
+
+.expense-lend {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 80px;
+  margin-left: 12px;
+}
+
+.expense-lend-amount,
+.expense-amount {
+  font-weight: 600;
+  color: var(--app-text);
+  font-size: 14px;
+}
+
+.expense-description {
+  font-weight: 500;
+  color: var(--app-text);
+  line-height: 1.2;
+  margin-left: 2px;
+  word-break: break-word;
+}
+
+.loading,
+.empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--app-muted);
+}
+
+.month-header {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--app-muted);
+  margin: 16px 0 4px;
+  padding-left: 8px;
+  text-transform: capitalize;
+}
