@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration production",
+    "start:prod": "serve -s dist/control-de-gastos/browser -l 8080",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "eslint .",
@@ -70,6 +71,7 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "prettier": "^3.5.3",
     "sass": "^1.89.0",
+    "serve": "^14.2.4",
     "typescript": "~5.8.3"
   }
 }
