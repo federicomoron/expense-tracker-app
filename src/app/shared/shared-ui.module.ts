@@ -13,14 +13,11 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
-import { ExpDateButtonComponent } from './components/exp-date-button/exp-date-button.component';
-
 @NgModule({
   imports: [
     MatIconModule,
     MatButtonModule,
     MatToolbarModule,
-    ExpDateButtonComponent,
     MatDatepickerModule,
     MatNativeDateModule,
   ],
@@ -36,7 +33,6 @@ import { ExpDateButtonComponent } from './components/exp-date-button/exp-date-bu
     MatSidenavModule,
     MatListModule,
     MatProgressSpinnerModule,
-    ExpDateButtonComponent,
     MatDatepickerModule,
     MatNativeDateModule,
   ],

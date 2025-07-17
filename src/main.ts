@@ -1,4 +1,6 @@
+import { isDevMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
+import { provideServiceWorker } from '@angular/service-worker';
 
 import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
@@ -15,4 +17,13 @@ if (themeToApply === 'dark') {
   document.documentElement.classList.add('dark-theme');
 }
 
-void bootstrapApplication(AppComponent, appConfig);
+void bootstrapApplication(AppComponent, {
+  ...appConfig,
+  providers: [
+    ...appConfig.providers,
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:3000',
+    }),
+  ],
+});
