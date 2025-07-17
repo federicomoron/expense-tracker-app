@@ -68,7 +68,6 @@ src/
 
 3. Run the app locally:
    yarn start
-
    - Open http://localhost:4200 in your browser.
 
 🔧 Available Scripts
