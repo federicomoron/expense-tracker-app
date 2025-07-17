@@ -64,6 +64,7 @@
 
 .account-list {
   background: transparent;
+  margin-top: 2rem;
 }
 
 .logout-button {
@@ -87,4 +88,10 @@
   &:hover {
     background-color: rgba(var(--app-text-rgb), 0.05);
   }
+}
+
+.pwa-button {
+  display: block;
+  margin-bottom: 1.5rem;
+  margin-top: 2rem;
 }

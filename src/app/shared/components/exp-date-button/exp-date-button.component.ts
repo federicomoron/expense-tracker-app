@@ -8,7 +8,7 @@ import { SharedUiModule } from '@app/shared/shared-ui.module';
   selector: 'app-exp-date-button',
   imports: [CommonModule, SharedUiModule],
   templateUrl: './exp-date-button.component.html',
-  styleUrl: './exp-date-button.component.scss',
+  styleUrls: ['./exp-date-button.component.scss'],
 })
 export class ExpDateButtonComponent {
   @ViewChild('datepicker') datepicker!: MatDatepicker<Date>;
