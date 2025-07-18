@@ -18,6 +18,7 @@ export class RegisterComponent {
   private router = inject(Router);
   private snackbar = inject(SnackbarService);
   private userService = inject(UserService);
+  loading = false;
 
   form: FormGroup = this.fb.group({
     name: ['', Validators.required],
@@ -31,9 +32,13 @@ export class RegisterComponent {
       return;
     }
 
+    this.loading = true;
     const data = this.form.value;
+
     this.userService.register(data).subscribe({
       next: (res) => {
+        this.loading = false;
+
         if (!res.success || !res.data?.email) {
           this.snackbar.show('There was a problem with the registration.');
           return;
@@ -43,6 +48,8 @@ export class RegisterComponent {
         setTimeout(() => void this.router.navigateByUrl('/login'), 2000);
       },
       error: (err) => {
+        this.loading = false;
+
         if (err.status === 409) {
           this.snackbar.show('The email is already registered.');
         } else {

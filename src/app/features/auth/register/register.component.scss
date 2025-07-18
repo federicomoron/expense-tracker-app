@@ -1,28 +1,68 @@
 :host {
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: start;
-  padding: 40px 16px;
-  box-sizing: border-box;
-  width: 100%;
-  min-height: calc(100vh - 64px);
+  min-height: 100vh;
+  padding: 1rem;
   background-color: var(--app-bg);
 }
 
 .register-form {
   display: flex;
   flex-direction: column;
-  max-width: 400px;
-  margin: 80px auto;
-  padding: 24px;
-  gap: 16px;
+  gap: 1.5rem;
   width: 100%;
-  box-sizing: border-box;
-  background-color: var(--app-surface);
-  border-radius: var(--app-radius);
-  box-shadow: var(--app-shadow);
+  max-width: 400px;
+  padding: 2rem;
+  border-radius: 1rem;
+  background-color: var(--app-card-bg, #fff);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  button {
+    align-self: center;
+    width: 100%;
+  }
 }
 
-.full-width {
-  width: 100%;
+:host-context(.dark-theme) .register-form {
+  background-color: #1e1e1e;
+  color: white;
+
+  input,
+  mat-label,
+  .mat-mdc-form-field-infix {
+    color: white !important;
+    caret-color: white;
+  }
+
+  .mat-mdc-text-field-wrapper,
+  .mat-mdc-form-field-flex {
+    background-color: transparent !important;
+  }
+
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  .mat-mdc-form-field-outline {
+    color: white !important;
+    border-color: white !important;
+  }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    color: #ccc;
+  }
+
+  mat-error {
+    color: #ff8a80;
+  }
 }

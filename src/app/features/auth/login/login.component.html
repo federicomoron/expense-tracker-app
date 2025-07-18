@@ -3,7 +3,7 @@
     <img src="/assets/spendly.png" alt="App Logo" class="logo" />
     <h1 class="login-title">Login</h1>
     <form (submit)="onSubmit($event)" class="login-form">
-      <mat-form-field appearance="outline" class="full-width">
+      <mat-form-field appearance="outline" class="custom-label-color">
         <mat-label>Email</mat-label>
         <input
           matInput
@@ -14,7 +14,7 @@
         />
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="full-width">
+      <mat-form-field appearance="outline" class="custom-label-color">
         <mat-label>Password</mat-label>
         <input
           matInput
@@ -35,7 +35,7 @@
         </button>
       </mat-form-field>
 
-      <app-exp-button type="submit" color="primary" [disabled]="isFormInvalid() || isLoading()">
+      <app-exp-button type="submit" color="primary" [disabled]="isLoading()">
         @if (isLoading()) {
           <mat-progress-spinner
             mode="indeterminate"

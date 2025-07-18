@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { PaidByDialogComponent } from '@features/expenses/components/paid-by-dialog/paid-by-dialog.component';
 import { SplitTypeDialogComponent } from '@features/expenses/components/split-type-dialog/split-type-dialog.component';
+import { AuthService } from '@services/auth.service';
 import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
@@ -14,12 +15,32 @@ import { SharedUiModule } from '@shared/shared-ui.module';
   styleUrls: ['./split-selector.component.scss'],
 })
 export class SplitSelectorComponent {
-  @Input() groupMembers: { userId: number; name: string }[] = [];
+  private authService = inject(AuthService);
+  private dialog = inject(MatDialog);
+  private _groupMembers: { userId: number; name: string }[] = [];
+
+  @Input()
+  set groupMembers(members: { userId: number; name: string }[]) {
+    this._groupMembers = members;
+
+    if (members.length && !this.selectedPayer()) {
+      const currentUserId = this.authService.currentUser()?.id;
+      if (currentUserId) {
+        const member = members.find((m) => m.userId === currentUserId);
+        if (member) {
+          this.selectedPayer.set(member);
+        } else {
+          console.warn(`⚠️ Current userId ${currentUserId} not found in group members`);
+        }
+      }
+    }
+  }
+  get groupMembers(): { userId: number; name: string }[] {
+    return this._groupMembers;
+  }
 
   selectedPayer = signal<{ userId: number; name: string } | null>(null);
   selectedSplitType = signal<string | null>(null);
-
-  private dialog = inject(MatDialog);
 
   openPaidByDialog() {
     if (!this.groupMembers || this.groupMembers.length === 0) {
@@ -55,5 +76,14 @@ export class SplitSelectorComponent {
         this.selectedSplitType.set(result);
       }
     });
+  }
+
+  setPayer(userId: number) {
+    const member = this.groupMembers.find((m) => m.userId === userId);
+    if (member) {
+      this.selectedPayer.set(member);
+    } else {
+      console.warn(`⚠️ Member with userId ${userId} not found`);
+    }
   }
 }

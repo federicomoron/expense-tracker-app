@@ -16,7 +16,6 @@ import { GroupDetail, GroupMember } from '@models/group-detail.model';
 import { AuthService } from '@services/auth.service';
 import { ExpenseService } from '@services/expenses.service';
 import { GroupService } from '@services/group.service';
-import { ExpDateButtonComponent } from '@shared/components/exp-date-button/exp-date-button.component';
 import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
@@ -28,7 +27,6 @@ import { SharedUiModule } from '@shared/shared-ui.module';
     CommonModule,
     SplitSelectorComponent,
     FooterComponent,
-    ExpDateButtonComponent,
   ],
   templateUrl: './expense-form.component.html',
   styleUrl: './expense-form.component.scss',
@@ -45,8 +43,8 @@ export class ExpenseFormComponent implements OnInit {
 
   @ViewChild(SplitSelectorComponent)
   splitSelectorComponent!: SplitSelectorComponent;
-  @ViewChild('dateButton')
-  dateButtonComponent!: ExpDateButtonComponent;
+  @ViewChild(FooterComponent)
+  footerComponent!: FooterComponent;
 
   groupId!: number;
   group: GroupDetail | null = null;
@@ -100,6 +98,12 @@ export class ExpenseFormComponent implements OnInit {
     this.groupService.getGroupDetail(this.groupId).subscribe({
       next: (group) => {
         this.group = group;
+        setTimeout(() => {
+          const currentUserId = this.authService.currentUser()?.id;
+          if (currentUserId) {
+            this.splitSelectorComponent?.setPayer(currentUserId);
+          }
+        }, 0);
       },
       error: (err) => {
         console.error('[ExpenseForm] Error loading group:', err);
@@ -241,11 +245,5 @@ export class ExpenseFormComponent implements OnInit {
 
   setExpenseDate(date: Date) {
     this.expenseForm.get('date')?.setValue(date);
-  }
-
-  openDateSelector() {
-    if (this.dateButtonComponent) {
-      this.dateButtonComponent.openPicker();
-    }
   }
 }
