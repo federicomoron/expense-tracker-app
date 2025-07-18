@@ -7,43 +7,37 @@ import { FullscreenLayoutComponent } from './layouts/fullscreen-layout.component
 
 export const routes: Routes = [
   {
-    path: 'groups/new',
-    component: FullscreenLayoutComponent,
+    path: '',
+    loadChildren: () => import('@features/auth/auth.routes').then((m) => m.default),
+  },
+  {
+    path: '',
+    component: AppLayoutComponent,
+    canActivateChild: [authGuard],
     children: [
+      { path: '', pathMatch: 'full', redirectTo: 'groups' },
       {
-        path: '',
+        path: 'groups/new',
         loadComponent: () =>
           import('@features/groups/group-form/group-form.component').then(
             (m) => m.GroupFormComponent,
           ),
       },
-    ],
-  },
-  {
-    path: '',
-    component: AppLayoutComponent,
-    children: [
-      { path: '', pathMatch: 'full', redirectTo: 'groups' },
       {
         path: 'groups',
-        canActivate: [authGuard],
         loadChildren: () => import('@features/groups/groups.routes').then((m) => m.default),
       },
       {
         path: 'account',
-        canActivate: [authGuard],
         loadComponent: () =>
           import('@features/account/account.component').then((m) => m.AccountComponent),
-      },
-      {
-        path: '',
-        loadChildren: () => import('@features/auth/auth.routes').then((m) => m.default),
       },
     ],
   },
   {
     path: 'groups/:groupId/expenses',
     component: FullscreenLayoutComponent,
+    canActivate: [authGuard],
     loadChildren: () => import('@features/expenses/expenses.routes').then((m) => m.default),
   },
   {

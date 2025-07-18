@@ -5,6 +5,6 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   selector: 'fullscreen-layout',
   imports: [RouterOutlet],
-  template: ` <router-outlet /> `,
+  template: `<router-outlet></router-outlet>`,
 })
 export class FullscreenLayoutComponent {}

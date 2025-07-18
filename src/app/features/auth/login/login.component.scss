@@ -1,25 +1,33 @@
-.login-container {
+:host {
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 1rem;
   background-color: var(--app-bg);
+}
+
+.login-container {
+  width: 100%;
 
   mat-card {
     width: 100%;
     max-width: 400px;
-    padding: 32px 24px;
-    border-radius: var(--app-radius);
+    padding: 2rem;
+    border-radius: 1rem;
     box-shadow: var(--app-shadow);
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 1.5rem;
     background-color: var(--app-surface);
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
   }
 
   .logo {
     width: 120px;
-    margin: 0 auto 8px;
+    margin: 0 auto 0.5rem;
     display: block;
   }
 
@@ -27,14 +35,23 @@
     text-align: center;
     font-size: 1.6rem;
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 0.5rem;
     color: var(--app-text);
   }
 
   .login-form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 1.5rem;
+
+    mat-form-field {
+      width: 100%;
+    }
+
+    button {
+      align-self: center;
+      width: 100%;
+    }
   }
 
   .full-width {
@@ -73,5 +90,43 @@
     display: inline-block;
     vertical-align: middle;
     margin-top: -2px;
+  }
+}
+
+:host-context(.dark-theme) .login-container mat-card {
+  background-color: #1e1e1e;
+  color: white;
+}
+
+:host-context(.dark-theme) .login-form {
+  input,
+  mat-label,
+  .mat-mdc-form-field-infix {
+    color: white !important;
+    caret-color: white;
+  }
+
+  .mat-mdc-text-field-wrapper,
+  .mat-mdc-form-field-flex {
+    background-color: transparent !important;
+  }
+
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  .mat-mdc-form-field-outline {
+    color: white !important;
+    border-color: white !important;
+  }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    color: #ccc;
+  }
+
+  mat-error {
+    color: #ff8a80;
   }
 }

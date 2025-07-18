@@ -1,10 +1,18 @@
 <footer class="app-footer">
   @if (calendarOnly) {
     <nav class="footer-nav">
-      <button type="button" (click)="onCalendarClick()">
+      <button type="button" (click)="openCalendar()">
         <mat-icon>calendar_today</mat-icon>
         <span>Fecha</span>
       </button>
+
+      <input
+        [matDatepicker]="picker"
+        [value]="date"
+        (dateChange)="onDateSelected($event.value)"
+        hidden
+      />
+      <mat-datepicker #picker></mat-datepicker>
     </nav>
   } @else if (!isExpenseForm) {
     <nav class="footer-nav">
