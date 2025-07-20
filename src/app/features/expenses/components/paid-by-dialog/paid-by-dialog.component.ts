@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { GroupMember } from '@models/group-detail.model';
 import { SharedUiModule } from '@shared/shared-ui.module';
@@ -8,7 +9,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
 @Component({
   standalone: true,
   selector: 'app-paid-by-dialog',
-  imports: [CommonModule, SharedUiModule],
+  imports: [CommonModule, SharedUiModule, TranslateModule],
   templateUrl: './paid-by-dialog.component.html',
   styleUrls: ['./paid-by-dialog.component.scss'],
 })

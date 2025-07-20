@@ -6,8 +6,8 @@ export enum GroupType {
 }
 
 export const GROUP_TYPE_OPTIONS = [
-  { label: 'Trip', value: GroupType.TRIP },
-  { label: 'House', value: GroupType.HOUSE },
-  { label: 'Couple', value: GroupType.COUPLE },
-  { label: 'Other', value: GroupType.OTHER },
+  { label: 'groupTypes.trip', value: GroupType.TRIP },
+  { label: 'groupTypes.house', value: GroupType.HOUSE },
+  { label: 'groupTypes.couple', value: GroupType.COUPLE },
+  { label: 'groupTypes.other', value: GroupType.OTHER },
 ];

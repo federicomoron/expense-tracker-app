@@ -1,9 +1,14 @@
 <div class="dialog-container">
   <div class="header">
-    <button mat-icon-button aria-label="Close category selector" (click)="closeDialog()">
+    <button
+      mat-icon-button
+      [attr.aria-label]="'categorySelector.close' | translate"
+      (click)="closeDialog()"
+    >
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <h2>Select Category</h2>
+
+    <h2>{{ 'categorySelector.title' | translate }}</h2>
   </div>
 
   <mat-nav-list>
@@ -12,7 +17,7 @@
         (click)="chooseCategory(category.key)"
         [class.selected]="selectedCategory() === category.key"
       >
-        <span class="option-name">{{ category.label }}</span>
+        <span class="option-name">{{ 'expenseCategories.' + category.key | translate }}</span>
       </mat-list-item>
     }
   </mat-nav-list>

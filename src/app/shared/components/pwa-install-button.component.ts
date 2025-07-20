@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { PwaInstallService } from 'src/app/core/services/pwa-install.service';
 
@@ -8,10 +9,12 @@ import { PwaInstallService } from 'src/app/core/services/pwa-install.service';
   selector: 'app-pwa-install-button',
   template: `
     @if (pwaService.canInstall()) {
-      <button mat-flat-button color="primary" (click)="pwaService.install()">Install App</button>
+      <button mat-flat-button color="primary" (click)="pwaService.install()">
+        {{ 'account.install' | translate }}
+      </button>
     }
   `,
-  imports: [MatButtonModule],
+  imports: [MatButtonModule, TranslateModule],
 })
 export class PwaInstallButtonComponent {
   readonly pwaService = inject(PwaInstallService);

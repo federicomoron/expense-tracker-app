@@ -17,14 +17,21 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": {
-              "base": "dist/control-de-gastos"
-            },
+            "outputPath": "dist/control-de-gastos",
             "index": "src/index.html",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/assets", "src/icons", "src/manifest.webmanifest"],
+            "assets": [
+              "src/assets",
+              {
+                "glob": "**/*.json",
+                "input": "src/assets/i18n",
+                "output": "/assets/i18n"
+              },
+              "src/icons",
+              "src/manifest.webmanifest"
+            ],
             "styles": ["src/styles.scss"],
             "scripts": [],
             "serviceWorker": "ngsw-config.json",
@@ -84,7 +91,21 @@
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
-            "assets": ["src/assets", "src/icons", "src/manifest.webmanifest"],
+            "assets": [
+              "src/assets",
+              {
+                "glob": "**/*.json",
+                "input": "src/assets/i18n",
+                "output": "/assets/i18n"
+              },
+              "src/icons",
+              "src/manifest.webmanifest"
+            ],
+            "i18n": {
+              "sourceLocale": "es",
+              "locales": ["en", "es"],
+              "outputPath": "dist/control-de-gastos/assets/i18n/"
+            },
             "styles": ["src/styles.scss"],
             "scripts": []
           }

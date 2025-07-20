@@ -1,11 +1,11 @@
 <div class="group-screen">
   <div class="main-content-bg">
     <mat-toolbar color="primary" class="group-form-toolbar">
-      <button mat-icon-button (click)="onCancel()" aria-label="Back">
+      <button mat-icon-button (click)="onCancel()" [attr.aria-label]="'groupForm.back' | translate">
         <mat-icon>arrow_back</mat-icon>
       </button>
 
-      <span class="toolbar-title">Create group</span>
+      <span class="toolbar-title">{{ 'groupForm.title' | translate }}</span>
 
       <span class="spacer"></span>
 
@@ -13,7 +13,7 @@
         mat-icon-button
         (click)="onSubmit($event)"
         [disabled]="isNameInvalid()"
-        aria-label="Save"
+        [attr.aria-label]="'groupForm.save' | translate"
       >
         <mat-icon>check</mat-icon>
       </button>
@@ -31,7 +31,7 @@
         [value]="name()"
         (input)="onNameInput($event)"
         class="flat-input full-width"
-        placeholder="Group Name"
+        [placeholder]="'groupForm.namePlaceholder' | translate"
       />
     </div>
 
@@ -43,7 +43,7 @@
       <mat-form-field appearance="fill" class="flat-select full-width">
         <mat-select [value]="type()" (selectionChange)="onTypeChange($event)">
           @for (option of groupTypeOptions; track option.value) {
-            <mat-option [value]="option.value">{{ option.label }}</mat-option>
+            <mat-option [value]="option.value">{{ option.label | translate }}</mat-option>
           }
         </mat-select>
       </mat-form-field>
