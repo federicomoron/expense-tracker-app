@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterModule } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 
 import { GroupDetailWithExpenses } from '@app/core/models/group-detail.model';
@@ -16,7 +17,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
 @Component({
   selector: 'app-groups',
   standalone: true,
-  imports: [SharedUiModule, RouterModule, CommonModule],
+  imports: [SharedUiModule, RouterModule, CommonModule, TranslateModule],
   templateUrl: './groups.component.html',
   styleUrl: './groups.component.scss',
 })
@@ -31,18 +32,27 @@ export class GroupsComponent implements OnInit {
   readonly currentUser = this.authService.currentUser;
   readonly currentUserId = this.currentUser()?.id ?? 0;
 
+  private translate = inject(TranslateService);
+  private groupService = inject(GroupService);
+  private snackbar = inject(SnackbarService);
+  private router = inject(Router);
+  private dialog = inject(MatDialog);
+
   getGroupDetails = (id: number) =>
     computed(() => {
       const detail = this._groupDetails()[id];
       return detail ?? undefined;
     });
 
-  constructor(
-    private groupService: GroupService,
-    private snackbar: SnackbarService,
-    private router: Router,
-    private dialog: MatDialog,
-  ) {}
+  ngOnInit(): void {
+    this.groupService.fetchGroups().subscribe({
+      next: () => this.loadGroupDetails(),
+      error: (err) => {
+        console.error('Error fetching groups', err);
+        this.snackbar.show(this.translate.instant('groups.errorFetching'));
+      },
+    });
+  }
 
   loadGroupDetails() {
     const groups = this.groups();
@@ -57,23 +67,13 @@ export class GroupsComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.groupService.fetchGroups().subscribe({
-      next: () => this.loadGroupDetails(),
-      error: (err) => {
-        console.error('Error fetching groups', err);
-        this.snackbar.show('Error fetching groups. Please try again.');
-      },
-    });
-  }
-
   addGroup(data: { name: string; type: GroupType }) {
     this.groupService.createGroup(data).subscribe({
       next: (res) => {
         if (res.success) this.showForm.set(false);
       },
       error: (err) => {
-        const message = err.error?.error?.message || 'There was an error creating the group';
+        const message = err.error?.error?.message || this.translate.instant('groups.errorCreating');
         if (!environment.production) {
           console.error('Backend message:', message);
         }

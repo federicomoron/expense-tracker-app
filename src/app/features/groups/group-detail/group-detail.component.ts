@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { SnackbarService } from '@app/core/services/snackbar.service';
 import { ExpensesComponent } from '@features/expenses/expenses/expenses.component';
@@ -12,7 +13,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
 @Component({
   selector: 'app-group-detail',
   standalone: true,
-  imports: [ExpensesComponent, CommonModule, SharedUiModule],
+  imports: [ExpensesComponent, CommonModule, SharedUiModule, TranslateModule],
   templateUrl: './group-detail.component.html',
   styleUrls: ['./group-detail.component.scss'],
 })
@@ -22,6 +23,7 @@ export class GroupDetailComponent implements OnInit {
   private groupService = inject(GroupService);
   private authService = inject(AuthService);
   private snackbar = inject(SnackbarService);
+  private translate = inject(TranslateService);
 
   groupId = signal(Number(this.route.snapshot.paramMap.get('id')));
   group = signal<GroupDetailWithExpenses | null>(null);
@@ -55,7 +57,7 @@ export class GroupDetailComponent implements OnInit {
       error: (err) => {
         console.error('Error loading group detail', err);
         this.loading.set(false);
-        this.snackbar.show('Could not load group details. Try again later.');
+        this.snackbar.show(this.translate.instant('groupDetail.errorLoading'));
       },
     });
   }

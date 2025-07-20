@@ -1,0 +1,153 @@
+{
+  "login": {
+    "title": "Login",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Enter your email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "togglePasswordVisibility": "Toggle password visibility",
+    "loginButton": "Login",
+    "googleSignIn": "Sign in with Google",
+    "noAccount": "Don't have an account?",
+    "registerHere": "Register here",
+    "fillAllFields": "Please fill in all fields.",
+    "invalidCredentials": "Incorrect email or password.",
+    "apiUnreachable": "🚨 API is not reachable. Please try again later.",
+    "unexpectedError": "An unexpected error occurred.",
+    "googleError": "Error with Google login"
+  },
+  "register": {
+    "nameLabel": "Name",
+    "nameRequired": "Name is required",
+    "emailLabel": "Email",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Invalid email",
+    "passwordLabel": "Password",
+    "passwordRequired": "Password is required",
+    "passwordMinLength": "Minimum 6 characters",
+    "registerButton": "Register",
+    "formInvalid": "Please complete all fields correctly.",
+    "registerError": "There was a problem with the registration.",
+    "registerSuccess": "Registration successful! Redirecting to login...",
+    "emailExists": "The email is already registered.",
+    "genericError": "Error during registration. Please try again."
+  },
+  "account": {
+    "logout": "Logout",
+    "install": "Install App",
+    "theme": {
+      "light": "☀️ Light",
+      "dark": "🌙 Dark",
+      "system": "🖥️ System"
+    }
+  },
+  "footer": {
+    "date": "Date",
+    "account": "Account",
+    "groups": "Groups",
+    "activity": "Activity",
+    "calendar": "Calendar",
+    "add": "Add"
+  },
+  "groups": {
+    "no_pending_balances": "No pending balances",
+    "you_owe": "You owe",
+    "owes_you": "owes you",
+    "new_group": "New Group",
+    "errorFetching": "Error fetching groups. Please try again.",
+    "errorCreating": "There was an error creating the group"
+  },
+  "groupDetail": {
+    "theyOweYou": "They owe you",
+    "youOwe": "You owe",
+    "owesYou": "owes you",
+    "addExpense": "Add new expense",
+    "errorLoading": "Could not load group details. Try again later."
+  },
+  "groupForm": {
+    "back": "Back",
+    "title": "Create group",
+    "save": "Save",
+    "namePlaceholder": "Group Name",
+    "errorCreating": "Error creating group"
+  },
+  "common": {
+    "close": "Close"
+  },
+  "groupTypes": {
+    "trip": "Trip",
+    "house": "House",
+    "couple": "Couple",
+    "other": "Other"
+  },
+  "expenseForm": {
+    "back": "Go back",
+    "title": "Add Expense",
+    "save": "Save",
+    "descriptionPlaceholder": "Enter a description",
+    "editModeWarning": "🛠 Edit mode enabled – waiting API support for GET + PUT",
+    "invalidGroupId": "⚠️ Invalid groupId",
+    "loadGroupError": "Failed to load group. Please try again later.",
+    "userNotLoggedIn": "User not logged in",
+    "noPayerSelected": "⚠️ No payer selected – expense not submitted",
+    "createError": "Error creating the expense",
+    "invalidGroupIdOnGoBack": "⚠️ Invalid groupId on goBack"
+  },
+  "paidByDialog": {
+    "title": "Select who paid",
+    "back": "Back"
+  },
+  "splitSelector": {
+    "paidBy": "Paid by",
+    "split": "Split",
+    "select": "Select"
+  },
+  "categorySelector": {
+    "close": "Close category selector",
+    "title": "Select Category"
+  },
+  "expenseCategories": {
+    "Food": "Food",
+    "Groceries": "Groceries",
+    "Rent": "Rent",
+    "Utilities": "Utilities",
+    "Transport": "Transport",
+    "Health": "Health",
+    "Clothing": "Clothing",
+    "Entertainment": "Entertainment",
+    "Subscriptions": "Subscriptions",
+    "Other": "Other"
+  },
+  "currencySelector": {
+    "close": "Close currency selector",
+    "title": "Select currency",
+    "currencies": {
+      "USD": "US Dollar",
+      "ARS": "Argentine Peso",
+      "EUR": "Euro",
+      "GBP": "British Pound",
+      "JPY": "Japanese Yen"
+    }
+  },
+  "splitTypeDialog": {
+    "close": "Close split type dialog",
+    "title": "Split Type",
+    "options": {
+      "equal": "Equal",
+      "percentage": "Percentage",
+      "shares": "Shares"
+    }
+  },
+  "expenses": {
+    "loading": "Loading expenses...",
+    "empty": "No expenses recorded.",
+    "youPaid": "You paid {{amount}} {{currency}}",
+    "paidBy": "{{name}} paid {{amount}} {{currency}}",
+    "paidByMultiple": "{{names}} paid {{total}} {{currency}}",
+    "youLent": "You lent",
+    "youBorrowed": "You borrowed"
+  },
+  "api": {
+    "notReachable": "🚨 The API is not reachable. Some actions may fail."
+  }
+}

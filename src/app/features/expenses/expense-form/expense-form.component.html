@@ -1,11 +1,11 @@
 <div class="expense-screen">
   <div class="expense-header-wrapper">
     <mat-toolbar color="primary" class="expense-form-toolbar">
-      <button mat-icon-button aria-label="Go back" (click)="goBack()">
+      <button mat-icon-button aria-label="expenseForm.back" (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
       </button>
 
-      <span class="toolbar-title">Add Expense</span>
+      <span class="toolbar-title">{{ 'expenseForm.title' | translate }}</span>
 
       <span class="spacer"></span>
 
@@ -13,7 +13,7 @@
         mat-icon-button
         (click)="submitExpense()"
         [disabled]="expenseForm.invalid || isSubmitting"
-        aria-label="Save"
+        aria-label="expenseForm.save"
       >
         <mat-icon>check</mat-icon>
       </button>
@@ -34,7 +34,7 @@
         type="text"
         formControlName="description"
         class="flat-input full-width"
-        placeholder="Enter a description"
+        [placeholder]="'expenseForm.descriptionPlaceholder' | translate"
       />
     </div>
 

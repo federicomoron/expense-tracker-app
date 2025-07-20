@@ -13,6 +13,10 @@
 
     <mat-divider class="account-divider"></mat-divider>
 
+    <button (click)="toggleLang()" class="logout-button" aria-label="Change language">
+      {{ currentLang === 'en' ? 'ES' : 'EN' }}
+    </button>
+
     <theme-toggle></theme-toggle>
 
     <div class="pwa-button">
@@ -22,7 +26,7 @@
     <div class="account-list">
       <button class="logout-button" (click)="logout()" aria-label="Logout">
         <mat-icon>logout</mat-icon>
-        <span>Logout</span>
+        <span>{{ 'account.logout' | translate }}</span>
       </button>
     </div>
   </div>

@@ -1,13 +1,14 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [SharedUiModule],
+  imports: [SharedUiModule, TranslateModule],
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
 })

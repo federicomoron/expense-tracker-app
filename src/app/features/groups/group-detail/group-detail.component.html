@@ -7,9 +7,9 @@
         <li class="summary-item">
           <span class="chip" [ngClass]="{ positive: b.amount > 0, negative: b.amount < 0 }">
             @if (b.amount > 0) {
-              They owe you
+              {{ 'groupDetail.theyOweYou' | translate }}
             } @else {
-              You owe
+              {{ 'groupDetail.youOwe' | translate }}
             }
           </span>
           <span class="summary-amount">
@@ -27,9 +27,9 @@
         <li class="member-item">
           <span class="chip" [ngClass]="{ positive: mb.amount > 0, negative: mb.amount < 0 }">
             @if (mb.amount > 0) {
-              {{ mb.name }} owes you
+              {{ mb.name }} {{ 'groupDetail.owesYou' | translate }}
             } @else {
-              You owe {{ mb.name }}
+              {{ 'groupDetail.youOwe' | translate }} {{ mb.name }}
             }
           </span>
           <span class="member-amount">
@@ -45,13 +45,13 @@
     [expenses]="group()?.expenses ?? []"
     [groupMembers]="group()?.members ?? []"
     [loading]="loading()"
-  />
+  ></app-expenses>
 
   <button
     mat-fab
     color="primary"
     class="new-expense-button"
-    aria-label="Add new expense"
+    aria-label="groupDetail.addExpense"
     (click)="goToNewExpense()"
   >
     <mat-icon>add</mat-icon>

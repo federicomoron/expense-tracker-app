@@ -1,6 +1,9 @@
 import { isDevMode } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideServiceWorker } from '@angular/service-worker';
+import { TranslateService } from '@ngx-translate/core';
+
+import { provideTranslocoConfig } from '@app/core/config/transloco.config';
 
 import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
@@ -25,5 +28,11 @@ void bootstrapApplication(AppComponent, {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:3000',
     }),
+    provideTranslocoConfig(),
   ],
+}).then((appRef) => {
+  const translate = appRef.injector.get(TranslateService);
+  const savedLang = localStorage.getItem('lang') || 'en';
+  translate.setDefaultLang('en');
+  translate.use(savedLang);
 });

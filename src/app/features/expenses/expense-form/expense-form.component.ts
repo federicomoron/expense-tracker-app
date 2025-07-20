@@ -3,6 +3,7 @@ import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { SnackbarService } from '@app/core/services/snackbar.service';
 import { EXPENSE_CATEGORIES } from '@app/shared/data/expense-categories';
@@ -27,6 +28,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
     CommonModule,
     SplitSelectorComponent,
     FooterComponent,
+    TranslateModule,
   ],
   templateUrl: './expense-form.component.html',
   styleUrl: './expense-form.component.scss',
@@ -40,6 +42,7 @@ export class ExpenseFormComponent implements OnInit {
   private dialog = inject(MatDialog);
   private groupService = inject(GroupService);
   private snackbar = inject(SnackbarService);
+  private translate = inject(TranslateService);
 
   @ViewChild(SplitSelectorComponent)
   splitSelectorComponent!: SplitSelectorComponent;
@@ -79,7 +82,7 @@ export class ExpenseFormComponent implements OnInit {
     this.isEditMode = !!this.expenseId;
 
     if (this.isEditMode) {
-      console.warn('🛠 Edit mode enabled – waiting API support for GET + PUT');
+      console.warn(this.translate.instant('expenseForm.editModeWarning'));
     }
 
     let parentRoute = this.route;
@@ -91,7 +94,7 @@ export class ExpenseFormComponent implements OnInit {
     this.groupId = groupIdParam ? +groupIdParam : NaN;
 
     if (isNaN(this.groupId)) {
-      console.warn('⚠️ Invalid groupId');
+      console.warn(this.translate.instant('expenseForm.invalidGroupId'));
       return;
     }
 
@@ -107,7 +110,7 @@ export class ExpenseFormComponent implements OnInit {
       },
       error: (err) => {
         console.error('[ExpenseForm] Error loading group:', err);
-        this.snackbar.show('Failed to load group. Please try again later.');
+        this.snackbar.show(this.translate.instant('expenseForm.loadGroupError'));
       },
     });
   }
@@ -117,7 +120,7 @@ export class ExpenseFormComponent implements OnInit {
 
     const currentUser = this.authService.currentUser();
     if (!currentUser) {
-      console.error('User not logged in');
+      console.error(this.translate.instant('expenseForm.userNotLoggedIn'));
       return;
     }
 
@@ -139,7 +142,7 @@ export class ExpenseFormComponent implements OnInit {
     const selectedPayer = this.splitSelectorComponent.selectedPayer();
 
     if (!selectedPayer) {
-      console.warn('⚠️ No payer selected – expense not submitted');
+      console.warn(this.translate.instant('expenseForm.noPayerSelected'));
       return;
     }
 
@@ -167,7 +170,7 @@ export class ExpenseFormComponent implements OnInit {
         if (validationErrors) {
           console.error('Validation errors:', validationErrors);
         } else {
-          console.error('Error al crear el gasto:', error);
+          console.error(this.translate.instant('expenseForm.createError'), error);
         }
 
         this.isSubmitting = false;
@@ -229,7 +232,7 @@ export class ExpenseFormComponent implements OnInit {
 
   goBack() {
     if (isNaN(this.groupId)) {
-      console.warn('⚠️ Invalid groupId on goBack');
+      console.warn(this.translate.instant('expenseForm.invalidGroupIdOnGoBack'));
       void this.router.navigate(['/groups']);
       return;
     }

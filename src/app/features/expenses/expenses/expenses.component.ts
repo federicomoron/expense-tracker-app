@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, inject } from '@angular/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { Expense, ExpenseExtended, ExpenseUser } from '@models/expenses.model';
 import { AuthService } from '@services/auth.service';
@@ -9,7 +10,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
 @Component({
   selector: 'app-expenses',
   standalone: true,
-  imports: [CommonModule, SharedUiModule],
+  imports: [CommonModule, SharedUiModule, TranslateModule],
   templateUrl: './expenses.component.html',
   styleUrls: ['./expenses.component.scss'],
 })
@@ -20,7 +21,7 @@ export class ExpensesComponent {
   @Input() groupMembers: { userId: number; name: string }[] = [];
 
   private authService = inject(AuthService);
-
+  private translate = inject(TranslateService);
   getCategoryIcon = getCategoryIcon;
 
   get groupedExpenses() {
@@ -61,21 +62,32 @@ export class ExpensesComponent {
   getPaidByText(exp: Expense): string {
     const paidBy = this.getPaidBy(exp);
     if (!paidBy.length) return '';
-    const user = this.currentUser;
+    const user = this.authService.currentUser();
 
     if (paidBy.length === 1) {
       const onlyPayer = paidBy[0];
       const name = this.getUserName(onlyPayer.userId);
       if (user && onlyPayer.userId === user.id) {
-        return `You paid ${Number(onlyPayer.amount).toFixed(2)} ${exp.currency}`;
+        return this.translate.instant('expenses.youPaid', {
+          amount: Number(onlyPayer.amount).toFixed(2),
+          currency: exp.currency,
+        });
       }
-      return `${name} paid ${Number(onlyPayer.amount).toFixed(2)} ${exp.currency}`;
+      return this.translate.instant('expenses.paidBy', {
+        name,
+        amount: Number(onlyPayer.amount).toFixed(2),
+        currency: exp.currency,
+      });
     }
 
-    type Participant = { userId: number; amount: number };
-    const names = paidBy.map((p: Participant) => this.getUserName(p.userId)).join(', ');
-    const total = paidBy.reduce((sum: number, p: Participant) => sum + Number(p.amount), 0);
-    return `${names} paid ${total.toFixed(2)} ${exp.currency}`;
+    const names = paidBy.map((p) => this.getUserName(p.userId)).join(', ');
+    const total = paidBy.reduce((sum, p) => sum + Number(p.amount), 0);
+
+    return this.translate.instant('expenses.paidByMultiple', {
+      names,
+      total: total.toFixed(2),
+      currency: exp.currency,
+    });
   }
 
   getUserLent(exp: Expense): number {
@@ -110,8 +122,8 @@ export class ExpensesComponent {
 
   getLendLabel(exp: Expense): string {
     const lent = this.getUserLent(exp);
-    if (lent > 0) return 'You lent';
-    if (lent < 0) return 'You borrowed';
+    if (lent > 0) return this.translate.instant('expenses.youLent');
+    if (lent < 0) return this.translate.instant('expenses.youBorrowed');
     return '';
   }
 }

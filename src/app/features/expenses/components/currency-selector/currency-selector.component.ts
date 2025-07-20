@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
   standalone: true,
   selector: 'app-currency-selector',
-  imports: [CommonModule, SharedUiModule],
+  imports: [CommonModule, SharedUiModule, TranslateModule],
   templateUrl: './currency-selector.component.html',
   styleUrls: ['./currency-selector.component.scss'],
 })

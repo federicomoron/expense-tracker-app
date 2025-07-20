@@ -1,33 +1,33 @@
 <div class="login-container">
   <mat-card>
     <img src="/assets/spendly.png" alt="App Logo" class="logo" />
-    <h1 class="login-title">Login</h1>
+    <h1 class="login-title">{{ 'login.title' | translate }}</h1>
     <form (submit)="onSubmit($event)" class="login-form">
       <mat-form-field appearance="outline" class="custom-label-color">
-        <mat-label>Email</mat-label>
+        <mat-label>{{ 'login.emailLabel' | translate }}</mat-label>
         <input
           matInput
           type="email"
           [value]="email()"
           (input)="onEmailInput($event)"
-          placeholder="Enter your email"
+          [placeholder]="'login.emailPlaceholder' | translate"
         />
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="custom-label-color">
-        <mat-label>Password</mat-label>
+        <mat-label>{{ 'login.passwordLabel' | translate }}</mat-label>
         <input
           matInput
           [type]="showPassword() ? 'text' : 'password'"
           [value]="password()"
           (input)="onPasswordInput($event)"
-          placeholder="Enter your password"
+          [placeholder]="'login.passwordPlaceholder' | translate"
         />
         <button
           mat-icon-button
           matSuffix
           (click)="togglePasswordVisibility()"
-          [attr.aria-label]="'Toggle password visibility'"
+          [attr.aria-label]="'login.togglePasswordVisibility' | translate"
           [attr.aria-pressed]="showPassword()"
           type="button"
         >
@@ -44,7 +44,7 @@
             class="spinner"
           ></mat-progress-spinner>
         } @else {
-          Login
+          {{ 'login.loginButton' | translate }}
         }
       </app-exp-button>
 
@@ -54,24 +54,26 @@
         </div>
       }
 
-      <button
+      <!-- Uncomment if Google login is needed -->
+      <!-- <button
         mat-stroked-button
         color="primary"
         class="full-width google-login-btn"
         (click)="onGoogleLogin()"
         type="button"
+        [attr.aria-label]="'login.googleSignIn' | translate"
       >
         <img
           src="https://developers.google.com/identity/images/g-logo.png"
           alt="Google logo"
           class="google-icon"
         />
-        Sign in with Google
-      </button>
+        {{ 'login.googleSignIn' | translate }}
+      </button> -->
 
       <p class="register-link">
-        Don't have an account?
-        <a routerLink="/register">Register here</a>
+        {{ 'login.noAccount' | translate }}
+        <a routerLink="/register">{{ 'login.registerHere' | translate }}</a>
       </p>
     </form>
   </mat-card>

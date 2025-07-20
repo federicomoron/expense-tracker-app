@@ -3,7 +3,7 @@
     <nav class="footer-nav">
       <button type="button" (click)="openCalendar()">
         <mat-icon>calendar_today</mat-icon>
-        <span>Fecha</span>
+        <span>{{ 'footer.date' | translate }}</span>
       </button>
 
       <input
@@ -17,21 +17,31 @@
   } @else if (!isExpenseForm) {
     <nav class="footer-nav">
       <button type="button" (click)="goTo('/account')" [class.active]="isActive('/account')">
-        <mat-icon>person</mat-icon><span>Account</span>
+        <mat-icon>person</mat-icon>
+        <span>{{ 'footer.account' | translate }}</span>
       </button>
+
       <button type="button" (click)="goTo('/groups')" [class.active]="isActive('/groups')">
-        <mat-icon>group</mat-icon><span>Groups</span>
+        <mat-icon>group</mat-icon>
+        <span>{{ 'footer.groups' | translate }}</span>
       </button>
-      <!-- <button type="button" (click)="goTo('/activity')" [class.active]="isActive('/activity')">
-        <mat-icon>history</mat-icon><span>Activity</span>
-      </button> -->
+
+      <!-- Botón para historial si se decide habilitar más adelante -->
+      <!--
+      <button type="button" (click)="goTo('/activity')" [class.active]="isActive('/activity')">
+        <mat-icon>history</mat-icon>
+        <span>{{ 'footer.activity' | translate }}</span>
+      </button>
+      -->
     </nav>
   } @else {
     <div class="footer-actions">
-      <button mat-fab color="primary" aria-label="Calendar">
+      <button mat-fab color="primary" [attr.aria-label]="'footer.calendar' | translate">
         <mat-icon>calendar_today</mat-icon>
       </button>
-      <button mat-fab color="accent" aria-label="Other"><mat-icon>add</mat-icon></button>
+      <button mat-fab color="accent" [attr.aria-label]="'footer.add' | translate">
+        <mat-icon>add</mat-icon>
+      </button>
     </div>
   }
 </footer>
