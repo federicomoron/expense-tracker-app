@@ -18,6 +18,7 @@
   },
   "register": {
     "nameLabel": "Name",
+    "title": "Register",
     "nameRequired": "Name is required",
     "emailLabel": "Email",
     "emailRequired": "Email is required",
@@ -35,6 +36,7 @@
   "account": {
     "logout": "Logout",
     "install": "Install App",
+    "i18n": "Language: English",
     "theme": {
       "light": "☀️ Light",
       "dark": "🌙 Dark",

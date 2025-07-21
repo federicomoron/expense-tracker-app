@@ -60,4 +60,8 @@ export class RegisterComponent {
       },
     });
   }
+
+  goBack() {
+    void this.router.navigate(['/login']);
+  }
 }

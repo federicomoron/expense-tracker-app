@@ -80,6 +80,14 @@
     color: var(--app-muted);
   }
 
+  .login-register {
+    color: var(--app-text);
+
+    &:hover {
+      color: var(--app-primary);
+    }
+  }
+
   .error-message {
     color: var(--app-error);
     font-size: 14px;
