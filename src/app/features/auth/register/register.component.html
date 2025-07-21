@@ -1,39 +1,45 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="register-form">
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>{{ 'register.nameLabel' | translate }}</mat-label>
-    <input matInput formControlName="name" />
-    @if (form.get('name')?.hasError('required')) {
-      <mat-error>{{ 'register.nameRequired' | translate }}</mat-error>
-    }
-  </mat-form-field>
-
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>{{ 'register.emailLabel' | translate }}</mat-label>
-    <input matInput formControlName="email" type="email" />
-    @if (form.get('email')?.hasError('required')) {
-      <mat-error>{{ 'register.emailRequired' | translate }}</mat-error>
-    }
-    @if (form.get('email')?.hasError('email')) {
-      <mat-error>{{ 'register.emailInvalid' | translate }}</mat-error>
-    }
-  </mat-form-field>
-
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>{{ 'register.passwordLabel' | translate }}</mat-label>
-    <input matInput formControlName="password" type="password" />
-    @if (form.get('password')?.hasError('required')) {
-      <mat-error>{{ 'register.passwordRequired' | translate }}</mat-error>
-    }
-    @if (form.get('password')?.hasError('minlength')) {
-      <mat-error>{{ 'register.passwordMinLength' | translate }}</mat-error>
-    }
-  </mat-form-field>
-
-  <button mat-raised-button color="primary" type="submit" [disabled]="loading">
-    @if (loading) {
-      <mat-spinner diameter="20" strokeWidth="3" color="accent" />
-    } @else {
-      {{ 'register.registerButton' | translate }}
-    }
+<div class="register-screen">
+  <button mat-icon-button aria-label="register.back" class="register-back" (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
   </button>
-</form>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="register-form">
+    <h1 class="register-title">{{ 'register.title' | translate }}</h1>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'register.nameLabel' | translate }}</mat-label>
+      <input matInput formControlName="name" />
+      @if (form.get('name')?.hasError('required')) {
+        <mat-error>{{ 'register.nameRequired' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'register.emailLabel' | translate }}</mat-label>
+      <input matInput formControlName="email" type="email" />
+      @if (form.get('email')?.hasError('required')) {
+        <mat-error>{{ 'register.emailRequired' | translate }}</mat-error>
+      }
+      @if (form.get('email')?.hasError('email')) {
+        <mat-error>{{ 'register.emailInvalid' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>{{ 'register.passwordLabel' | translate }}</mat-label>
+      <input matInput formControlName="password" type="password" />
+      @if (form.get('password')?.hasError('required')) {
+        <mat-error>{{ 'register.passwordRequired' | translate }}</mat-error>
+      }
+      @if (form.get('password')?.hasError('minlength')) {
+        <mat-error>{{ 'register.passwordMinLength' | translate }}</mat-error>
+      }
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="loading">
+      @if (loading) {
+        <mat-spinner diameter="20" strokeWidth="3" color="accent" />
+      } @else {
+        {{ 'register.registerButton' | translate }}
+      }
+    </button>
+  </form>
+</div>

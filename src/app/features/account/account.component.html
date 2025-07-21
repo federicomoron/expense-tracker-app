@@ -14,7 +14,7 @@
     <mat-divider class="account-divider"></mat-divider>
 
     <button (click)="toggleLang()" class="logout-button" aria-label="Change language">
-      {{ currentLang === 'en' ? 'ES' : 'EN' }}
+      <mat-label>{{ 'account.i18n' | translate }}</mat-label>
     </button>
 
     <theme-toggle></theme-toggle>

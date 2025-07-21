@@ -18,6 +18,7 @@
   },
   "register": {
     "nameLabel": "Nombre",
+    "title": "Registrarse",
     "nameRequired": "El nombre es obligatorio",
     "emailLabel": "Correo electrónico",
     "emailRequired": "El correo es obligatorio",
@@ -35,6 +36,7 @@
   "account": {
     "logout": "Cerrar sesión",
     "install": "Instalar aplicación",
+    "i18n": "Idioma: Español",
     "theme": {
       "light": "☀️ Claro",
       "dark": "🌙 Oscuro",
@@ -144,8 +146,8 @@
     "youPaid": "Pagaste {{amount}} {{currency}}",
     "paidBy": "{{name}} pagó {{amount}} {{currency}}",
     "paidByMultiple": "{{names}} pagaron {{total}} {{currency}}",
-    "youLent": "Prestaste",
-    "youBorrowed": "Tomaste prestado"
+    "youLent": "prestaste",
+    "youBorrowed": "pediste"
   },
   "api": {
     "notReachable": "🚨 La API no está disponible. Algunas acciones pueden fallar."

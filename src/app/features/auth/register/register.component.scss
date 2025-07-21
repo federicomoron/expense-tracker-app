@@ -1,10 +1,26 @@
 :host {
+  display: block;
+  min-height: 100vh;
+  background-color: var(--app-bg);
+  padding: 0;
+}
+
+.register-screen {
+  position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: 1rem;
-  background-color: var(--app-bg);
+  padding: 2rem 1rem;
+}
+
+.register-back {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  color: var(--app-text);
+  z-index: 10;
 }
 
 .register-form {
@@ -12,7 +28,7 @@
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
-  max-width: 400px;
+  max-width: 300px;
   padding: 2rem;
   border-radius: 1rem;
   background-color: var(--app-card-bg, #fff);
@@ -25,10 +41,18 @@
     width: 100%;
   }
 
-  button {
+  button[type='submit'] {
     align-self: center;
     width: 100%;
   }
+}
+
+.register-title {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--app-text);
 }
 
 :host-context(.dark-theme) .register-form {
