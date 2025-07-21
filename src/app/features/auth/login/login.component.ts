@@ -1,5 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { SnackbarService } from '@app/core/services/snackbar.service';
 import { AuthService } from '@services/auth.service';
@@ -9,7 +10,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [SharedUiModule, RouterModule, ExpButtonComponent],
+  imports: [SharedUiModule, RouterModule, ExpButtonComponent, TranslateModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
@@ -24,6 +25,7 @@ export class LoginComponent {
     private authService: AuthService,
     private router: Router,
     private snackbar: SnackbarService,
+    private translate: TranslateService,
   ) {}
 
   isFormInvalid = computed(() => this.email().trim() === '' || this.password().trim() === '');
@@ -33,7 +35,7 @@ export class LoginComponent {
     this.errorMessage.set('');
 
     if (this.isFormInvalid()) {
-      this.errorMessage.set('Please fill in all fields.');
+      this.errorMessage.set(this.translate.instant('login.fillAllFields'));
       return;
     }
 
@@ -45,17 +47,18 @@ export class LoginComponent {
         if (res?.success) {
           void this.router.navigate(['/groups']);
         } else {
-          this.snackbar.show('Incorrect email or password.');
+          this.snackbar.show(this.translate.instant('login.invalidCredentials'));
         }
       },
       error: (err) => {
         this.isLoading.set(false);
+
         if (err.status === 0) {
-          this.snackbar.show('🚨 API is not reachable. Please try again later.');
+          this.snackbar.show(this.translate.instant('login.apiUnreachable'));
         } else if (err.status === 401 || err.status === 400) {
-          this.snackbar.show('Incorrect email or password.');
+          this.snackbar.show(this.translate.instant('login.invalidCredentials'));
         } else {
-          this.snackbar.show('An unexpected error occurred.');
+          this.snackbar.show(this.translate.instant('login.unexpectedError'));
         }
       },
     });
@@ -80,7 +83,7 @@ export class LoginComponent {
       if (res && res.success) {
         void this.router.navigate(['/groups']);
       } else {
-        alert('Error with Google login');
+        alert(this.translate.instant('login.googleError'));
       }
     });
   }

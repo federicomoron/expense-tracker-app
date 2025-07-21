@@ -1,4 +1,5 @@
 import { Component, signal } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 type ThemeOption = 'light' | 'dark' | 'system';
 
@@ -7,15 +8,10 @@ type ThemeOption = 'light' | 'dark' | 'system';
   selector: 'theme-toggle',
   templateUrl: './theme-toggle.component.html',
   styleUrls: ['./theme-toggle.component.scss'],
+  imports: [TranslateModule],
 })
 export class ThemeToggleComponent {
   options: ThemeOption[] = ['light', 'dark', 'system'];
-  labels: Record<ThemeOption, string> = {
-    light: '☀️ Light',
-    dark: '🌙 Dark',
-    system: '🖥️ System',
-  };
-
   theme = signal<ThemeOption>(this.getInitialTheme());
 
   setTheme(option: ThemeOption) {
@@ -37,9 +33,5 @@ export class ThemeToggleComponent {
     if (theme === 'dark' || (theme === 'system' && prefersDark)) {
       classList.add('dark-theme');
     }
-  }
-
-  getLabel(option: ThemeOption): string {
-    return this.labels[option];
   }
 }

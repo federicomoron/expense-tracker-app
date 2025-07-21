@@ -1,9 +1,9 @@
 <div class="dialog-container">
   <div class="header">
-    <button mat-icon-button (click)="closeDialog()">
+    <button mat-icon-button aria-label="paidByDialog.back" (click)="closeDialog()">
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <h2>Select who paid</h2>
+    <h2>{{ 'paidByDialog.title' | translate }}</h2>
   </div>
 
   <mat-nav-list>

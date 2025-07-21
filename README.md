@@ -1,63 +1,62 @@
-# Expense Tracker App
+# SpendTrack - Expense Tracker Angular App
 
-A modern and modular web application to track personal and group expenses, built with Angular using a standalone architecture and designed with mobile-first principles. Ideal for managing your daily, shared, or travel expenses with a clean and responsive UI.
+**SpendTrack** is a modern, modular and mobile-first web application to manage **group and personal expenses**, inspired by Splitwise.  
+Built with **Angular 20**, **standalone components**, **Signals**, and a clean architecture ready for production-grade projects.
 
-![Angular CI Pipeline](https://github.com/federicomoron/expense-tracker-app/actions/workflows/ci.yml/badge.svg)
+![CI Pipeline](https://github.com/federicomoron/expense-tracker-app/actions/workflows/ci.yml/badge.svg)
 
 ## ✨ Features
 
-- Auth simulation with routing guards and layout separation
-- Create and manage expense groups (e.g., Family, Personal, Trips)
-- Add expenses with currency, category, and split-type selectors
-- Reusable and dynamic dialog components for form-based inputs
-- Multi-currency group support (coming soon)
-- Fully responsive and mobile-first design using Angular Material
-- Shared layouts for authenticated vs unauthenticated flows
-- Clean architecture with feature-based and core-based structure
-- Configurable theme using SCSS variables and Angular Material theming
+- Authentication with Google (login/register) and route guards.
+- Create and manage expense groups (Family, Personal, Trips).
+- Add expenses with currency, category, and split-type selectors.
+- Reusable dynamic dialog components for form inputs.
+- Multi-currency support per expense (group-level coming soon).
+- Fully responsive, mobile-first design.
+- Light/Dark theme toggle _(WIP)_
+- Modular and clean architecture with core, features, shared, layouts.
+- Configurable theming via SCSS and Angular Material.
+- Build served locally with `serve` package for production simulation.
+- Automated linting, formatting, testing, and CI/CD pipeline.
 
 ## 🌐 Tech Stack
 
-- Angular (standalone components + signals)
-- Angular Material (custom theme)
+- Angular 20+ (standalone components + Signals)
+- Angular Material (custom theming)
 - TypeScript
-- RxJS (Reactive Programming)
-- SCSS (modular and theme-based)
-- ESLint + Prettier (code formatting & quality)
-- Husky + lint-staged + commitlint (Git hooks)
-- GitHub Actions (CI/CD pipeline)
+- RxJS
+- SCSS (theme-based)
+- ESLint + Prettier
+- Husky + lint-staged + commitlint
+- GitHub Actions for CI/CD
 
 ## 🏢 Project Structure
 
 ```txt
 src/
 ├── app/
-│   ├── core/                  # Global services, interceptors, guards, constants, models
-│   │   ├── constants/
-│   │   ├── guards/
-│   │   ├── interceptors/
-│   │   ├── models/
-│   │   └── services/
-│   ├── features/              # Feature-based modules
-│   │   ├── auth/              # Login and register views
-│   │   ├── expenses/          # Expense module (selectors, dialogs, forms)
-│   │   └── groups/            # Group module (form, detail, listing)
-│   ├── layouts/               # App layout (shell) and fullscreen layout
-│   ├── shared/                # Reusable UI components, helpers, styles
-│   │   ├── components/
-│   │   ├── helpers/
-│   │   └── styles/
-│   ├── app.routes.ts          # Global route definitions
-│   ├── app.config.ts          # Standalone providers and router setup
-│   └── app.component.ts       # Root shell component
-├── environments/              # Environment-specific configs (dev, prod)
-├── assets/                    # Static files (icons, images, etc.)
-├── theme/                     # Theme configuration (SCSS variables and overrides)
-├── styles.scss                # Global styles
-└── main.ts                    # Standalone bootstrap entry
+│ ├── core/            # Interceptors, services, guards, models
+│ │ ├── services/      # HTTP + logic services
+│ │ └── interceptors/  # Auth interceptor
+│ ├── features/        # Domain features (auth, groups, expenses)
+│ │ └── groups/        # Create, list and manage expense groups
+│ ├── layouts/         # Application and fullscreen layouts
+│ ├── shared/          # UI components, Material module, styles
+│ │ ├── components/    # Reusable UI components
+│ │ ├── directives/    # Custom directives
+│ │ ├── pipes/         # Shared pipes
+│ │ └── material.module.ts
+│ ├── app.routes.ts    # Routing configuration
+│ ├── app.config.ts    # App-level providers and config
+│ └── app.component.ts # Root component
+├── theme/             # SCSS theming (variables, mixins, palettes)
+├── environments/      # Dev/prod environment configs
+├── assets/            # Images, icons, fonts
+├── styles.scss        # Global styles
+└── main.ts            # Entry point
 ```
 
-🚀 Getting Started
+## 🚀 Getting Started
 
 1. Clone the repository:
    git clone https://github.com/federicomoron/expense-tracker-app.git
@@ -68,26 +67,17 @@ src/
 
 3. Run the app locally:
    yarn start
-
    - Open http://localhost:4200 in your browser.
 
-🔧 Available Scripts
+## 🔧 Available Scripts
 
-# Lint the code
-
-yarn lint
-
-# Lint and auto-fix
-
-yarn lint:fix
-
-# Format code with Prettier
-
-yarn format
-
-# Check formatting only
-
-yarn format:check
+- yarn lint - Lint code with ESLint
+- yarn lint:fix - Auto-fix lint errors
+- yarn format - Format code with Prettier
+- yarn format:check - Check code formatting
+- yarn test - Run tests (Karma/Jasmine)
+- yarn build - Build production bundle
+- yarn start - Run dev server
 
 ## ✨ Author
 

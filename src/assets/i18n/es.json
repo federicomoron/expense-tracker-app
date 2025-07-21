@@ -1,0 +1,155 @@
+{
+  "login": {
+    "title": "Ingresar",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "Ingrese su correo",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "Ingrese su contraseña",
+    "togglePasswordVisibility": "Alternar visibilidad de la contraseña",
+    "loginButton": "Ingresar",
+    "googleSignIn": "Iniciar sesión con Google",
+    "noAccount": "¿No tienes una cuenta?",
+    "registerHere": "Regístrate aquí",
+    "fillAllFields": "Por favor completá todos los campos.",
+    "invalidCredentials": "Correo o contraseña incorrectos.",
+    "apiUnreachable": "🚨 La API no está disponible. Por favor, intentá más tarde.",
+    "unexpectedError": "Ocurrió un error inesperado.",
+    "googleError": "Error al iniciar sesión con Google"
+  },
+  "register": {
+    "nameLabel": "Nombre",
+    "title": "Registrarse",
+    "nameRequired": "El nombre es obligatorio",
+    "emailLabel": "Correo electrónico",
+    "emailRequired": "El correo es obligatorio",
+    "emailInvalid": "Correo inválido",
+    "passwordLabel": "Contraseña",
+    "passwordRequired": "La contraseña es obligatoria",
+    "passwordMinLength": "Mínimo 6 caracteres",
+    "registerButton": "Registrarse",
+    "formInvalid": "Por favor completá todos los campos correctamente.",
+    "registerError": "Hubo un problema con el registro.",
+    "registerSuccess": "¡Registro exitoso! Redirigiendo al inicio de sesión...",
+    "emailExists": "El correo ya está registrado.",
+    "genericError": "Error durante el registro. Por favor, intentá de nuevo."
+  },
+  "account": {
+    "logout": "Cerrar sesión",
+    "install": "Instalar aplicación",
+    "i18n": "Idioma: Español",
+    "theme": {
+      "light": "☀️ Claro",
+      "dark": "🌙 Oscuro",
+      "system": "🖥️ Sistema"
+    }
+  },
+  "footer": {
+    "date": "Fecha",
+    "account": "Cuenta",
+    "groups": "Grupos",
+    "activity": "Actividad",
+    "calendar": "Calendario",
+    "add": "Agregar"
+  },
+  "groups": {
+    "no_pending_balances": "Sin saldos pendientes",
+    "you_owe": "Debés",
+    "owes_you": "te debe",
+    "new_group": "Nuevo Grupo",
+    "errorFetching": "Error al obtener grupos. Por favor, intentá nuevamente.",
+    "errorCreating": "Hubo un error al crear el grupo"
+  },
+  "groupDetail": {
+    "theyOweYou": "Te deben",
+    "youOwe": "Debes",
+    "owesYou": "te debe",
+    "addExpense": "Agregar nuevo gasto",
+    "errorLoading": "No se pudieron cargar los detalles del grupo. Intentá más tarde."
+  },
+  "groupForm": {
+    "back": "Volver",
+    "title": "Crear grupo",
+    "save": "Guardar",
+    "namePlaceholder": "Nombre del grupo",
+    "errorCreating": "Error al crear el grupo"
+  },
+  "common": {
+    "close": "Cerrar"
+  },
+  "groupTypes": {
+    "trip": "Viaje",
+    "house": "Casa",
+    "couple": "Pareja",
+    "other": "Otro"
+  },
+  "expenseForm": {
+    "back": "Volver",
+    "title": "Agregar gasto",
+    "save": "Guardar",
+    "descriptionPlaceholder": "Descripción del gasto",
+    "editModeWarning": "🛠 Modo edición activado – esperando soporte API para GET + PUT",
+    "invalidGroupId": "⚠️ groupId inválido",
+    "loadGroupError": "No se pudo cargar el grupo. Por favor, intentá nuevamente más tarde.",
+    "userNotLoggedIn": "Usuario no logueado",
+    "noPayerSelected": "⚠️ No hay pagador seleccionado – gasto no enviado",
+    "createError": "Error al crear el gasto",
+    "invalidGroupIdOnGoBack": "⚠️ groupId inválido en goBack"
+  },
+  "paidByDialog": {
+    "title": "Seleccioná quién pagó",
+    "back": "Atrás"
+  },
+  "splitSelector": {
+    "paidBy": "Pagado por",
+    "split": "Dividir",
+    "select": "Seleccionar"
+  },
+  "categorySelector": {
+    "close": "Cerrar selector de categoría",
+    "title": "Seleccionar Categoría"
+  },
+  "expenseCategories": {
+    "Food": "Comida",
+    "Groceries": "Supermercado",
+    "Rent": "Alquiler",
+    "Utilities": "Servicios",
+    "Transport": "Transporte",
+    "Health": "Salud",
+    "Clothing": "Ropa",
+    "Entertainment": "Entretenimiento",
+    "Subscriptions": "Suscripciones",
+    "Other": "Otro"
+  },
+  "currencySelector": {
+    "close": "Cerrar selector de moneda",
+    "title": "Seleccionar moneda",
+    "currencies": {
+      "USD": "Dólar estadounidense",
+      "ARS": "Peso argentino",
+      "EUR": "Euro",
+      "GBP": "Libra esterlina",
+      "JPY": "Yen japonés"
+    }
+  },
+  "splitTypeDialog": {
+    "close": "Cerrar diálogo de tipo de división",
+    "title": "Tipo de división",
+    "options": {
+      "equal": "Igual",
+      "percentage": "Porcentaje",
+      "shares": "Participaciones"
+    }
+  },
+  "expenses": {
+    "loading": "Cargando gastos...",
+    "empty": "No hay gastos registrados.",
+    "youPaid": "Pagaste {{amount}} {{currency}}",
+    "paidBy": "{{name}} pagó {{amount}} {{currency}}",
+    "paidByMultiple": "{{names}} pagaron {{total}} {{currency}}",
+    "youLent": "prestaste",
+    "youBorrowed": "pediste"
+  },
+  "api": {
+    "notReachable": "🚨 La API no está disponible. Algunas acciones pueden fallar."
+  }
+}

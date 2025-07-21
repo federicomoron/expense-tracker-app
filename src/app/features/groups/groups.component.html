@@ -18,7 +18,7 @@
           </div>
         } @else {
           @if (detail.balanceSummary.length === 0 && detail.memberBalances.length === 0) {
-            <p class="placeholder">No pending balances</p>
+            <p class="placeholder">{{ 'groups.no_pending_balances' | translate }}</p>
           } @else {
             <div class="group-balances">
               @for (balance of detail.balanceSummary; track $index) {
@@ -31,13 +31,14 @@
               @for (member of detail.memberBalances; track $index) {
                 @if (member.amount > 0) {
                   @if (member.userId === currentUserId) {
-                    <small class="member"
-                      >You owe {{ member.amount | number: '1.2-2' }} {{ member.currency }}</small
-                    >
+                    <small class="member">
+                      {{ 'groups.you_owe' | translate }} {{ member.amount | number: '1.2-2' }}
+                      {{ member.currency }}
+                    </small>
                   } @else {
                     <small class="member">
-                      {{ member.name }} owes you {{ member.amount | number: '1.2-2' }}
-                      {{ member.currency }}
+                      {{ member.name }} {{ 'groups.owes_you' | translate }}
+                      {{ member.amount | number: '1.2-2' }} {{ member.currency }}
                     </small>
                   }
                 }
@@ -54,7 +55,7 @@
   mat-fab
   color="primary"
   class="fab-button"
-  aria-label="New Group"
+  [attr.aria-label]="'groups.new_group' | translate"
   [routerLink]="['/groups/new']"
 >
   <mat-icon>add</mat-icon>

@@ -39,7 +39,6 @@
 
 .field-row {
   display: flex;
-  align-items: center;
   gap: 12px;
   width: 100%;
   max-width: 300px;
@@ -53,7 +52,7 @@
   padding: 8px 4px;
   color: var(--app-text);
   outline: none;
-  flex: 1;
+  flex: 0 1 160px;
 }
 
 .flat-input::placeholder {
@@ -85,4 +84,13 @@
   &:hover {
     background-color: rgba(var(--app-text-rgb), 0.05);
   }
+}
+
+::ng-deep .flat-select {
+  flex: 0 1 200px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
 }

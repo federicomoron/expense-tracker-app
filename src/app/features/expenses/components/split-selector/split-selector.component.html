@@ -1,13 +1,18 @@
 <div class="selector-buttons">
   @if (groupMembers && groupMembers.length > 0) {
-    <button class="selector-button" (click)="openPaidByDialog()">
+    <button class="selector-button" (click)="openPaidByDialog()" aria-label="splitSelector.paidBy">
       <mat-icon>person</mat-icon>
-      <span>Paid by: {{ selectedPayer()?.name || 'Select' }}</span>
+      <span
+        >{{ 'splitSelector.paidBy' | translate }}:
+        {{ selectedPayer()?.name || ('splitSelector.select' | translate) }}</span
+      >
     </button>
 
-    <!-- <button class="selector-button" (click)="openSplitTypeDialog()">
+    <!--
+    <button class="selector-button" (click)="openSplitTypeDialog()" aria-label="splitSelector.splitType">
       <mat-icon>call_split</mat-icon>
-      <span>Split: {{ selectedSplitType() || 'Select' }}</span>
-    </button> -->
+      <span>{{ 'splitSelector.split' | translate }}: {{ selectedSplitType() || ('splitSelector.select' | translate) }}</span>
+    </button>
+    -->
   }
 </div>

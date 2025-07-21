@@ -3,6 +3,7 @@ import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { SnackbarService } from '@app/core/services/snackbar.service';
 import { EXPENSE_CATEGORIES } from '@app/shared/data/expense-categories';
@@ -16,7 +17,6 @@ import { GroupDetail, GroupMember } from '@models/group-detail.model';
 import { AuthService } from '@services/auth.service';
 import { ExpenseService } from '@services/expenses.service';
 import { GroupService } from '@services/group.service';
-import { ExpDateButtonComponent } from '@shared/components/exp-date-button/exp-date-button.component';
 import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
@@ -28,7 +28,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
     CommonModule,
     SplitSelectorComponent,
     FooterComponent,
-    ExpDateButtonComponent,
+    TranslateModule,
   ],
   templateUrl: './expense-form.component.html',
   styleUrl: './expense-form.component.scss',
@@ -42,11 +42,12 @@ export class ExpenseFormComponent implements OnInit {
   private dialog = inject(MatDialog);
   private groupService = inject(GroupService);
   private snackbar = inject(SnackbarService);
+  private translate = inject(TranslateService);
 
   @ViewChild(SplitSelectorComponent)
   splitSelectorComponent!: SplitSelectorComponent;
-  @ViewChild('dateButton')
-  dateButtonComponent!: ExpDateButtonComponent;
+  @ViewChild(FooterComponent)
+  footerComponent!: FooterComponent;
 
   groupId!: number;
   group: GroupDetail | null = null;
@@ -81,7 +82,7 @@ export class ExpenseFormComponent implements OnInit {
     this.isEditMode = !!this.expenseId;
 
     if (this.isEditMode) {
-      console.warn('🛠 Edit mode enabled – waiting API support for GET + PUT');
+      console.warn(this.translate.instant('expenseForm.editModeWarning'));
     }
 
     let parentRoute = this.route;
@@ -93,17 +94,23 @@ export class ExpenseFormComponent implements OnInit {
     this.groupId = groupIdParam ? +groupIdParam : NaN;
 
     if (isNaN(this.groupId)) {
-      console.warn('⚠️ Invalid groupId');
+      console.warn(this.translate.instant('expenseForm.invalidGroupId'));
       return;
     }
 
     this.groupService.getGroupDetail(this.groupId).subscribe({
       next: (group) => {
         this.group = group;
+        setTimeout(() => {
+          const currentUserId = this.authService.currentUser()?.id;
+          if (currentUserId) {
+            this.splitSelectorComponent?.setPayer(currentUserId);
+          }
+        }, 0);
       },
       error: (err) => {
         console.error('[ExpenseForm] Error loading group:', err);
-        this.snackbar.show('Failed to load group. Please try again later.');
+        this.snackbar.show(this.translate.instant('expenseForm.loadGroupError'));
       },
     });
   }
@@ -113,7 +120,7 @@ export class ExpenseFormComponent implements OnInit {
 
     const currentUser = this.authService.currentUser();
     if (!currentUser) {
-      console.error('User not logged in');
+      console.error(this.translate.instant('expenseForm.userNotLoggedIn'));
       return;
     }
 
@@ -135,7 +142,7 @@ export class ExpenseFormComponent implements OnInit {
     const selectedPayer = this.splitSelectorComponent.selectedPayer();
 
     if (!selectedPayer) {
-      console.warn('⚠️ No payer selected – expense not submitted');
+      console.warn(this.translate.instant('expenseForm.noPayerSelected'));
       return;
     }
 
@@ -163,7 +170,7 @@ export class ExpenseFormComponent implements OnInit {
         if (validationErrors) {
           console.error('Validation errors:', validationErrors);
         } else {
-          console.error('Error al crear el gasto:', error);
+          console.error(this.translate.instant('expenseForm.createError'), error);
         }
 
         this.isSubmitting = false;
@@ -225,7 +232,7 @@ export class ExpenseFormComponent implements OnInit {
 
   goBack() {
     if (isNaN(this.groupId)) {
-      console.warn('⚠️ Invalid groupId on goBack');
+      console.warn(this.translate.instant('expenseForm.invalidGroupIdOnGoBack'));
       void this.router.navigate(['/groups']);
       return;
     }
@@ -241,11 +248,5 @@ export class ExpenseFormComponent implements OnInit {
 
   setExpenseDate(date: Date) {
     this.expenseForm.get('date')?.setValue(date);
-  }
-
-  openDateSelector() {
-    if (this.dateButtonComponent) {
-      this.dateButtonComponent.openPicker();
-    }
   }
 }

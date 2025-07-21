@@ -1,4 +1,3 @@
-import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -12,33 +11,21 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
-import { ExpDateButtonComponent } from './components/exp-date-button/exp-date-button.component';
-
-@NgModule({
-  imports: [
-    MatIconModule,
-    MatButtonModule,
-    MatToolbarModule,
-    ExpDateButtonComponent,
-    MatDatepickerModule,
-    MatNativeDateModule,
-  ],
-  exports: [
-    MatIconModule,
-    MatButtonModule,
-    MatToolbarModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCardModule,
-    MatSnackBarModule,
-    MatSelectModule,
-    MatSidenavModule,
-    MatListModule,
-    MatProgressSpinnerModule,
-    ExpDateButtonComponent,
-    MatDatepickerModule,
-    MatNativeDateModule,
-  ],
-})
-export class SharedUiModule {}
+export const SharedUiModule = [
+  MatIconModule,
+  MatButtonModule,
+  MatToolbarModule,
+  MatDatepickerModule,
+  MatNativeDateModule,
+  MatTooltipModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatCardModule,
+  MatSnackBarModule,
+  MatSelectModule,
+  MatSidenavModule,
+  MatListModule,
+  MatProgressSpinnerModule,
+];

@@ -1,78 +1,151 @@
-# Copilot Instructions for Expense Tracker App
+# 🧠 Copilot Instructions for SpendTrack (Angular 20+ Expense Tracker)
 
-## Project Overview
+## 🚀 Project Overview
 
-- **Framework:** Angular 19+ using standalone components, signals, and RxJS.
-- **UI:** Angular Material with custom theming (`src/theme/custom-theme.scss`).
-- **Architecture:** Modular feature-based structure with clear separation between:
-  - `core/`: services, models, guards, interceptors, constants.
-  - `features/`: domain modules (auth, expenses, groups).
-  - `shared/`: reusable UI components, helpers, styles.
-  - `layouts/`: app shell and fullscreen layouts.
+SpendTrack is a modern, modular, mobile-first expense tracking web app built with Angular 20 using:
 
-## Key Directories
+- ✅ Standalone Components
+- ✅ Angular Signals for reactive state
+- ✅ Angular Material (custom theming in `src/theme/custom-theme.scss`)
+- ✅ Feature-based architecture
+- ✅ Fully lazy-loaded routing with `loadComponent` / `loadChildren`
+- ✅ Protected routes with `authGuard`
+- ✅ Signal-based or Reactive Forms
+- ✅ CI via GitHub Actions
 
-- `src/app/core/` – global services, guards, interceptors, constants, models.
-- `src/app/features/` – feature modules (auth, expenses, groups).
-- `src/app/shared/` – reusable UI components, helpers, styles.
-- `src/app/layouts/` – app shell and fullscreen layouts.
-- `src/app/app.routes.ts` – central route definitions, lazy loading via `loadChildren` and `loadComponent`.
+---
 
-## Routing & Layouts
+## 📁 Project Structure
 
-- Authenticated routes use `authGuard` and `AppLayoutComponent`.
-- Routes are lazy-loaded with standalone components using `loadChildren` and `loadComponent`.
-- Dialogs (e.g., expense/group forms) use Angular Material dialogs with full-screen or custom styles (`@shared/styles/dialog-common.scss`).
-- Avoid direct DOM manipulation; use Angular router and idiomatic patterns.
+src/
+├── app/
+│ ├── core/ # Global services, guards, interceptors, models, constants
+│ │ ├── services/
+│ │ ├── guards/
+│ │ ├── interceptors/
+│ │ ├── models/
+│ │ └── constants/
+│ ├── features/ # Feature modules (auth, expenses, groups, etc.)
+│ │ ├── auth/
+│ │ ├── expenses/
+│ │ └── groups/
+│ ├── layouts/ # App shell layout (with sidenav) and FullscreenLayout
+│ ├── shared/ # UI components, custom pipes, inputs, selectors
+│ └── app.routes.ts # Main routing file with loadChildren and canActivate
+├── assets/ # Static assets
+├── environments/ # Environment files
+├── theme/ # Custom Angular Material theming
 
-## UI Patterns & State Management
+---
 
-- Use standalone components everywhere; import dependencies directly in `@Component`.
-- Dialogs use Angular Material dialogs; always close via `MatDialogRef` and pass data with `MAT_DIALOG_DATA`.
-- State management uses Angular Signals (`signal`, `computed`) for reactivity and performance.
-- Modular selectors (category, currency, split-type) are reusable components inside forms.
-- Follow reactive forms or signals-based forms patterns consistently.
+## 🔐 Routing & Layouts
 
-## Developer Workflows
+- Public routes (login/register) use `FullscreenLayoutComponent`.
+- Protected routes use `AppLayoutComponent` and `authGuard`.
+- Routing is lazy-loaded and standalone-based:
 
-- Install dependencies: `yarn install`
-- Start local server: `yarn start` (http://localhost:4200)
-- Build: `yarn build`
-- Test: `yarn test` (Karma/Jasmine)
-- Lint: `yarn lint` (ESLint + Prettier enforced)
-- Auto-fix lint: `yarn lint:fix`
-- Format code: `yarn format`
-- Check formatting: `yarn format:check`
-- CI runs lint, build, tests on push/PR via GitHub Actions (`.github/workflows/ci.yml`).
+```ts
+{
+  path: 'groups',
+  canActivate: [authGuard],
+  loadChildren: () => import('@features/groups/routes').then(m => m.GROUP_ROUTES)
+}
 
-## Code Conventions
+```
 
-- SCSS for all styles; theming and variables in `src/theme/`.
-- Use path aliases (`@core`, `@features`, `@shared`) for imports.
-- Use single quotes for strings.
-- Max line length 120 characters.
-- Error handling shows user-facing messages via `SnackbarService`.
-- Commit messages follow conventional commits (`feat:`, `fix:`, `refactor:`).
+## 🧱 Dialogs
 
-## Integrations
+Dialogs use Angular Material:
 
-- All backend communication through services in `core/services/`.
-- API endpoints declared in `core/constants/api-endpoints.ts`.
-- Environment configs under `environments/`.
-- Static assets inside `assets/`.
+- Use MAT_DIALOG_DATA to inject data.
+- Use MatDialogRef to close dialogs and return results.
 
-## Examples & References
+## ⚙️ State & Forms
 
-- Lazy-loaded route example in `app.routes.ts`.
-- Dialog pattern example: `features/expenses/components/paid-by-dialog/paid-by-dialog.component.ts`.
-- Signal usage example: `features/groups/groups.component.ts`.
+- Use Angular Signals (signal(), computed()) for reactive state.
+- Prefer signals-based forms.
+- If using FormGroup, maintain a reactive logic flow.
+- Create reusable form components:
+  e.g. category-selector, currency-selector.
 
-## Tips for AI Agents
+Guidelines:
 
-- Prefer creating new standalone components for UI features.
-- Reuse shared modules/components where possible.
-- Follow existing dialog, selector, and error handling patterns.
-- Use Angular signals (`signal`, `computed`) for reactive state.
-- Avoid imperative DOM manipulation; rely on Angular idioms and router.
-- Follow commit conventions and code style consistently.
-- Refer to `README.md` for commands and developer workflows.
+- Avoid document.querySelector or direct DOM access.
+- Forms must be isolated in dedicated components (\*FormComponent).
+- Form logic should stay self-contained and reactive.
+
+## 🧩 UI & UX Patterns
+
+- UI built with Angular Material.
+- Use shared components from shared/.
+- Snackbar service handles toast notifications (via SnackbarService).
+- Show user errors cleanly (e.g. login failed, group not created).
+- Layouts use mat-sidenav-container with responsive behavior.
+
+## 🧪 Development Workflow
+
+```txt
+yarn install       # Install dependencies
+yarn start         # Start dev server (http://localhost:4200)
+yarn build         # Build production
+yarn test          # Run unit tests
+yarn lint          # Run ESLint
+yarn lint:fix      # Fix ESLint errors
+yarn format        # Format code with Prettier
+yarn format:check  # Check formatting
+```
+
+CI runs on push via GitHub Actions: .github/workflows/ci.yml.
+
+## 📏 Code Style & Conventions
+
+- SCSS with BEM-like naming
+- Single quotes (') for strings
+- Max line length: 120
+- Commit style: Conventional Commits:
+
+```txt
+  feat: add group form
+  fix: login error handling
+  refactor: move dialog to standalone
+```
+
+- Path aliases:
+  @core → src/app/core
+  @features → src/app/features
+  @shared → src/app/shared
+
+## 🔌 Backend Integration
+
+- API via services in core/services/
+- Endpoints defined in core/constants/api-endpoints.ts
+- Auth token is managed automatically via interceptor
+- Backend errors transformed before showing to users
+
+## ✅ Copilot Code Examples
+
+- Lazy Route (Groups)
+  src/app/app.routes.ts → loadChildren(...)
+- Dialog Example
+  features/expenses/components/paid-by-dialog/
+- Signals Usage
+  features/groups/groups.component.ts → signal(), computed()
+- Custom Selector
+  shared/components/category-selector/
+
+## 💡 AI & Copilot Guidelines
+
+- Always generate standalone components
+- Use Angular Signals (signal, computed) for reactive state
+- Reuse shared modules, selectors and dialogs from shared/
+- Follow existing form and error handling patterns
+- For new features, create:
+  - A folder in features/
+  - A routes.ts file
+  - A form component
+  - A service in core/services/ if backend is needed
+- Avoid imperative DOM manipulation; use Angular idioms
+- Respect folder boundaries: core/, features/, shared/
+- Match existing naming and folder conventions
+- Follow conventional commits and project code style
+- Refer to README.md for commands and developer workflow

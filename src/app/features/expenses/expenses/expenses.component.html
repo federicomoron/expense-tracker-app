@@ -1,8 +1,8 @@
 @if (loading) {
-  <div class="loading">Loading expenses...</div>
+  <div class="loading">{{ 'expenses.loading' | translate }}</div>
 } @else {
   @if (expenses.length === 0) {
-    <div class="empty">No expenses recorded.</div>
+    <div class="empty">{{ 'expenses.empty' | translate }}</div>
   } @else {
     <div class="expenses-list">
       @for (entry of groupedExpenses; track entry[0]) {
@@ -16,7 +16,10 @@
             </div>
 
             <div class="expense-icon">
-              <img [src]="getCategoryIcon(exp.description || '')" alt="icon" />
+              <img
+                [src]="getCategoryIcon(exp.description || '')"
+                alt="{{ 'expenses.iconAlt' | translate }}"
+              />
             </div>
 
             <div class="expense-info">
