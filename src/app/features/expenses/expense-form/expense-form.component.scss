@@ -1,3 +1,23 @@
+.expense-form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background-color: var(--app-primary);
+  color: white;
+
+  h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  mat-icon,
+  button[mat-icon-button] {
+    color: white;
+  }
+}
+
 .expense-form {
   display: flex;
   flex-direction: column;

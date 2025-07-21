@@ -7,6 +7,19 @@ import { FullscreenLayoutComponent } from './layouts/fullscreen-layout.component
 
 export const routes: Routes = [
   {
+    path: 'groups/new',
+    component: FullscreenLayoutComponent,
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('@features/groups/group-form/group-form.component').then(
+            (m) => m.GroupFormComponent,
+          ),
+      },
+    ],
+  },
+  {
     path: '',
     loadChildren: () => import('@features/auth/auth.routes').then((m) => m.default),
   },
