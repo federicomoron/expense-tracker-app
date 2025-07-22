@@ -11,10 +11,12 @@ import { FooterComponent } from '@app/features/footer/footer.component';
   selector: 'app-layout',
   imports: [RouterOutlet, FooterComponent],
   template: `
-    <main class="main-content-bg">
-      <router-outlet></router-outlet>
-    </main>
-    <app-footer></app-footer>
+    <div class="layout-wrapper">
+      <main class="main-content-bg">
+        <router-outlet></router-outlet>
+      </main>
+      <app-footer></app-footer>
+    </div>
   `,
   styleUrls: ['./app-layout.component.scss'],
 })

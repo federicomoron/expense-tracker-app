@@ -1,6 +1,14 @@
+.layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+}
+
 .main-content-bg {
+  flex: 1;
+  overflow-y: auto;
   background-color: var(--app-bg);
-  min-height: 100vh;
   padding: 1rem;
   transition: background-color 0.3s ease;
 }

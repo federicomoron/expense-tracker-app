@@ -58,7 +58,7 @@ export class ExpenseFormComponent implements OnInit {
     description: ['', Validators.required],
     total: [null, [Validators.required, Validators.min(0.01)]],
     currency: ['ARS', Validators.required],
-    date: [new Date(), Validators.required],
+    createdAt: [new Date(), Validators.required],
   });
 
   get members(): GroupMember[] {
@@ -124,17 +124,19 @@ export class ExpenseFormComponent implements OnInit {
       return;
     }
 
-    const { description, currency, date } = this.expenseForm.value;
+    const { description, currency, createdAt } = this.expenseForm.value;
+
     let isoDate: string | undefined;
-    if (typeof date === 'string') {
-      const [year, month, day] = date.split('-').map(Number);
+    if (typeof createdAt === 'string') {
+      const [year, month, day] = createdAt.split('-').map(Number);
       const localDate = new Date(year, month - 1, day, 12, 0, 0);
       isoDate = localDate.toISOString();
-    } else if (date instanceof Date) {
-      isoDate = date.toISOString();
+    } else if (createdAt instanceof Date) {
+      isoDate = createdAt.toISOString();
     } else {
       isoDate = undefined;
     }
+
     const total = Number(this.expenseForm.value.total);
     const groupMembers = this.group.members.map((m) => m.userId);
     const splits = this.buildSplits(groupMembers, total);
@@ -151,7 +153,7 @@ export class ExpenseFormComponent implements OnInit {
       description,
       total,
       currency,
-      date: isoDate,
+      createdAt: isoDate,
       paidBy: [{ userId: selectedPayer.userId, amount: total }],
       splits,
     };
@@ -239,14 +241,14 @@ export class ExpenseFormComponent implements OnInit {
     void this.router.navigate(['/groups', this.groupId]);
   }
 
-  get expenseDateForFooter(): Date {
-    const val = this.expenseForm.value.date;
+  get expenseCreatedAtForFooter(): Date {
+    const val = this.expenseForm.value.createdAt;
     if (val instanceof Date) return val;
     if (typeof val === 'string') return new Date(val);
     return new Date();
   }
 
-  setExpenseDate(date: Date) {
-    this.expenseForm.get('date')?.setValue(date);
+  setExpenseDate(createdAt: Date) {
+    this.expenseForm.get('createdAt')?.setValue(createdAt);
   }
 }
