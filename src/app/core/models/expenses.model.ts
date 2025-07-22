@@ -18,7 +18,7 @@ export interface ExpenseRequest {
   description: string;
   total: number;
   currency: string;
-  date?: string;
+  createdAt?: string;
   paidBy: ExpenseUser[];
   splits: ExpenseUser[];
 }

@@ -28,7 +28,8 @@ export class ExpensesComponent {
     const map = new Map<string, Expense[]>();
 
     for (const exp of this.expenses) {
-      const month = new Date(exp.createdAt).toLocaleString('default', {
+      const date = new Date(exp.createdAt);
+      const month = date.toLocaleString('default', {
         month: 'long',
       });
       if (!map.has(month)) {
