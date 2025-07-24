@@ -82,6 +82,17 @@
     "couple": "Couple",
     "other": "Other"
   },
+  "expenses": {
+    "loading": "Loading expenses...",
+    "empty": "No expenses recorded.",
+    "youPaid": "You paid {{amount}} {{currency}}",
+    "paidBy": "{{name}} paid {{amount}} {{currency}}",
+    "paidByMultiple": "{{names}} paid {{total}} {{currency}}",
+    "youLent": "You lent",
+    "youBorrowed": "You borrowed",
+    "deletedSuccess": "Expense deleted successfully.",
+    "deleteError": "Error deleting expense."
+  },
   "expenseForm": {
     "back": "Go back",
     "title": "Add Expense",
@@ -94,6 +105,12 @@
     "noPayerSelected": "⚠️ No payer selected – expense not submitted",
     "createError": "Error creating the expense",
     "invalidGroupIdOnGoBack": "⚠️ Invalid groupId on goBack"
+  },
+  "expenseDetail": {
+    "title": "Expense Details",
+    "description": "Description",
+    "total": "Total",
+    "date": "Date"
   },
   "paidByDialog": {
     "title": "Select who paid",
@@ -140,16 +157,15 @@
       "shares": "Shares"
     }
   },
-  "expenses": {
-    "loading": "Loading expenses...",
-    "empty": "No expenses recorded.",
-    "youPaid": "You paid {{amount}} {{currency}}",
-    "paidBy": "{{name}} paid {{amount}} {{currency}}",
-    "paidByMultiple": "{{names}} paid {{total}} {{currency}}",
-    "youLent": "You lent",
-    "youBorrowed": "You borrowed"
-  },
   "api": {
     "notReachable": "🚨 The API is not reachable. Some actions may fail."
+  },
+  "confirmDelete": {
+    "title": "Delete Expense",
+    "message": "Are you sure you want to delete this expense?"
+  },
+  "common": {
+    "confirm": "Confirm",
+    "cancel": "Cancel"
   }
 }

@@ -1,5 +1,6 @@
+import { HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { API_ENDPOINTS } from '@constants/api-endpoints';
 import { environment } from '@environments/environment';
@@ -25,21 +26,11 @@ export class ExpenseService {
     );
   }
 
-  getExpenseById(expenseId: number): Observable<ExpenseResponse> {
-    console.warn('⚠️ getExpenseById is mocked – replace when backend is ready');
-    return of({
-      success: true,
-      data: {
-        id: expenseId,
-        description: 'Mock expense',
-        total: 50,
-        currency: 'USD',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        participants: [],
-        category: 'Food',
-        iconUrl: '/assets/food.svg',
-      },
+  deleteExpense(expenseId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/expenses/${expenseId}`, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
     });
   }
 }

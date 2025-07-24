@@ -52,7 +52,10 @@
       />
     </div>
 
-    <app-split-selector [groupMembers]="group?.members || []"></app-split-selector>
+    <app-split-selector
+      [groupMembers]="group?.members || []"
+      (payerChanged)="onPayerChanged($event)"
+    ></app-split-selector>
   </form>
 
   <app-footer

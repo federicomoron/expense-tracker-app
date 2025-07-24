@@ -1,5 +1,6 @@
 export interface Expense {
   id: number;
+  groupId: number;
   description: string;
   total: number | string;
   currency: string;
