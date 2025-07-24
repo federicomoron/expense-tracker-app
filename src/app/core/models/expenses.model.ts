@@ -1,5 +1,6 @@
 export interface Expense {
   id: number;
+  groupId: number;
   description: string;
   total: number | string;
   currency: string;
@@ -18,7 +19,7 @@ export interface ExpenseRequest {
   description: string;
   total: number;
   currency: string;
-  date?: string;
+  createdAt?: string;
   paidBy: ExpenseUser[];
   splits: ExpenseUser[];
 }

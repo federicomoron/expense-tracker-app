@@ -54,11 +54,14 @@ export class ExpenseFormComponent implements OnInit {
   expenseId: number | null = null;
   isEditMode = false;
 
+  selectedPayer: { userId: number; name: string } | null = null;
+
   expenseForm: FormGroup = this.fb.group({
     description: ['', Validators.required],
     total: [null, [Validators.required, Validators.min(0.01)]],
     currency: ['ARS', Validators.required],
-    date: [new Date(), Validators.required],
+    createdAt: [new Date(), Validators.required],
+    category: [''],
   });
 
   get members(): GroupMember[] {
@@ -81,20 +84,33 @@ export class ExpenseFormComponent implements OnInit {
     this.expenseId = expenseIdParam ? +expenseIdParam : null;
     this.isEditMode = !!this.expenseId;
 
-    if (this.isEditMode) {
-      console.warn(this.translate.instant('expenseForm.editModeWarning'));
+    const expenseFromState = history.state?.expense;
+    if (expenseFromState) {
+      this.expenseId = expenseFromState.id;
+      this.isEditMode = true;
+
+      this.expenseForm.patchValue({
+        description: expenseFromState.description,
+        total: expenseFromState.total,
+        currency: expenseFromState.currency,
+        createdAt: new Date(expenseFromState.createdAt),
+      });
+
+      this.selectedCategory = expenseFromState.category || '';
+      if (this.selectedCategory) {
+        this.updateCategoryIcon(this.selectedCategory);
+      }
     }
 
-    let parentRoute = this.route;
-    let groupIdParam: string | null = null;
-    while (parentRoute && !groupIdParam) {
-      groupIdParam = parentRoute.snapshot.paramMap.get('groupId');
-      parentRoute = parentRoute.parent!;
+    const groupId = this.findGroupIdInRoute(this.route);
+    if (groupId === null) {
+      console.warn('⚠️ groupId inválido o no encontrado en la ruta');
+      return;
     }
-    this.groupId = groupIdParam ? +groupIdParam : NaN;
+    this.groupId = groupId;
 
-    if (isNaN(this.groupId)) {
-      console.warn(this.translate.instant('expenseForm.invalidGroupId'));
+    if (!this.groupId) {
+      console.warn('⚠️ groupId inválido o no encontrado en la ruta');
       return;
     }
 
@@ -115,6 +131,20 @@ export class ExpenseFormComponent implements OnInit {
     });
   }
 
+  private findGroupIdInRoute(route: ActivatedRoute): number | null {
+    let currentRoute: ActivatedRoute | null = route;
+    while (currentRoute) {
+      const groupIdParam =
+        currentRoute.snapshot.paramMap.get('groupId') ?? currentRoute.snapshot.paramMap.get('id');
+      if (groupIdParam) {
+        const id = Number(groupIdParam);
+        if (!isNaN(id)) return id;
+      }
+      currentRoute = currentRoute.parent;
+    }
+    return null;
+  }
+
   submitExpense() {
     if (!this.groupId || this.expenseForm.invalid || !this.group) return;
 
@@ -124,34 +154,35 @@ export class ExpenseFormComponent implements OnInit {
       return;
     }
 
-    const { description, currency, date } = this.expenseForm.value;
+    const { description, currency, createdAt } = this.expenseForm.value;
+
     let isoDate: string | undefined;
-    if (typeof date === 'string') {
-      const [year, month, day] = date.split('-').map(Number);
+    if (typeof createdAt === 'string') {
+      const [year, month, day] = createdAt.split('-').map(Number);
       const localDate = new Date(year, month - 1, day, 12, 0, 0);
       isoDate = localDate.toISOString();
-    } else if (date instanceof Date) {
-      isoDate = date.toISOString();
+    } else if (createdAt instanceof Date) {
+      isoDate = createdAt.toISOString();
     } else {
       isoDate = undefined;
     }
+
     const total = Number(this.expenseForm.value.total);
     const groupMembers = this.group.members.map((m) => m.userId);
     const splits = this.buildSplits(groupMembers, total);
 
-    const selectedPayer = this.splitSelectorComponent.selectedPayer();
+    const selectedPayer = this.selectedPayer;
 
     if (!selectedPayer) {
       console.warn(this.translate.instant('expenseForm.noPayerSelected'));
       return;
     }
-
     const expense: ExpenseRequest = {
       groupId: this.groupId,
       description,
       total,
       currency,
-      date: isoDate,
+      createdAt: isoDate,
       paidBy: [{ userId: selectedPayer.userId, amount: total }],
       splits,
     };
@@ -239,14 +270,18 @@ export class ExpenseFormComponent implements OnInit {
     void this.router.navigate(['/groups', this.groupId]);
   }
 
-  get expenseDateForFooter(): Date {
-    const val = this.expenseForm.value.date;
+  get expenseCreatedAtForFooter(): Date {
+    const val = this.expenseForm.value.createdAt;
     if (val instanceof Date) return val;
     if (typeof val === 'string') return new Date(val);
     return new Date();
   }
 
-  setExpenseDate(date: Date) {
-    this.expenseForm.get('date')?.setValue(date);
+  setExpenseDate(createdAt: Date) {
+    this.expenseForm.get('createdAt')?.setValue(createdAt);
+  }
+
+  onPayerChanged(payer: { userId: number; name: string }) {
+    this.selectedPayer = payer;
   }
 }

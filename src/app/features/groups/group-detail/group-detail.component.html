@@ -44,6 +44,8 @@
   <app-expenses
     [expenses]="group()?.expenses ?? []"
     [groupMembers]="group()?.members ?? []"
+    (expenseDeleted)="removeExpenseLocally()"
+    [groupId]="group()?.id"
     [loading]="loading()"
   ></app-expenses>
 

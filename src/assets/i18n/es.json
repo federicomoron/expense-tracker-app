@@ -82,6 +82,17 @@
     "couple": "Pareja",
     "other": "Otro"
   },
+  "expenses": {
+    "loading": "Cargando gastos...",
+    "empty": "No hay gastos registrados.",
+    "youPaid": "Pagaste {{amount}} {{currency}}",
+    "paidBy": "{{name}} pagó {{amount}} {{currency}}",
+    "paidByMultiple": "{{names}} pagaron {{total}} {{currency}}",
+    "youLent": "prestaste",
+    "youBorrowed": "pediste",
+    "deletedSuccess": "Gasto eliminado correctamente.",
+    "deleteError": "Error al eliminar el gasto."
+  },
   "expenseForm": {
     "back": "Volver",
     "title": "Agregar gasto",
@@ -94,6 +105,12 @@
     "noPayerSelected": "⚠️ No hay pagador seleccionado – gasto no enviado",
     "createError": "Error al crear el gasto",
     "invalidGroupIdOnGoBack": "⚠️ groupId inválido en goBack"
+  },
+  "expenseDetail": {
+    "title": "Detalle del gasto",
+    "description": "Descripción",
+    "total": "Total",
+    "date": "Fecha"
   },
   "paidByDialog": {
     "title": "Seleccioná quién pagó",
@@ -140,16 +157,15 @@
       "shares": "Participaciones"
     }
   },
-  "expenses": {
-    "loading": "Cargando gastos...",
-    "empty": "No hay gastos registrados.",
-    "youPaid": "Pagaste {{amount}} {{currency}}",
-    "paidBy": "{{name}} pagó {{amount}} {{currency}}",
-    "paidByMultiple": "{{names}} pagaron {{total}} {{currency}}",
-    "youLent": "prestaste",
-    "youBorrowed": "pediste"
-  },
   "api": {
     "notReachable": "🚨 La API no está disponible. Algunas acciones pueden fallar."
+  },
+  "confirmDelete": {
+    "title": "Eliminar gasto",
+    "message": "¿Estás seguro de que querés eliminar este gasto?"
+  },
+  "common": {
+    "confirm": "Confirmar",
+    "cancel": "Cancelar"
   }
 }

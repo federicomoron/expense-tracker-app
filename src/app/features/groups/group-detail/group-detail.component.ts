@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { SnackbarService } from '@app/core/services/snackbar.service';
@@ -13,7 +13,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
 @Component({
   selector: 'app-group-detail',
   standalone: true,
-  imports: [ExpensesComponent, CommonModule, SharedUiModule, TranslateModule],
+  imports: [ExpensesComponent, CommonModule, SharedUiModule, TranslateModule, RouterModule],
   templateUrl: './group-detail.component.html',
   styleUrls: ['./group-detail.component.scss'],
 })
@@ -64,5 +64,17 @@ export class GroupDetailComponent implements OnInit {
 
   goToNewExpense() {
     void this.router.navigate(['/groups', this.groupId(), 'expenses', 'new']);
+  }
+
+  removeExpenseLocally() {
+    this.groupService.getGroupDetail(this.groupId()).subscribe({
+      next: (data) => {
+        this.group.set(data);
+      },
+      error: (err) => {
+        console.error('Error reloading group after expense delete', err);
+        this.snackbar.show('Error al actualizar el grupo');
+      },
+    });
   }
 }

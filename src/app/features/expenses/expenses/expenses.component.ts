@@ -1,11 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
+import { ExpenseService } from '@app/core/services/expenses.service';
 import { Expense, ExpenseExtended, ExpenseUser } from '@models/expenses.model';
 import { AuthService } from '@services/auth.service';
 import { getCategoryIcon } from '@shared/helpers/get-category-icon';
 import { SharedUiModule } from '@shared/shared-ui.module';
+
+import { ExpenseDetailComponent } from '../expense-detail/expense-detail.component';
+import { ExpenseFormComponent } from '../expense-form/expense-form.component';
 
 @Component({
   selector: 'app-expenses',
@@ -19,16 +26,31 @@ export class ExpensesComponent {
   @Input() expenses: Expense[] = [];
   @Input() loading = false;
   @Input() groupMembers: { userId: number; name: string }[] = [];
+  @Input() groupId: number | undefined;
+  @Output() expenseDeleted = new EventEmitter<number>();
 
   private authService = inject(AuthService);
   private translate = inject(TranslateService);
+  private dialog = inject(MatDialog);
+  private snackbar = inject(MatSnackBar);
+  private expenseService = inject(ExpenseService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  totalAmount = 0;
+
   getCategoryIcon = getCategoryIcon;
+
+  ngOnInit() {
+    this.calculateTotal();
+  }
 
   get groupedExpenses() {
     const map = new Map<string, Expense[]>();
 
     for (const exp of this.expenses) {
-      const month = new Date(exp.createdAt).toLocaleString('default', {
+      const date = new Date(exp.createdAt);
+      const month = date.toLocaleString('default', {
         month: 'long',
       });
       if (!map.has(month)) {
@@ -125,5 +147,72 @@ export class ExpensesComponent {
     if (lent > 0) return this.translate.instant('expenses.youLent');
     if (lent < 0) return this.translate.instant('expenses.youBorrowed');
     return '';
+  }
+
+  openExpenseDetail(expense: Expense) {
+    const mergedExpense = { ...expense, groupId: this.groupId };
+
+    const dialogRef = this.dialog.open(ExpenseDetailComponent, {
+      data: { expense: mergedExpense },
+      width: '100vw',
+      height: '100vh',
+      maxWidth: '100vw',
+      panelClass: 'full-screen-modal',
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (!result) return;
+
+      if (result.action === 'edit') {
+        if (result.expense?.id && result.expense?.groupId) {
+          void this.router.navigate(['../expenses', result.expense.id, 'edit'], {
+            relativeTo: this.route,
+            state: { expense: result.expense },
+          });
+        } else {
+          console.warn('No se pudo redirigir: falta expense.id o groupId');
+        }
+      }
+
+      if (result.action === 'delete') {
+        this.deleteExpense(result.expense);
+      }
+    });
+  }
+
+  openExpenseForm(expense: Expense) {
+    const dialogRef = this.dialog.open(ExpenseFormComponent, {
+      data: { expense },
+      width: '100vw',
+      height: '100vh',
+      maxWidth: '100vw',
+      panelClass: 'full-screen-modal',
+    });
+
+    dialogRef.afterClosed().subscribe(() => {});
+  }
+
+  deleteExpense(expense: Expense) {
+    this.expenseService.deleteExpense(expense.id!).subscribe({
+      next: () => {
+        this.snackbar.open(this.translate.instant('expenses.deletedSuccess'), 'OK', {
+          duration: 2000,
+        });
+
+        this.expenses = this.expenses.filter((e) => e.id !== expense.id);
+        this.expenseDeleted.emit(expense.id!);
+        this.calculateTotal();
+      },
+      error: (error) => {
+        console.error('Error deleting expense:', error);
+        this.snackbar.open(this.translate.instant('expenses.deleteError'), 'OK', {
+          duration: 3000,
+        });
+      },
+    });
+  }
+
+  calculateTotal() {
+    this.totalAmount = this.expenses.reduce((sum, e) => sum + Number(e.total), 0);
   }
 }

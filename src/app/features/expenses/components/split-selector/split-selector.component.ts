@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -19,7 +19,8 @@ export class SplitSelectorComponent {
   private authService = inject(AuthService);
   private dialog = inject(MatDialog);
   private _groupMembers: { userId: number; name: string }[] = [];
-
+  @Output()
+  payerChanged = new EventEmitter<{ userId: number; name: string }>();
   @Input()
   set groupMembers(members: { userId: number; name: string }[]) {
     this._groupMembers = members;
@@ -60,6 +61,7 @@ export class SplitSelectorComponent {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.selectedPayer.set(result);
+        this.payerChanged.emit(result);
       }
     });
   }
