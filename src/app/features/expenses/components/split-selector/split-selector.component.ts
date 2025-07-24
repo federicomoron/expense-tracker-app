@@ -58,7 +58,11 @@ export class SplitSelectorComponent {
       data: { members: this.groupMembers },
     });
 
+    const popStateListener = () => dialogRef.close();
+    window.addEventListener('popstate', popStateListener);
+
     dialogRef.afterClosed().subscribe((result) => {
+      window.removeEventListener('popstate', popStateListener);
       if (result) {
         this.selectedPayer.set(result);
         this.payerChanged.emit(result);
@@ -74,7 +78,11 @@ export class SplitSelectorComponent {
       panelClass: 'full-screen-modal',
     });
 
+    const popStateListener = () => dialogRef.close();
+    window.addEventListener('popstate', popStateListener);
+
     dialogRef.afterClosed().subscribe((result) => {
+      window.removeEventListener('popstate', popStateListener);
       if (result) {
         this.selectedSplitType.set(result);
       }
@@ -88,5 +96,9 @@ export class SplitSelectorComponent {
     } else {
       console.warn(`⚠️ Member with userId ${userId} not found`);
     }
+  }
+
+  getSelectedPayerSignal() {
+    return this.selectedPayer;
   }
 }
