@@ -121,6 +121,11 @@ export class ExpenseFormComponent implements OnInit {
           const currentUserId = this.authService.currentUser()?.id;
           if (currentUserId) {
             this.splitSelectorComponent?.setPayer(currentUserId);
+
+            const payerSignal = this.splitSelectorComponent?.getSelectedPayerSignal();
+            if (payerSignal) {
+              this.selectedPayer = payerSignal();
+            }
           }
         }, 0);
       },
@@ -171,7 +176,8 @@ export class ExpenseFormComponent implements OnInit {
     const groupMembers = this.group.members.map((m) => m.userId);
     const splits = this.buildSplits(groupMembers, total);
 
-    const selectedPayer = this.selectedPayer;
+    const selectedPayerSignal = this.splitSelectorComponent?.getSelectedPayerSignal?.();
+    const selectedPayer = selectedPayerSignal?.();
 
     if (!selectedPayer) {
       console.warn(this.translate.instant('expenseForm.noPayerSelected'));
@@ -216,7 +222,12 @@ export class ExpenseFormComponent implements OnInit {
       maxWidth: '100vw',
       panelClass: 'full-screen-modal',
     });
+
+    const popStateListener = () => dialogRef.close();
+    window.addEventListener('popstate', popStateListener);
+
     dialogRef.componentInstance.selected.subscribe((currency: string) => {
+      window.removeEventListener('popstate', popStateListener);
       this.expenseForm.get('currency')?.setValue(currency);
       dialogRef.close();
     });
@@ -229,7 +240,12 @@ export class ExpenseFormComponent implements OnInit {
       maxWidth: '100vw',
       panelClass: 'full-screen-modal',
     });
+
+    const popStateListener = () => dialogRef.close();
+    window.addEventListener('popstate', popStateListener);
+
     dialogRef.afterClosed().subscribe((selectedCategory: string) => {
+      window.removeEventListener('popstate', popStateListener);
       if (selectedCategory) {
         this.selectedCategory = selectedCategory;
         this.selectedCategoryLabel =

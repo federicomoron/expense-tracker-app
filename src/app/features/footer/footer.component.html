@@ -36,10 +36,15 @@
     </nav>
   } @else {
     <div class="footer-actions">
-      <button mat-fab color="primary" [attr.aria-label]="'footer.calendar' | translate">
+      <button
+        type="button"
+        mat-fab
+        color="primary"
+        [attr.aria-label]="'footer.calendar' | translate"
+      >
         <mat-icon>calendar_today</mat-icon>
       </button>
-      <button mat-fab color="accent" [attr.aria-label]="'footer.add' | translate">
+      <button type="button" mat-fab color="accent" [attr.aria-label]="'footer.add' | translate">
         <mat-icon>add</mat-icon>
       </button>
     </div>

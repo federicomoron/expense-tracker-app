@@ -160,7 +160,11 @@ export class ExpensesComponent {
       panelClass: 'full-screen-modal',
     });
 
+    const popStateListener = () => dialogRef.close();
+    window.addEventListener('popstate', popStateListener);
+
     dialogRef.afterClosed().subscribe((result: any) => {
+      window.removeEventListener('popstate', popStateListener);
       if (!result) return;
 
       if (result.action === 'edit') {
@@ -189,7 +193,12 @@ export class ExpensesComponent {
       panelClass: 'full-screen-modal',
     });
 
-    dialogRef.afterClosed().subscribe(() => {});
+    const popStateListener = () => dialogRef.close();
+    window.addEventListener('popstate', popStateListener);
+
+    dialogRef.afterClosed().subscribe(() => {
+      window.removeEventListener('popstate', popStateListener);
+    });
   }
 
   deleteExpense(expense: Expense) {
