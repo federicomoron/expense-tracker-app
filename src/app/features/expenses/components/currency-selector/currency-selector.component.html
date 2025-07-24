@@ -1,6 +1,11 @@
 <div class="dialog-container">
   <div class="header">
-    <button mat-icon-button aria-label="currencySelector.close" (click)="closeDialog()">
+    <button
+      type="button"
+      mat-icon-button
+      aria-label="currencySelector.close"
+      (click)="closeDialog()"
+    >
       <mat-icon>arrow_back</mat-icon>
     </button>
     <h2>{{ 'currencySelector.title' | translate }}</h2>

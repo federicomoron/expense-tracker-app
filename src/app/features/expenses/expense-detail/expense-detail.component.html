@@ -1,15 +1,15 @@
 <div class="dialog-container">
   <div class="header">
-    <button mat-icon-button aria-label="close" (click)="closeDialog()">
+    <button type="button" mat-icon-button aria-label="close" (click)="closeDialog()">
       <mat-icon>arrow_back</mat-icon>
     </button>
 
     <h2>{{ 'expenseDetail.title' | translate }}</h2>
     <div class="actions">
-      <button mat-icon-button color="primary" aria-label="edit" (click)="onEdit()">
+      <button type="button" mat-icon-button color="primary" aria-label="edit" (click)="onEdit()">
         <mat-icon>edit</mat-icon>
       </button>
-      <button mat-icon-button color="warn" aria-label="delete" (click)="onDelete()">
+      <button type="button" mat-icon-button color="warn" aria-label="delete" (click)="onDelete()">
         <mat-icon>delete</mat-icon>
       </button>
     </div>

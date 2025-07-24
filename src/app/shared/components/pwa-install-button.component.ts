@@ -9,7 +9,7 @@ import { PwaInstallService } from 'src/app/core/services/pwa-install.service';
   selector: 'app-pwa-install-button',
   template: `
     @if (pwaService.canInstall()) {
-      <button mat-flat-button color="primary" (click)="pwaService.install()">
+      <button type="button" mat-flat-button color="primary" (click)="pwaService.install()">
         {{ 'account.install' | translate }}
       </button>
     }

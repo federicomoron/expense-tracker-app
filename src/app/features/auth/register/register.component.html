@@ -1,5 +1,11 @@
 <div class="register-screen">
-  <button mat-icon-button aria-label="register.back" class="register-back" (click)="goBack()">
+  <button
+    type="button"
+    mat-icon-button
+    aria-label="register.back"
+    class="register-back"
+    (click)="goBack()"
+  >
     <mat-icon>arrow_back</mat-icon>
   </button>
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="register-form">
