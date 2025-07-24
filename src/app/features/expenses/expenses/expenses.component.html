@@ -9,7 +9,7 @@
         <div class="month-header">{{ entry[0] }}</div>
 
         @for (exp of entry[1]; track exp.id) {
-          <div class="expense-row">
+          <div class="expense-row" (click)="openExpenseDetail(exp)">
             <div class="expense-date">
               {{ exp.createdAt | date: 'dd' }}<br />
               {{ exp.createdAt | date: 'MMM' }}

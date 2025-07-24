@@ -12,7 +12,13 @@ export const groupGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   const router = inject(Router);
 
   const userEmail = authService.currentUser()?.email;
-  const idParam = route.paramMap.get('id');
+
+  let idParam = route.paramMap.get('id') || route.paramMap.get('groupId');
+
+  if (!idParam && route.parent) {
+    idParam = route.parent.paramMap.get('id') || route.parent.paramMap.get('groupId');
+  }
+
   const groupId = idParam ? Number(idParam) : NaN;
 
   if (!userEmail || isNaN(groupId)) {
