@@ -9,4 +9,33 @@ body {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
   background-color: var(--app-bg);
   color: var(--app-text);
+  overflow-x: hidden;
+  width: 100%;
+}
+
+#splash-screen {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--app-bg);
+  color: var(--app-text);
+  font-size: 1.25rem;
+  font-weight: 400;
+  gap: 1rem;
+
+  img {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    opacity: 0.8;
+  }
+
+  h1 {
+    margin: 0;
+    text-align: center;
+    font-weight: 400;
+    font-size: 1.1rem;
+  }
 }

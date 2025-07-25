@@ -1,25 +1,13 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { API_ENDPOINTS } from '@constants/api-endpoints';
 import { STORAGE_KEYS } from '@constants/storage-keys';
 import { environment } from '@environments/environment';
 import { HttpService } from '@services/http.service';
 
-export interface User {
-  id: number;
-  email: string;
-  name?: string;
-}
-
-interface LoginResponse {
-  success: boolean;
-  data: {
-    user: User;
-    token: string;
-  };
-}
+import { LoginResponse, User } from '../models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -32,11 +20,10 @@ export class AuthService {
   currentUser = this._currentUser.asReadonly();
 
   constructor(private router: Router) {
-    // Load user session from localStorage if available
-    const isLoggedIn = localStorage.getItem(STORAGE_KEYS.IS_LOGGED_IN) === 'true';
+    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
     const userJson = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
 
-    if (isLoggedIn && userJson) {
+    if (token && this.isTokenValid(token) && userJson) {
       try {
         const user = JSON.parse(userJson);
         this._isLoggedIn.set(true);
@@ -44,6 +31,8 @@ export class AuthService {
       } catch (e) {
         console.error('Error parsing user JSON from localStorage', e);
       }
+    } else {
+      this.logout(false);
     }
   }
 
@@ -63,7 +52,6 @@ export class AuthService {
             throw new Error('Invalid response from server');
           }
 
-          // Save login state and user info in memory and localStorage
           this._isLoggedIn.set(true);
           this._currentUser.set(user);
 
@@ -74,14 +62,24 @@ export class AuthService {
       );
   }
 
-  logout() {
+  logout(redirect = true) {
     this._isLoggedIn.set(false);
     this._currentUser.set(null);
 
-    // Clear session and redirect to login page
     localStorage.removeItem(STORAGE_KEYS.IS_LOGGED_IN);
     localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
     localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
-    void this.router.navigate(['/login']);
+
+    if (redirect) void this.router.navigate(['/login']);
+  }
+
+  private isTokenValid(token: string): boolean {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const now = Math.floor(Date.now() / 1000);
+      return payload.exp && payload.exp > now;
+    } catch {
+      return false;
+    }
   }
 }

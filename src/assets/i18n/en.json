@@ -36,6 +36,7 @@
   "account": {
     "logout": "Logout",
     "install": "Install App",
+    "install_ios": "To install the app on iPhone, tap the Share icon and select 'Add to Home Screen'.",
     "i18n": "Language: English",
     "theme": {
       "light": "☀️ Light",
@@ -57,7 +58,11 @@
     "owes_you": "owes you",
     "new_group": "New Group",
     "errorFetching": "Error fetching groups. Please try again.",
-    "errorCreating": "There was an error creating the group"
+    "errorCreating": "There was an error creating the group",
+    "settled_hidden": "Settled groups are hidden",
+    "show_settled_groups_one": "Show 1 settled group",
+    "show_settled_groups_many": "Show {{count}} settled groups",
+    "hide_settled_groups": "Hide settled groups"
   },
   "groupDetail": {
     "theyOweYou": "They owe you",
@@ -85,7 +90,7 @@
   "expenses": {
     "loading": "Loading expenses...",
     "empty": "No expenses recorded.",
-    "youPaid": "You paid {{amount}} {{currency}}",
+    "youPaid": "You paid {{currency}} {{amount}}",
     "paidBy": "{{name}} paid {{amount}} {{currency}}",
     "paidByMultiple": "{{names}} paid {{total}} {{currency}}",
     "youLent": "You lent",
