@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ExpenseService } from '@app/core/services/expenses.service';
+import { CURRENCY_SYMBOLS } from '@app/shared/helpers/currency-symbols';
+import { CurrencySymbolPipe } from '@app/shared/pipes/currency-symbol.pipe';
 import { Expense, ExpenseExtended, ExpenseUser } from '@models/expenses.model';
 import { AuthService } from '@services/auth.service';
 import { getCategoryIcon } from '@shared/helpers/get-category-icon';
@@ -17,7 +19,7 @@ import { ExpenseFormComponent } from '../expense-form/expense-form.component';
 @Component({
   selector: 'app-expenses',
   standalone: true,
-  imports: [CommonModule, SharedUiModule, TranslateModule],
+  imports: [CommonModule, SharedUiModule, TranslateModule, CurrencySymbolPipe],
   templateUrl: './expenses.component.html',
   styleUrls: ['./expenses.component.scss'],
 })
@@ -85,6 +87,7 @@ export class ExpensesComponent {
     const paidBy = this.getPaidBy(exp);
     if (!paidBy.length) return '';
     const user = this.authService.currentUser();
+    const symbol = CURRENCY_SYMBOLS[exp.currency.toUpperCase()] || exp.currency;
 
     if (paidBy.length === 1) {
       const onlyPayer = paidBy[0];
@@ -92,13 +95,13 @@ export class ExpensesComponent {
       if (user && onlyPayer.userId === user.id) {
         return this.translate.instant('expenses.youPaid', {
           amount: Number(onlyPayer.amount).toFixed(2),
-          currency: exp.currency,
+          currency: symbol,
         });
       }
       return this.translate.instant('expenses.paidBy', {
         name,
         amount: Number(onlyPayer.amount).toFixed(2),
-        currency: exp.currency,
+        currency: symbol,
       });
     }
 
@@ -108,7 +111,7 @@ export class ExpensesComponent {
     return this.translate.instant('expenses.paidByMultiple', {
       names,
       total: total.toFixed(2),
-      currency: exp.currency,
+      currency: symbol,
     });
   }
 

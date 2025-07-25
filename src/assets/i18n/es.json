@@ -36,6 +36,7 @@
   "account": {
     "logout": "Cerrar sesión",
     "install": "Instalar aplicación",
+    "install_ios": "Para instalar la app en iPhone, tocá el icono de Compartir y luego 'Agregar a pantalla de inicio'.",
     "i18n": "Idioma: Español",
     "theme": {
       "light": "☀️ Claro",
@@ -57,7 +58,11 @@
     "owes_you": "te debe",
     "new_group": "Nuevo Grupo",
     "errorFetching": "Error al obtener grupos. Por favor, intentá nuevamente.",
-    "errorCreating": "Hubo un error al crear el grupo"
+    "errorCreating": "Hubo un error al crear el grupo",
+    "settled_hidden": "Se ocultan los grupos con cuentas saldadas",
+    "show_settled_groups_one": "Mostrar 1 grupo con cuentas saldadas",
+    "show_settled_groups_many": "Mostrar {{count}} grupos con cuentas saldadas",
+    "hide_settled_groups": "Ocultar grupos con cuentas saldadas"
   },
   "groupDetail": {
     "theyOweYou": "Te deben",
@@ -85,7 +90,7 @@
   "expenses": {
     "loading": "Cargando gastos...",
     "empty": "No hay gastos registrados.",
-    "youPaid": "Pagaste {{amount}} {{currency}}",
+    "youPaid": "Pagaste {{currency}} {{amount}}",
     "paidBy": "{{name}} pagó {{amount}} {{currency}}",
     "paidByMultiple": "{{names}} pagaron {{total}} {{currency}}",
     "youLent": "prestaste",
