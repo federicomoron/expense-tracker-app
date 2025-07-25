@@ -1,8 +1,6 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class PwaInstallService {
   private deferredPrompt: any = null;
 
@@ -10,7 +8,7 @@ export class PwaInstallService {
   readonly canInstall = this._canInstall.asReadonly();
 
   constructor() {
-    this._canInstall.set(true);
+    if (this.isIos()) return;
 
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -32,5 +30,18 @@ export class PwaInstallService {
         this.deferredPrompt = null;
       });
     }
+  }
+
+  isIos(): boolean {
+    const ua = window.navigator.userAgent.toLowerCase();
+    const result = /iphone|ipad|ipod/.test(ua);
+    return result;
+  }
+
+  isStandalone(): boolean {
+    return (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as any).standalone === true
+    );
   }
 }

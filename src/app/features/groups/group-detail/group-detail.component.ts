@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { SnackbarService } from '@app/core/services/snackbar.service';
+import { CurrencySymbolPipe } from '@app/shared/pipes/currency-symbol.pipe';
 import { ExpensesComponent } from '@features/expenses/expenses/expenses.component';
 import { GroupDetailWithExpenses } from '@models/group-detail.model';
 import { AuthService } from '@services/auth.service';
@@ -13,7 +14,14 @@ import { SharedUiModule } from '@shared/shared-ui.module';
 @Component({
   selector: 'app-group-detail',
   standalone: true,
-  imports: [ExpensesComponent, CommonModule, SharedUiModule, TranslateModule, RouterModule],
+  imports: [
+    ExpensesComponent,
+    CommonModule,
+    SharedUiModule,
+    TranslateModule,
+    RouterModule,
+    CurrencySymbolPipe,
+  ],
   templateUrl: './group-detail.component.html',
   styleUrls: ['./group-detail.component.scss'],
 })

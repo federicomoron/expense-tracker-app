@@ -28,6 +28,13 @@ export class GroupsComponent implements OnInit {
   private _groupDetails = signal<Record<number, GroupDetailWithExpenses>>({});
   readonly groupDetailsMap = this._groupDetails;
 
+  saved = localStorage.getItem('showSettledGroups');
+  readonly showSettledGroups = signal<boolean>(
+    localStorage.getItem('showSettledGroups') === 'true',
+  );
+
+  readonly hasAnyDetail = computed(() => Object.keys(this._groupDetails()).length > 0);
+
   private authService = inject(AuthService);
   readonly currentUser = this.authService.currentUser;
   readonly currentUserId = this.currentUser()?.id ?? 0;
@@ -101,5 +108,31 @@ export class GroupsComponent implements OnInit {
 
   goToNewGroup() {
     void this.router.navigateByUrl('/groups/new');
+  }
+
+  readonly activeGroups = computed(() =>
+    this.groups().filter((g) => {
+      const detail = this._groupDetails()[g.id];
+      if (!detail) return false;
+      return detail.balanceSummary.length > 0 || detail.memberBalances.some((m) => m.amount > 0);
+    }),
+  );
+
+  readonly settledGroups = computed(() =>
+    this.groups().filter((g) => {
+      const detail = this._groupDetails()[g.id];
+      if (!detail) return false;
+      return (
+        detail.balanceSummary.length === 0 && detail.memberBalances.every((m) => m.amount === 0)
+      );
+    }),
+  );
+
+  toggleShowSettledGroups() {
+    this.showSettledGroups.update((prev) => {
+      const next = !prev;
+      localStorage.setItem('showSettledGroups', String(next));
+      return next;
+    });
   }
 }

@@ -5,19 +5,11 @@ import { API_ENDPOINTS } from '@constants/api-endpoints';
 import { STORAGE_KEYS } from '@constants/storage-keys';
 import { environment } from '@environments/environment';
 import { GroupDetailResponse, GroupDetailWithExpenses } from '@models/group-detail.model';
-import { GroupType } from '@models/group-type.enum';
 import { Group } from '@models/group.model';
 import { HttpService } from '@services/http.service';
 
-interface CreateGroupPayload {
-  name: string;
-  type: GroupType;
-}
+import { CreateGroupPayload, CreateGroupResponse } from '../models/group-request.model';
 
-interface CreateGroupResponse {
-  success: boolean;
-  data: Group;
-}
 @Injectable({
   providedIn: 'root',
 })

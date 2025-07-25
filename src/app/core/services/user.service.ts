@@ -5,20 +5,7 @@ import { API_ENDPOINTS } from '@constants/api-endpoints';
 import { environment } from '@environments/environment';
 import { HttpService } from '@services/http.service';
 
-export interface User {
-  email: string;
-  name: string;
-}
-export interface RegisterResponse {
-  success: boolean;
-  data: User;
-}
-
-interface RegisterPayload {
-  name: string;
-  email: string;
-  password: string;
-}
+import { RegisterPayload, RegisterResponse } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',

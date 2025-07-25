@@ -7,13 +7,8 @@ import { PwaInstallService } from 'src/app/core/services/pwa-install.service';
 @Component({
   standalone: true,
   selector: 'app-pwa-install-button',
-  template: `
-    @if (pwaService.canInstall()) {
-      <button type="button" mat-flat-button color="primary" (click)="pwaService.install()">
-        {{ 'account.install' | translate }}
-      </button>
-    }
-  `,
+  templateUrl: './pwa-install-button.component.html',
+  styleUrls: ['./pwa-install-button.component.scss'],
   imports: [MatButtonModule, TranslateModule],
 })
 export class PwaInstallButtonComponent {

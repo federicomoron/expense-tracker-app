@@ -59,3 +59,21 @@
   justify-content: center;
   padding: 1rem;
 }
+
+.settled-toggle {
+  text-align: center;
+  padding: 1rem;
+
+  .placeholder {
+    margin-bottom: 0.5rem;
+    color: var(--app-muted);
+    font-size: 0.875rem;
+  }
+}
+
+.groups-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+}
