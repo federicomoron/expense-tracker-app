@@ -1,62 +1,116 @@
-<div class="groups-container">
-  @for (group of groups(); track $index) {
-    @let detail = getGroupDetails(group.id)();
+@if (!hasAnyDetail()) {
+  <div class="groups-loading">
+    <mat-spinner></mat-spinner>
+  </div>
+} @else {
+  <div class="groups-container">
+    @for (group of activeGroups(); track $index) {
+      @let detail = getGroupDetails(group.id)();
 
-    <mat-card (click)="goToGroup(group.id)" class="group-card">
-      <mat-card-header>
-        <mat-card-title>{{ group.name }}</mat-card-title>
-      </mat-card-header>
+      <mat-card (click)="goToGroup(group.id)" class="group-card">
+        <mat-card-header>
+          <mat-card-title>{{ group.name }}</mat-card-title>
+        </mat-card-header>
 
-      <mat-card-content>
-        @if (!detail) {
-          <div class="loading-spinner">
-            <mat-progress-spinner
-              diameter="24"
-              mode="indeterminate"
-              color="primary"
-            ></mat-progress-spinner>
-          </div>
-        } @else {
-          @if (detail.balanceSummary.length === 0 && detail.memberBalances.length === 0) {
-            <p class="placeholder">{{ 'groups.no_pending_balances' | translate }}</p>
-          } @else {
-            <div class="group-balances">
-              @for (balance of detail.balanceSummary; track $index) {
-                <small class="balance"
-                  >{{ balance.currency }}: {{ balance.amount | number: '1.2-2' }}</small
-                >
-              }
+        <mat-card-content>
+          @if (!detail) {
+            <div class="loading-spinner">
+              <mat-progress-spinner
+                diameter="24"
+                mode="indeterminate"
+                color="primary"
+              ></mat-progress-spinner>
             </div>
-            <div class="group-members">
-              @for (member of detail.memberBalances; track $index) {
-                @if (member.amount > 0) {
-                  @if (member.userId === currentUserId) {
-                    <small class="member">
-                      {{ 'groups.you_owe' | translate }} {{ member.amount | number: '1.2-2' }}
-                      {{ member.currency }}
-                    </small>
-                  } @else {
-                    <small class="member">
-                      {{ member.name }} {{ 'groups.owes_you' | translate }}
-                      {{ member.amount | number: '1.2-2' }} {{ member.currency }}
-                    </small>
+          } @else {
+            @if (detail.balanceSummary.length === 0 && detail.memberBalances.length === 0) {
+              <p class="placeholder">{{ 'groups.no_pending_balances' | translate }}</p>
+            } @else {
+              <div class="group-balances">
+                @for (balance of detail.balanceSummary; track $index) {
+                  <small class="balance">
+                    {{ balance.currency }}: {{ balance.amount | number: '1.2-2' }}
+                  </small>
+                }
+              </div>
+              <div class="group-members">
+                @for (member of detail.memberBalances; track $index) {
+                  @if (member.amount > 0) {
+                    @if (member.userId === currentUserId) {
+                      <small class="member">
+                        {{ 'groups.you_owe' | translate }}
+                        {{ member.amount | number: '1.2-2' }} {{ member.currency }}
+                      </small>
+                    } @else {
+                      <small class="member">
+                        {{ member.name }} {{ 'groups.owes_you' | translate }}
+                        {{ member.amount | number: '1.2-2' }} {{ member.currency }}
+                      </small>
+                    }
                   }
                 }
-              }
-            </div>
+              </div>
+            }
           }
-        }
-      </mat-card-content>
-    </mat-card>
-  }
-</div>
+        </mat-card-content>
+      </mat-card>
+    }
 
-<button
-  mat-fab
-  color="primary"
-  class="fab-button"
-  [attr.aria-label]="'groups.new_group' | translate"
-  [routerLink]="['/groups/new']"
->
-  <mat-icon>add</mat-icon>
-</button>
+    @if (showSettledGroups()) {
+      @for (group of settledGroups(); track $index) {
+        @let detail = getGroupDetails(group.id)();
+
+        <mat-card (click)="goToGroup(group.id)" class="group-card">
+          <mat-card-header>
+            <mat-card-title>{{ group.name }}</mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content>
+            @if (!detail) {
+              <div class="loading-spinner">
+                <mat-progress-spinner
+                  diameter="24"
+                  mode="indeterminate"
+                  color="primary"
+                ></mat-progress-spinner>
+              </div>
+            } @else {
+              <p class="placeholder">{{ 'groups.no_pending_balances' | translate }}</p>
+            }
+          </mat-card-content>
+        </mat-card>
+      }
+    }
+
+    @if (settledGroups().length > 0) {
+      <div class="settled-toggle">
+        @if (!showSettledGroups()) {
+          <p class="placeholder">
+            {{ 'groups.settled_hidden' | translate }}
+          </p>
+        }
+
+        <button mat-stroked-button color="primary" (click)="toggleShowSettledGroups()">
+          @if (showSettledGroups()) {
+            {{ 'groups.hide_settled_groups' | translate }}
+          } @else {
+            @if (settledGroups().length === 1) {
+              {{ 'groups.show_settled_groups_one' | translate }}
+            } @else {
+              {{ 'groups.show_settled_groups_many' | translate: { count: settledGroups().length } }}
+            }
+          }
+        </button>
+      </div>
+    }
+  </div>
+
+  <button
+    mat-fab
+    color="primary"
+    class="fab-button"
+    [attr.aria-label]="'groups.new_group' | translate"
+    [routerLink]="['/groups/new']"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+}
