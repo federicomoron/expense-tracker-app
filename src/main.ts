@@ -35,4 +35,7 @@ void bootstrapApplication(AppComponent, {
   const savedLang = localStorage.getItem('lang') || 'en';
   translate.setDefaultLang('en');
   translate.use(savedLang);
+
+  const splash = document.getElementById('splash-screen');
+  if (splash) splash.style.display = 'none';
 });
