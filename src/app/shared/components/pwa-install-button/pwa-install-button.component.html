@@ -1,0 +1,7 @@
+@if (!pwaService.isIos() && pwaService.canInstall()) {
+  <button type="button" mat-flat-button color="primary" (click)="pwaService.install()">
+    {{ 'account.install' | translate }}
+  </button>
+} @else if (pwaService.isIos() && !pwaService.isStandalone()) {
+  <div class="ios-install-hint">📱 {{ 'account.install_ios' | translate }}</div>
+}
