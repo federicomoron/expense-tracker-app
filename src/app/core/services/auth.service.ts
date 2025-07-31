@@ -28,8 +28,8 @@ export class AuthService {
         const user = JSON.parse(userJson);
         this._isLoggedIn.set(true);
         this._currentUser.set(user);
-      } catch (e) {
-        console.error('Error parsing user JSON from localStorage', e);
+      } catch {
+        this.logout(false);
       }
     } else {
       this.logout(false);
@@ -81,5 +81,11 @@ export class AuthService {
     } catch {
       return false;
     }
+  }
+
+  hasValidSession(): boolean {
+    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+    const userJson = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
+    return !!token && !!userJson && this.isTokenValid(token);
   }
 }
