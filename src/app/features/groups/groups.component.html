@@ -4,24 +4,16 @@
   </div>
 } @else {
   <div class="groups-container">
-    @for (group of activeGroups(); track $index) {
+    @for (group of activeGroups(); track group.id) {
       @let detail = getGroupDetails(group.id)();
 
-      <mat-card (click)="goToGroup(group.id)" class="group-card">
-        <mat-card-header>
-          <mat-card-title>{{ group.name }}</mat-card-title>
-        </mat-card-header>
+      @if (detail) {
+        <mat-card (click)="goToGroup(group.id)" class="group-card">
+          <mat-card-header>
+            <mat-card-title>{{ group.name }}</mat-card-title>
+          </mat-card-header>
 
-        <mat-card-content>
-          @if (!detail) {
-            <div class="loading-spinner">
-              <mat-progress-spinner
-                diameter="24"
-                mode="indeterminate"
-                color="primary"
-              ></mat-progress-spinner>
-            </div>
-          } @else {
+          <mat-card-content>
             @if (detail.balanceSummary.length === 0 && detail.memberBalances.length === 0) {
               <p class="placeholder">{{ 'groups.no_pending_balances' | translate }}</p>
             } @else {
@@ -50,34 +42,34 @@
                 }
               </div>
             }
-          }
-        </mat-card-content>
-      </mat-card>
+          </mat-card-content>
+        </mat-card>
+      } @else {
+        <div class="loading-spinner">
+          <div class="custom-spinner"></div>
+        </div>
+      }
     }
 
     @if (showSettledGroups()) {
-      @for (group of settledGroups(); track $index) {
+      @for (group of settledGroups(); track group.id) {
         @let detail = getGroupDetails(group.id)();
 
-        <mat-card (click)="goToGroup(group.id)" class="group-card">
-          <mat-card-header>
-            <mat-card-title>{{ group.name }}</mat-card-title>
-          </mat-card-header>
+        @if (detail) {
+          <mat-card (click)="goToGroup(group.id)" class="group-card">
+            <mat-card-header>
+              <mat-card-title>{{ group.name }}</mat-card-title>
+            </mat-card-header>
 
-          <mat-card-content>
-            @if (!detail) {
-              <div class="loading-spinner">
-                <mat-progress-spinner
-                  diameter="24"
-                  mode="indeterminate"
-                  color="primary"
-                ></mat-progress-spinner>
-              </div>
-            } @else {
+            <mat-card-content>
               <p class="placeholder">{{ 'groups.no_pending_balances' | translate }}</p>
-            }
-          </mat-card-content>
-        </mat-card>
+            </mat-card-content>
+          </mat-card>
+        } @else {
+          <div class="loading-spinner">
+            <div class="custom-spinner"></div>
+          </div>
+        }
       }
     }
 
@@ -89,7 +81,12 @@
           </p>
         }
 
-        <button mat-stroked-button color="primary" (click)="toggleShowSettledGroups()">
+        <button
+          mat-stroked-button
+          color="primary"
+          (click)="toggleShowSettledGroups()"
+          type="button"
+        >
           @if (showSettledGroups()) {
             {{ 'groups.hide_settled_groups' | translate }}
           } @else {
@@ -110,6 +107,7 @@
     class="fab-button"
     [attr.aria-label]="'groups.new_group' | translate"
     [routerLink]="['/groups/new']"
+    type="button"
   >
     <mat-icon>add</mat-icon>
   </button>

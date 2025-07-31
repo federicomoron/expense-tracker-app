@@ -7,65 +7,58 @@
   overflow: hidden;
 }
 
-.register-screen {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 2rem 1rem;
-}
-
-.register-back {
-  position: fixed;
-  top: 1rem;
-  left: 1rem;
-  color: var(--app-text);
-  z-index: 10;
-}
-
-.register-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+.register-container {
   width: 100%;
-  max-width: 300px;
-  padding: 2rem;
-  border-radius: 1rem;
-  background-color: var(--app-card-bg, #fff);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  max-width: 400px;
+  padding: 0 1rem;
+  overflow: hidden;
+  position: relative;
 
-  mat-form-field {
-    width: 100%;
+  .register-back {
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    color: var(--app-text);
+    z-index: 10;
   }
 
-  button[type='submit'] {
-    align-self: center;
-    width: 100%;
+  .register-title {
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
-}
 
-.register-title {
-  text-align: center;
-  font-size: 1.6rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--app-text);
+  .register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+
+    mat-form-field {
+      width: 100%;
+      font-size: 0.95rem;
+    }
+
+    button {
+      align-self: center;
+      width: 100%;
+    }
+  }
+
+  .spinner {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: -2px;
+  }
 }
 
 :host-context(.dark-theme) .register-form {
-  background-color: #1e1e1e;
-  color: white;
-
   input,
   mat-label,
   .mat-mdc-form-field-infix {
-    color: white !important;
-    caret-color: white;
+    color: var(--app-text) !important;
+    caret-color: var(--app-text);
   }
 
   .mat-mdc-text-field-wrapper,
@@ -73,15 +66,9 @@
     background-color: transparent !important;
   }
 
-  .mdc-notched-outline__leading,
-  .mdc-notched-outline__notch,
-  .mdc-notched-outline__trailing {
-    border-color: rgba(255, 255, 255, 0.6) !important;
-  }
-
   .mat-mdc-form-field-outline {
-    color: white !important;
-    border-color: white !important;
+    color: var(--app-text) !important;
+    border-color: var(--app-text) !important;
   }
 
   .mat-mdc-form-field-subscript-wrapper {
@@ -89,6 +76,25 @@
   }
 
   mat-error {
-    color: #ff8a80;
+    color: var(--app-error);
   }
+}
+
+:host-context(.dark-theme) {
+  .form-field-dark {
+    ::ng-deep .mdc-notched-outline__leading,
+    ::ng-deep .mdc-notched-outline__notch,
+    ::ng-deep .mdc-notched-outline__trailing {
+      border-color: var(--app-text) !important;
+      border-width: 1px !important;
+    }
+  }
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  will-change: unset !important;
+}
+
+::ng-deep .mdc-text-field {
+  will-change: opacity, transform, color !important;
 }

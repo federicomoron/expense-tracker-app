@@ -1,0 +1,20 @@
+<div class="calendar-dialog">
+  <button
+    type="button"
+    mat-icon-button
+    aria-label="register.back"
+    class="register-back"
+    (click)="close()"
+  >
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <mat-calendar [(selected)]="selectedDate" [dateFilter]="isDateValid" />
+  <div class="actions">
+    <button mat-button (click)="close()">
+      {{ 'calendar.cancel' | translate }}
+    </button>
+    <button mat-button color="primary" (click)="confirm()">
+      {{ 'calendar.accept' | translate }}
+    </button>
+  </div>
+</div>

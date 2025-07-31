@@ -1,4 +1,4 @@
-<div class="register-screen">
+<div class="register-container">
   <button
     type="button"
     mat-icon-button
@@ -8,44 +8,61 @@
   >
     <mat-icon>arrow_back</mat-icon>
   </button>
+
+  <h1 class="register-title">{{ 'register.title' | translate }}</h1>
+
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="register-form">
-    <h1 class="register-title">{{ 'register.title' | translate }}</h1>
-    <mat-form-field appearance="outline" class="full-width">
+    <mat-form-field appearance="outline" floatLabel="always" class="form-field-dark">
       <mat-label>{{ 'register.nameLabel' | translate }}</mat-label>
       <input matInput formControlName="name" />
-      @if (form.get('name')?.hasError('required')) {
+      @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
         <mat-error>{{ 'register.nameRequired' | translate }}</mat-error>
       }
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
+    <mat-form-field appearance="outline" floatLabel="always" class="form-field-dark">
       <mat-label>{{ 'register.emailLabel' | translate }}</mat-label>
-      <input matInput formControlName="email" type="email" />
-      @if (form.get('email')?.hasError('required')) {
+      <input matInput type="email" formControlName="email" />
+      @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
         <mat-error>{{ 'register.emailRequired' | translate }}</mat-error>
       }
-      @if (form.get('email')?.hasError('email')) {
+      @if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
         <mat-error>{{ 'register.emailInvalid' | translate }}</mat-error>
       }
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="full-width">
+    <mat-form-field appearance="outline" floatLabel="always" class="form-field-dark">
       <mat-label>{{ 'register.passwordLabel' | translate }}</mat-label>
-      <input matInput formControlName="password" type="password" />
-      @if (form.get('password')?.hasError('required')) {
+      <input matInput [type]="showPassword() ? 'text' : 'password'" formControlName="password" />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        (click)="togglePasswordVisibility()"
+        [attr.aria-label]="'register.togglePasswordVisibility' | translate"
+        [attr.aria-pressed]="showPassword()"
+      >
+        <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
         <mat-error>{{ 'register.passwordRequired' | translate }}</mat-error>
       }
-      @if (form.get('password')?.hasError('minlength')) {
+      @if (form.get('password')?.hasError('minlength') && form.get('password')?.touched) {
         <mat-error>{{ 'register.passwordMinLength' | translate }}</mat-error>
       }
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit" [disabled]="loading">
+    <app-exp-button type="submit" color="primary" [disabled]="loading">
       @if (loading) {
-        <mat-spinner diameter="20" strokeWidth="3" color="accent" />
+        <mat-progress-spinner
+          mode="indeterminate"
+          diameter="20"
+          color="accent"
+          class="spinner"
+        ></mat-progress-spinner>
       } @else {
         {{ 'register.registerButton' | translate }}
       }
-    </button>
+    </app-exp-button>
   </form>
 </div>
