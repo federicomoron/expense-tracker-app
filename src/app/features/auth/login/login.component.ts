@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -21,12 +21,10 @@ export class LoginComponent {
   errorMessage = signal('');
   isLoading = signal(false);
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private snackbar: SnackbarService,
-    private translate: TranslateService,
-  ) {}
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private snackbar = inject(SnackbarService);
+  private translate = inject(TranslateService);
 
   isFormInvalid = computed(() => this.email().trim() === '' || this.password().trim() === '');
 

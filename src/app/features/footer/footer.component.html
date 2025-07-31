@@ -1,18 +1,10 @@
 <footer class="app-footer">
   @if (calendarOnly) {
     <nav class="footer-nav">
-      <button type="button" (click)="openCalendar()">
+      <button type="button" (click)="openCalendar()" aria-label="Change date" class="calendar-btn">
         <mat-icon>calendar_today</mat-icon>
-        <span>{{ 'footer.date' | translate }}</span>
+        <span class="date-badge">{{ date | date: 'd' }}</span>
       </button>
-
-      <input
-        [matDatepicker]="picker"
-        [value]="date"
-        (dateChange)="onDateSelected($event.value)"
-        hidden
-      />
-      <mat-datepicker #picker></mat-datepicker>
     </nav>
   } @else if (!isExpenseForm) {
     <nav class="footer-nav">

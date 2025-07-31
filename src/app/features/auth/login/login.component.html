@@ -1,61 +1,55 @@
 <div class="login-container">
-  <mat-card>
-    <img src="/assets/spendly.png" alt="App Logo" class="logo" />
-    <h1 class="login-title">{{ 'login.title' | translate }}</h1>
-    <form (submit)="onSubmit($event)" class="login-form">
-      <mat-form-field appearance="outline" class="custom-label-color">
-        <mat-label>{{ 'login.emailLabel' | translate }}</mat-label>
-        <input
-          matInput
-          type="email"
-          [value]="email()"
-          (input)="onEmailInput($event)"
-          [placeholder]="'login.emailPlaceholder' | translate"
-        />
-      </mat-form-field>
+  <img class="logo logo-light" src="/assets/spendly-dark.png" alt="Logo claro" />
+  <img class="logo logo-dark" src="/assets/spendly-light.png" alt="Logo oscuro" />
+  <h1 class="login-title">{{ 'login.title' | translate }}</h1>
 
-      <mat-form-field appearance="outline" class="custom-label-color">
-        <mat-label>{{ 'login.passwordLabel' | translate }}</mat-label>
-        <input
-          matInput
-          [type]="showPassword() ? 'text' : 'password'"
-          [value]="password()"
-          (input)="onPasswordInput($event)"
-          [placeholder]="'login.passwordPlaceholder' | translate"
-        />
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="togglePasswordVisibility()"
-          [attr.aria-label]="'login.togglePasswordVisibility' | translate"
-          [attr.aria-pressed]="showPassword()"
-          type="button"
-        >
-          <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
-        </button>
-      </mat-form-field>
+  <form (submit)="onSubmit($event)" class="login-form">
+    <mat-form-field appearance="outline" floatLabel="always" class="form-field-dark">
+      <mat-label>{{ 'login.emailLabel' | translate }}</mat-label>
+      <input matInput type="email" [value]="email()" (input)="onEmailInput($event)" />
+    </mat-form-field>
 
-      <app-exp-button type="submit" color="primary" [disabled]="isLoading()">
-        @if (isLoading()) {
-          <mat-progress-spinner
-            mode="indeterminate"
-            diameter="20"
-            color="accent"
-            class="spinner"
-          ></mat-progress-spinner>
-        } @else {
-          {{ 'login.loginButton' | translate }}
-        }
-      </app-exp-button>
+    <mat-form-field appearance="outline" floatLabel="always" class="form-field-dark">
+      <mat-label>{{ 'login.passwordLabel' | translate }}</mat-label>
+      <input
+        matInput
+        [type]="showPassword() ? 'text' : 'password'"
+        [value]="password()"
+        (input)="onPasswordInput($event)"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="togglePasswordVisibility()"
+        [attr.aria-label]="'login.togglePasswordVisibility' | translate"
+        [attr.aria-pressed]="showPassword()"
+        type="button"
+      >
+        <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+    </mat-form-field>
 
-      @if (errorMessage()) {
-        <div class="error-message">
-          {{ errorMessage() }}
-        </div>
+    <app-exp-button type="submit" color="primary" [disabled]="isLoading()">
+      @if (isLoading()) {
+        <mat-progress-spinner
+          mode="indeterminate"
+          diameter="20"
+          color="accent"
+          class="spinner"
+        ></mat-progress-spinner>
+      } @else {
+        {{ 'login.loginButton' | translate }}
       }
+    </app-exp-button>
 
-      <!-- Uncomment if Google login is needed -->
-      <!-- <button
+    @if (errorMessage()) {
+      <div class="error-message">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <!-- Uncomment if Google login is needed -->
+    <!-- <button
         mat-stroked-button
         color="primary"
         class="full-width google-login-btn"
@@ -71,10 +65,9 @@
         {{ 'login.googleSignIn' | translate }}
       </button> -->
 
-      <p class="register-link">
-        {{ 'login.noAccount' | translate }}
-        <a class="login-register" routerLink="/register">{{ 'login.registerHere' | translate }}</a>
-      </p>
-    </form>
-  </mat-card>
+    <p class="register-link">
+      {{ 'login.noAccount' | translate }}
+      <a class="login-register" routerLink="/register">{{ 'login.registerHere' | translate }}</a>
+    </p>
+  </form>
 </div>

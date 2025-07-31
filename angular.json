@@ -30,7 +30,8 @@
                 "output": "/assets/i18n"
               },
               "src/icons",
-              "src/manifest.webmanifest"
+              "src/manifest.webmanifest",
+              "src/spendly.ico"
             ],
             "styles": ["src/styles.scss"],
             "scripts": [],
@@ -99,7 +100,8 @@
                 "output": "/assets/i18n"
               },
               "src/icons",
-              "src/manifest.webmanifest"
+              "src/manifest.webmanifest",
+              "src/spendly.ico"
             ],
             "i18n": {
               "sourceLocale": "es",
@@ -121,7 +123,7 @@
   },
   "cli": {
     "analytics": false,
-    "schematicCollections": ["angular-eslint"]
+    "schematicCollections": ["@angular-eslint/schematics"]
   },
   "schematics": {
     "@schematics/angular:component": {
