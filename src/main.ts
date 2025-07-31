@@ -1,4 +1,5 @@
 import { isDevMode } from '@angular/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideServiceWorker } from '@angular/service-worker';
 import { TranslateService } from '@ngx-translate/core';
@@ -24,6 +25,7 @@ void bootstrapApplication(AppComponent, {
   ...appConfig,
   providers: [
     ...appConfig.providers,
+    provideNativeDateAdapter(),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:3000',
