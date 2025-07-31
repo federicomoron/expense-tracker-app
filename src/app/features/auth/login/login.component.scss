@@ -30,23 +30,41 @@
   }
 
   .logo {
-    width: 120px;
+    max-width: 80%;
+    height: auto;
+    display: block;
     margin: 0 auto 0.5rem;
+    transition: opacity 0.3s ease;
+  }
+
+  .logo-dark {
+    display: none;
+  }
+  .logo-light {
     display: block;
   }
 
+  :host-context(.dark-theme) {
+    .logo-dark {
+      display: block;
+    }
+
+    .logo-light {
+      display: none;
+    }
+  }
+
   .login-title {
-    text-align: center;
-    font-size: 1.6rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: var(--app-text);
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
 
   .login-form {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
 
     mat-form-field {
       width: 100%;
@@ -141,4 +159,23 @@
   mat-error {
     color: #ff8a80;
   }
+}
+
+:host-context(.dark-theme) {
+  .form-field-dark {
+    ::ng-deep .mdc-notched-outline__leading,
+    ::ng-deep .mdc-notched-outline__notch,
+    ::ng-deep .mdc-notched-outline__trailing {
+      border-color: white !important;
+      border-width: 1px !important;
+    }
+  }
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  will-change: unset !important;
+}
+
+::ng-deep .mdc-text-field {
+  will-change: opacity, transform, color !important;
 }

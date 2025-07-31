@@ -1,20 +1,23 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { SnackbarService } from '@app/core/services/snackbar.service';
+import { ExpButtonComponent } from '@app/shared/components/exp-button/exp-button.component';
 import { UserService } from '@services/user.service';
 import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [SharedUiModule, ReactiveFormsModule, TranslateModule],
+  imports: [SharedUiModule, ReactiveFormsModule, TranslateModule, ExpButtonComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
+  showPassword = signal(false);
+
   private fb = inject(FormBuilder);
   private router = inject(Router);
   private snackbar = inject(SnackbarService);
@@ -63,5 +66,9 @@ export class RegisterComponent {
 
   goBack() {
     void this.router.navigate(['/login']);
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword.update((value) => !value);
   }
 }
