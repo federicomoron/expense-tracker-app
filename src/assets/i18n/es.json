@@ -4,7 +4,6 @@
     "emailLabel": "Correo electrónico",
     "emailPlaceholder": "Ingrese su correo",
     "passwordLabel": "Contraseña",
-    "passwordPlaceholder": "Ingrese su contraseña",
     "togglePasswordVisibility": "Alternar visibilidad de la contraseña",
     "loginButton": "Ingresar",
     "googleSignIn": "Iniciar sesión con Google",
@@ -172,5 +171,9 @@
   "common": {
     "confirm": "Confirmar",
     "cancel": "Cancelar"
+  },
+  "calendar": {
+    "cancel": "Cancelar",
+    "accept": "Aceptar"
   }
 }
