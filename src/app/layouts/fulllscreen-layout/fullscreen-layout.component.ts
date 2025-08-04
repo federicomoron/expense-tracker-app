@@ -5,11 +5,7 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   selector: 'fullscreen-layout',
   imports: [RouterOutlet],
-  template: `
-    <div class="fullscreen-wrapper">
-      <router-outlet></router-outlet>
-    </div>
-  `,
+  templateUrl: './fullscreen-layout.component.html',
   styleUrls: ['./fullscreen-layout.component.scss'],
 })
 export class FullscreenLayoutComponent {}
