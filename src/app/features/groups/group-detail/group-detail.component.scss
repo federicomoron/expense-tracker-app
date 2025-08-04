@@ -1,5 +1,7 @@
 .group-detail-container {
   padding: 0;
+  margin: 0;
+  position: relative;
 }
 
 .group-title {
@@ -33,12 +35,12 @@
 
   &.positive {
     background-color: rgba(46, 125, 50, 0.1);
-    color: #2e7d32;
+    color: var(--app-success);
   }
 
   &.negative {
     background-color: rgba(198, 40, 40, 0.1);
-    color: #c62828;
+    color: var(--app-error);
   }
 }
 
@@ -52,12 +54,12 @@
 
   &.positive {
     background-color: rgba(46, 125, 50, 0.1);
-    color: #2e7d32;
+    color: var(--app-success);
   }
 
   &.negative {
     background-color: rgba(198, 40, 40, 0.1);
-    color: #c62828;
+    color: var(--app-error);
   }
 }
 
@@ -72,4 +74,45 @@
   bottom: 80px;
   right: 16px;
   z-index: 100;
+}
+
+.group-banner {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+
+.floating-balance-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 20px;
+  padding: 0 16px;
+}
+
+.summary-chip {
+  padding: 6px 10px;
+  border-radius: 16px;
+  font-size: 13px;
+  background-color: var(--app-surface);
+  color: var(--app-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &.positive {
+    background-color: rgba(46, 125, 50, 0.1);
+    color: var(--app-success);
+  }
+
+  &.negative {
+    background-color: rgba(198, 40, 40, 0.1);
+    color: var(--app-error);
+  }
+
+  strong {
+    font-weight: 600;
+  }
 }

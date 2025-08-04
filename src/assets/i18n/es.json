@@ -72,17 +72,18 @@
   },
   "groupForm": {
     "back": "Volver",
-    "title": "Crear grupo",
+    "title": "Crear un grupo",
     "save": "Guardar",
     "namePlaceholder": "Nombre del grupo",
-    "errorCreating": "Error al crear el grupo"
+    "errorCreating": "Error al crear el grupo",
+    "typeLabel": "Tipo"
   },
   "common": {
     "close": "Cerrar"
   },
-  "groupTypes": {
+  "groupType": {
     "trip": "Viaje",
-    "house": "Casa",
+    "home": "Casa",
     "couple": "Pareja",
     "other": "Otro"
   },
