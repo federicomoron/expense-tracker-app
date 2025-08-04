@@ -94,4 +94,15 @@ export class GroupService {
       .get<GroupDetailResponse>(`${this.apiUrl}${API_ENDPOINTS.GET_GROUP_DETAIL(groupId)}`)
       .pipe(map((res) => res.data));
   }
+
+  uploadImage(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('image', file);
+    return this.http
+      .post<
+        { success: boolean; data: { url: string } },
+        FormData
+      >(`${this.apiUrl}${API_ENDPOINTS.UPLOAD_GROUP_IMAGE}`, formData)
+      .pipe(map((res) => res.data.url));
+  }
 }

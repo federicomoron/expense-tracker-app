@@ -1,13 +1,13 @@
 export enum GroupType {
   TRIP = 'trip',
-  HOUSE = 'house',
+  HOME = 'home',
   COUPLE = 'couple',
   OTHER = 'other',
 }
 
 export const GROUP_TYPE_OPTIONS = [
-  { label: 'groupTypes.trip', value: GroupType.TRIP },
-  { label: 'groupTypes.house', value: GroupType.HOUSE },
-  { label: 'groupTypes.couple', value: GroupType.COUPLE },
-  { label: 'groupTypes.other', value: GroupType.OTHER },
+  { value: GroupType.TRIP, label: 'groupType.trip', icon: 'flight' },
+  { value: GroupType.HOME, label: 'groupType.home', icon: 'home' },
+  { value: GroupType.COUPLE, label: 'groupType.couple', icon: 'favorite' },
+  { value: GroupType.OTHER, label: 'groupType.other', icon: 'list' },
 ];

@@ -52,16 +52,22 @@ export class ExpensesComponent {
 
     for (const exp of this.expenses) {
       const date = new Date(exp.createdAt);
-      const month = date.toLocaleString('default', {
-        month: 'long',
-      });
-      if (!map.has(month)) {
-        map.set(month, []);
+      const month = date.toLocaleString('default', { month: 'long' });
+      const year = date.getFullYear();
+      const key = `${this.capitalizeFirstLetter(month)} ${year}`;
+
+      if (!map.has(key)) {
+        map.set(key, []);
       }
-      map.get(month)!.push(exp);
+
+      map.get(key)!.push(exp);
     }
 
     return Array.from(map.entries());
+  }
+
+  private capitalizeFirstLetter(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
   get currentUser() {

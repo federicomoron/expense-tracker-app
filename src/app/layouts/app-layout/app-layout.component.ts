@@ -1,5 +1,5 @@
-import { Component, effect, inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, computed, inject } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ApiStatusService } from '@app/core/services/api-status.service';
@@ -10,26 +10,24 @@ import { FooterComponent } from '@app/features/footer/footer.component';
   standalone: true,
   selector: 'app-layout',
   imports: [RouterOutlet, FooterComponent],
-  template: `
-    <div class="layout-wrapper">
-      <main class="main-content-bg">
-        <router-outlet></router-outlet>
-      </main>
-      <app-footer></app-footer>
-    </div>
-  `,
+  templateUrl: './app-layout.component.html',
   styleUrls: ['./app-layout.component.scss'],
 })
 export class AppLayoutComponent {
   private apiStatus = inject(ApiStatusService);
   private snackbar = inject(SnackbarService);
   private translate = inject(TranslateService);
+  private router = inject(Router);
+
+  readonly shouldRemovePaddingTop = computed(() => {
+    const url = this.router.url;
+    const match = url.match(/^\/groups\/\d+$/);
+    return !!match;
+  });
 
   constructor() {
-    effect(() => {
-      if (!this.apiStatus.isReachable()) {
-        this.snackbar.show(this.translate.instant('api.notReachable'));
-      }
-    });
+    if (!this.apiStatus.isReachable()) {
+      this.snackbar.show(this.translate.instant('api.notReachable'));
+    }
   }
 }

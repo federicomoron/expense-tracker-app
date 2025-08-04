@@ -26,6 +26,7 @@ export interface GroupDetail {
 
 export interface GroupDetailWithExpenses extends GroupDetail {
   expenses?: Expense[];
+  imageUrl?: string;
 }
 
 export interface GroupDetailResponse {

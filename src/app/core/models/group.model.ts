@@ -5,4 +5,5 @@ export interface Group {
   name: string;
   type: GroupType;
   createdAt: string;
+  imageUrl?: string;
 }
