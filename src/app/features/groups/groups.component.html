@@ -8,45 +8,41 @@
       @let detail = getGroupDetails(group.id)();
 
       @if (detail) {
-        <mat-card (click)="goToGroup(group.id)" class="group-card">
-          <mat-card-header>
-            <mat-card-title>{{ group.name }}</mat-card-title>
-          </mat-card-header>
+        <div class="group-item" (click)="goToGroup(group.id)">
+          <img class="group-avatar" [src]="getGroupImage(group.type, group.imageUrl)" alt="Group" />
 
-          <mat-card-content>
+          <div class="group-info">
+            <div class="group-title">{{ group.name }}</div>
+
             @if (detail.balanceSummary.length === 0 && detail.memberBalances.length === 0) {
-              <p class="placeholder">{{ 'groups.no_pending_balances' | translate }}</p>
+              <div class="group-subtitle muted">
+                {{ 'groups.no_pending_balances' | translate }}
+              </div>
             } @else {
               <div class="group-balances">
                 @for (balance of detail.balanceSummary; track $index) {
-                  <small class="balance">
+                  <div class="balance-line">
                     {{ balance.currency }}: {{ balance.amount | number: '1.2-2' }}
-                  </small>
+                  </div>
                 }
               </div>
               <div class="group-members">
                 @for (member of detail.memberBalances; track $index) {
                   @if (member.amount > 0) {
-                    @if (member.userId === currentUserId) {
-                      <small class="member">
+                    <div class="member-line muted">
+                      @if (member.userId === currentUserId) {
                         {{ 'groups.you_owe' | translate }}
                         {{ member.amount | number: '1.2-2' }} {{ member.currency }}
-                      </small>
-                    } @else {
-                      <small class="member">
+                      } @else {
                         {{ member.name }} {{ 'groups.owes_you' | translate }}
                         {{ member.amount | number: '1.2-2' }} {{ member.currency }}
-                      </small>
-                    }
+                      }
+                    </div>
                   }
                 }
               </div>
             }
-          </mat-card-content>
-        </mat-card>
-      } @else {
-        <div class="loading-spinner">
-          <div class="custom-spinner"></div>
+          </div>
         </div>
       }
     }
@@ -56,15 +52,20 @@
         @let detail = getGroupDetails(group.id)();
 
         @if (detail) {
-          <mat-card (click)="goToGroup(group.id)" class="group-card">
-            <mat-card-header>
-              <mat-card-title>{{ group.name }}</mat-card-title>
-            </mat-card-header>
+          <div class="group-item" (click)="goToGroup(group.id)">
+            <img
+              class="group-avatar"
+              [src]="getGroupImage(group.type, group.imageUrl)"
+              alt="Group"
+            />
 
-            <mat-card-content>
-              <p class="placeholder">{{ 'groups.no_pending_balances' | translate }}</p>
-            </mat-card-content>
-          </mat-card>
+            <div class="group-info">
+              <div class="group-title">{{ group.name }}</div>
+              <div class="group-subtitle muted">
+                {{ 'groups.no_pending_balances' | translate }}
+              </div>
+            </div>
+          </div>
         } @else {
           <div class="loading-spinner">
             <div class="custom-spinner"></div>

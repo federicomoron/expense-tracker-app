@@ -6,4 +6,5 @@ export const API_ENDPOINTS = {
   GET_GROUP_DETAIL: (groupId: number) => `/groups/${groupId}`,
   CREATE_EXPENSE: '/expenses/create',
   // GET_EXPENSES_BY_GROUP: (groupId: number) => `/expenses/group/${groupId}`,
+  UPLOAD_GROUP_IMAGE: '/uploads/groups',
 };

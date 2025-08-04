@@ -1,8 +1,3 @@
-.main-content-bg {
-  background-color: var(--app-bg);
-  min-height: auto;
-}
-
 .group-form-toolbar {
   background-color: var(--app-primary);
   position: sticky;
@@ -31,13 +26,13 @@
   flex-direction: column;
   align-items: center;
   padding: 24px 16px;
-  gap: 32px;
+  gap: 24px;
   background-color: var(--app-bg);
-  min-height: auto;
 }
 
 .field-row {
   display: flex;
+  align-items: center;
   gap: 12px;
   width: 100%;
   max-width: 300px;
@@ -51,7 +46,7 @@
   padding: 8px 4px;
   color: var(--app-text);
   outline: none;
-  flex: 0 1 160px;
+  flex: 1;
 }
 
 .flat-input::placeholder {
@@ -67,29 +62,100 @@
   border-bottom: 2px solid var(--app-primary);
 }
 
-.icon-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.image-selector {
   width: 48px;
   height: 48px;
   border-radius: 8px;
   border: 1px solid var(--app-border);
   background-color: var(--app-surface);
-  color: var(--app-text);
-  font-size: 20px;
-  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
 
   &:hover {
     background-color: rgba(var(--app-text-rgb), 0.05);
   }
+
+  .image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .image-placeholder-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .image-placeholder-icon {
+    font-size: 20px;
+    color: var(--app-muted);
+  }
+
+  .image-add-icon {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    font-size: 18px;
+    color: var(--app-muted);
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+  }
 }
 
-::ng-deep .flat-select {
-  flex: 0 1 200px;
-  height: 70px;
+.icon-label {
+  color: var(--app-text);
+  font-size: 24px;
+  padding: 0 4px;
+}
+
+.field-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.section-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--app-muted);
+}
+
+.type-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.type-button {
+  flex: 1 1 calc(50% - 6px);
   display: flex;
   align-items: center;
-  min-width: 0;
-  max-width: 100%;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--app-border);
+  border-radius: 12px;
+  background-color: var(--app-surface);
+  color: var(--app-text);
+  font-size: 14px;
+  transition: all 0.2s ease;
+
+  .type-icon {
+    font-size: 20px;
+  }
+
+  &.selected {
+    border: 2px solid var(--app-primary);
+    background-color: rgba(var(--app-primary-rgb), 0.1);
+  }
 }

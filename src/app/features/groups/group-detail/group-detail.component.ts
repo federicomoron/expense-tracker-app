@@ -3,7 +3,9 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
+import { GroupType } from '@app/core/models/group-type.enum';
 import { SnackbarService } from '@app/core/services/snackbar.service';
+import { getGroupImage } from '@app/shared/helpers/group-type-image-map';
 import { CurrencySymbolPipe } from '@app/shared/pipes/currency-symbol.pipe';
 import { ExpensesComponent } from '@features/expenses/expenses/expenses.component';
 import { GroupDetailWithExpenses } from '@models/group-detail.model';
@@ -32,6 +34,10 @@ export class GroupDetailComponent implements OnInit {
   private authService = inject(AuthService);
   private snackbar = inject(SnackbarService);
   private translate = inject(TranslateService);
+
+  readonly GroupType = GroupType;
+
+  getGroupImage = getGroupImage;
 
   groupId = signal(Number(this.route.snapshot.paramMap.get('id')));
   group = signal<GroupDetailWithExpenses | null>(null);

@@ -92,3 +92,64 @@
     transform: rotate(360deg);
   }
 }
+
+.group-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  cursor: pointer;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: rgba(var(--app-text-rgb), 0.02);
+  }
+}
+
+.group-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  object-fit: cover;
+  background-color: #e0e0e0;
+}
+
+.group-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.group-title {
+  font-weight: 600;
+  color: var(--app-text);
+  font-size: 1.05rem;
+  margin-bottom: 2px;
+}
+
+.group-subtitle {
+  font-size: 0.875rem;
+  color: var(--app-text);
+}
+
+.balance-line,
+.member-line {
+  font-size: 0.825rem;
+  margin-bottom: 2px;
+}
+
+.muted {
+  color: var(--app-muted);
+}
+
+.icon-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e0e0e0;
+  color: var(--app-text);
+  font-size: 24px;
+}

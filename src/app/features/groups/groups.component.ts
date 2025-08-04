@@ -8,6 +8,7 @@ import { forkJoin } from 'rxjs';
 import { GroupDetailWithExpenses } from '@app/core/models/group-detail.model';
 import { AuthService } from '@app/core/services/auth.service';
 import { SnackbarService } from '@app/core/services/snackbar.service';
+import { getGroupImage } from '@app/shared/helpers/group-type-image-map';
 import { environment } from '@environments/environment';
 import { GroupFormComponent } from '@features/groups/group-form/group-form.component';
 import { GroupType } from '@models/group-type.enum';
@@ -24,6 +25,9 @@ import { SharedUiModule } from '@shared/shared-ui.module';
 export class GroupsComponent implements OnInit {
   readonly showForm = signal(false);
   readonly groups = computed(() => this.groupService.groups());
+  readonly GroupType = GroupType;
+
+  getGroupImage = getGroupImage;
 
   private _groupDetails = signal<Record<number, GroupDetailWithExpenses>>({});
   readonly groupDetailsMap = this._groupDetails;
