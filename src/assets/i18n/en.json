@@ -75,14 +75,15 @@
     "title": "Create group",
     "save": "Save",
     "namePlaceholder": "Group Name",
-    "errorCreating": "Error creating group"
+    "errorCreating": "Error creating group",
+    "typeLabel": "Type"
   },
   "common": {
     "close": "Close"
   },
-  "groupTypes": {
+  "groupType": {
     "trip": "Trip",
-    "house": "House",
+    "home": "Home",
     "couple": "Couple",
     "other": "Other"
   },
