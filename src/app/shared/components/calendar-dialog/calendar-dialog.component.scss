@@ -11,7 +11,7 @@
   }
 
   ::ng-deep .mat-calendar-body-label {
-    color: var(--app-text);
+    color: transparent !important;
   }
 
   ::ng-deep .mat-calendar-table-header th {

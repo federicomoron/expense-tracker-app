@@ -1,11 +1,15 @@
+import { registerLocaleData } from '@angular/common';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
+import localeEs from '@angular/common/locales/es';
 import {
   APP_INITIALIZER,
   ApplicationConfig,
   importProvidersFrom,
   isDevMode,
+  LOCALE_ID,
   provideZoneChangeDetection,
 } from '@angular/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
@@ -22,6 +26,8 @@ import { I18nService } from './core/services/i18n.service';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '/assets/i18n/', '.json');
 }
+
+registerLocaleData(localeEs);
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -48,6 +54,16 @@ export const appConfig: ApplicationConfig = {
       useFactory: (i18nService: I18nService) => i18nInitializer(i18nService),
       deps: [I18nService],
       multi: true,
+    },
+    {
+      provide: LOCALE_ID,
+      useFactory: (i18nService: I18nService) => i18nService.getCurrentLocale(),
+      deps: [I18nService],
+    },
+    {
+      provide: MAT_DATE_LOCALE,
+      useFactory: (i18nService: I18nService) => i18nService.getCurrentLocale(),
+      deps: [I18nService],
     },
   ],
 };
