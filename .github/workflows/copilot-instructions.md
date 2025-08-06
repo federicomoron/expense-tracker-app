@@ -1,8 +1,8 @@
-# 🧠 Copilot Instructions for SpendTrack (Angular 20+ Expense Tracker)
+# 🧠 Copilot Instructions for Spendly (Angular 20+ Expense Tracker)
 
 ## 🚀 Project Overview
 
-SpendTrack is a modern, modular, mobile-first expense tracking web app built with Angular 20 using:
+Spendly is a modern, modular, mobile-first expense tracking web app built with Angular 20 using:
 
 - ✅ Standalone Components
 - ✅ Angular Signals for reactive state
