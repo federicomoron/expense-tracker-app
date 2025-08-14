@@ -19,47 +19,53 @@
     </button>
   </mat-toolbar>
 
-  <form [formGroup]="expenseForm" class="expense-form" (ngSubmit)="submitExpense()">
-    <div class="field-row">
-      <button type="button" class="icon-button" (click)="openCategorySelector()">
-        @if (selectedCategoryIcon) {
-          <img [src]="selectedCategoryIcon" alt="Category Icon" width="24" height="24" />
-        } @else {
-          <mat-icon>receipt</mat-icon>
-        }
-      </button>
+  @if (group) {
+    <form [formGroup]="expenseForm" class="expense-form" (ngSubmit)="submitExpense()">
+      <div class="field-row">
+        <button type="button" class="icon-button" (click)="openCategorySelector()">
+          @if (selectedCategoryIcon) {
+            <img [src]="selectedCategoryIcon" alt="Category Icon" width="24" height="24" />
+          } @else {
+            <mat-icon>receipt</mat-icon>
+          }
+        </button>
 
-      <input
-        type="text"
-        formControlName="description"
-        class="flat-input full-width"
-        [placeholder]="'expenseForm.descriptionPlaceholder' | translate"
-      />
+        <input
+          type="text"
+          formControlName="description"
+          class="flat-input full-width"
+          [placeholder]="'expenseForm.descriptionPlaceholder' | translate"
+        />
+      </div>
+
+      <div class="field-row">
+        <button type="button" class="icon-button" (click)="openCurrencySelector()">
+          <span class="currency-label">{{ expenseForm.value.currency || '$' }}</span>
+        </button>
+
+        <input
+          type="number"
+          inputmode="numeric"
+          formControlName="total"
+          class="flat-input full-width"
+          placeholder="0.00"
+        />
+      </div>
+
+      <app-split-selector
+        [groupMembers]="group.members"
+        (payerChanged)="onPayerChanged($event)"
+      ></app-split-selector>
+    </form>
+
+    <app-footer
+      [calendarOnly]="true"
+      [date]="expenseCreatedAtForFooter"
+      (dateChange)="setExpenseDate($event)"
+    ></app-footer>
+  } @else {
+    <div class="loading-spinner">
+      <div class="custom-spinner"></div>
     </div>
-
-    <div class="field-row">
-      <button type="button" class="icon-button" (click)="openCurrencySelector()">
-        <span class="currency-label">{{ expenseForm.value.currency || '$' }}</span>
-      </button>
-
-      <input
-        type="number"
-        inputmode="numeric"
-        formControlName="total"
-        class="flat-input full-width"
-        placeholder="0.00"
-      />
-    </div>
-
-    <app-split-selector
-      [groupMembers]="group?.members || []"
-      (payerChanged)="onPayerChanged($event)"
-    ></app-split-selector>
-  </form>
-
-  <app-footer
-    [calendarOnly]="true"
-    [date]="expenseCreatedAtForFooter"
-    (dateChange)="setExpenseDate($event)"
-  ></app-footer>
+  }
 </div>
