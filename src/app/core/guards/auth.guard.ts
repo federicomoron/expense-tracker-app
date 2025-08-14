@@ -7,15 +7,22 @@ export const authGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
 
   return new Promise<boolean>((resolve) => {
-    const stop = effect(() => {
+    let resolved = false;
+
+    effect(() => {
+      if (resolved) return;
+
       if (auth.isSessionRestored()) {
-        stop.destroy();
+        resolved = true;
         resolve(auth.isLoggedIn());
       }
     });
+
     setTimeout(() => {
-      stop.destroy();
-      resolve(false);
+      if (!resolved) {
+        resolved = true;
+        resolve(false);
+      }
     }, 1000);
   });
 };
