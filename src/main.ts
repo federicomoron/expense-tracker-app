@@ -5,21 +5,12 @@ import { provideServiceWorker } from '@angular/service-worker';
 import { TranslateService } from '@ngx-translate/core';
 
 import { provideTranslocoConfig } from '@app/core/config/transloco.config';
+import { applyTheme } from '@app/core/services/theme.service';
 
 import { AppComponent } from './app/app.component';
 import { appConfig } from './app/app.config';
 
-const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'system' | null;
-
-const themeToApply =
-  savedTheme === 'dark' || (savedTheme === 'system' && prefersDark) || (!savedTheme && prefersDark)
-    ? 'dark'
-    : 'light';
-
-if (themeToApply === 'dark') {
-  document.documentElement.classList.add('dark-theme');
-}
+applyTheme();
 
 void bootstrapApplication(AppComponent, {
   ...appConfig,

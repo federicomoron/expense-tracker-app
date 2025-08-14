@@ -31,7 +31,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
     TranslateModule,
   ],
   templateUrl: './expense-form.component.html',
-  styleUrl: './expense-form.component.scss',
+  styleUrls: ['./expense-form.component.scss'],
 })
 export class ExpenseFormComponent implements OnInit {
   private expenseService = inject(ExpenseService);

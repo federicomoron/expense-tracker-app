@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 
+import { loginGuard } from '@app/core/guards/login.guard';
+
 export default [
   {
     path: '',
@@ -8,6 +10,7 @@ export default [
   },
   {
     path: 'login',
+    canActivate: [loginGuard],
     loadComponent: () => import('./login/login.component').then((m) => m.LoginComponent),
   },
   {

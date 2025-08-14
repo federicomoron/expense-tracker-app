@@ -20,7 +20,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
   standalone: true,
   imports: [SharedUiModule, RouterModule, CommonModule, TranslateModule],
   templateUrl: './groups.component.html',
-  styleUrl: './groups.component.scss',
+  styleUrls: ['./groups.component.scss'],
 })
 export class GroupsComponent implements OnInit {
   readonly showForm = signal(false);

@@ -13,7 +13,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
   standalone: true,
   imports: [SharedUiModule, ReactiveFormsModule, TranslateModule, ExpButtonComponent],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss',
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
   showPassword = signal(false);

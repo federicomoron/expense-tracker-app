@@ -12,7 +12,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
   standalone: true,
   imports: [SharedUiModule, TranslateModule],
   templateUrl: './group-form.component.html',
-  styleUrl: './group-form.component.scss',
+  styleUrls: ['./group-form.component.scss'],
 })
 export class GroupFormComponent {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;

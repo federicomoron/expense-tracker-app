@@ -16,32 +16,20 @@ export class AuthService {
   private readonly apiUrl = environment.apiUrl;
   private http = inject(HttpService);
 
+  private readonly _isSessionRestored = signal(false);
+  isSessionRestored = this._isSessionRestored.asReadonly();
+
   isLoggedIn = this._isLoggedIn.asReadonly();
   currentUser = this._currentUser.asReadonly();
 
-  constructor(private router: Router) {
-    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
-    const userJson = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
-
-    if (token && this.isTokenValid(token) && userJson) {
-      try {
-        const user = JSON.parse(userJson);
-        this._isLoggedIn.set(true);
-        this._currentUser.set(user);
-      } catch {
-        this.logout(false);
-      }
-    } else {
-      this.logout(false);
-    }
-  }
+  constructor(private router: Router) {}
 
   login(email: string, password: string) {
     const loginRequest = { email, password };
     return this.http
       .post<
         LoginResponse,
-        { email: string; password: string }
+        typeof loginRequest
       >(`${this.apiUrl}${API_ENDPOINTS.LOGIN}`, loginRequest)
       .pipe(
         tap((res) => {
@@ -83,9 +71,27 @@ export class AuthService {
     }
   }
 
-  hasValidSession(): boolean {
+  private clearSession() {
+    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+    localStorage.removeItem(STORAGE_KEYS.IS_LOGGED_IN);
+  }
+
+  restoreSession(): void {
     const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
     const userJson = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
-    return !!token && !!userJson && this.isTokenValid(token);
+
+    if (token && userJson && this.isTokenValid(token)) {
+      try {
+        const user = JSON.parse(userJson);
+        this._isLoggedIn.set(true);
+        this._currentUser.set(user);
+      } catch (e) {
+        this.clearSession();
+      }
+    } else {
+      this.clearSession();
+    }
+    this._isSessionRestored.set(true);
   }
 }
