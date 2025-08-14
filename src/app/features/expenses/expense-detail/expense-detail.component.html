@@ -15,17 +15,18 @@
     </div>
   </div>
 
-  <div class="expense-content">
-    <p>
-      <strong>{{ 'expenseDetail.description' | translate }}:</strong> {{ expense().description }}
-    </p>
-
-    <p>
-      <strong>{{ 'expenseDetail.total' | translate }}:</strong>
-      {{ expense().total | currency: expense().currency }}
-    </p>
-    <p>
-      <strong>{{ 'expenseDetail.date' | translate }}:</strong> {{ expense().createdAt | date }}
-    </p>
-  </div>
+  @if (expense()) {
+    <div class="expense-content">
+      <p>
+        <strong>{{ 'expenseDetail.description' | translate }}:</strong> {{ expense()?.description }}
+      </p>
+      <p>
+        <strong>{{ 'expenseDetail.total' | translate }}:</strong>
+        {{ expense()?.total | currency: expense()?.currency }}
+      </p>
+      <p>
+        <strong>{{ 'expenseDetail.date' | translate }}:</strong> {{ expense()?.createdAt | date }}
+      </p>
+    </div>
+  }
 </div>

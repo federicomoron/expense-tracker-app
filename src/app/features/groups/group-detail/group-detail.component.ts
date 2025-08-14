@@ -69,6 +69,7 @@ export class GroupDetailComponent implements OnInit {
     this.groupService.getGroupDetail(this.groupId()).subscribe({
       next: (data) => {
         this.group.set(data as GroupDetailWithExpenses);
+        (window as any).currentGroupDetail = data;
         this.loading.set(false);
       },
       error: (err) => {
