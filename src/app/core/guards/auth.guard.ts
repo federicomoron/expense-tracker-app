@@ -1,28 +1,24 @@
-import { effect, inject } from '@angular/core';
-import { CanActivateFn } from '@angular/router';
+import { inject } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { CanActivateFn, Router } from '@angular/router';
+import { filter, firstValueFrom, map } from 'rxjs';
 
 import { AuthService } from '@services/auth.service';
 
-export const authGuard: CanActivateFn = () => {
+export const authGuard: CanActivateFn = async () => {
   const auth = inject(AuthService);
+  const router = inject(Router);
 
-  return new Promise<boolean>((resolve) => {
-    let resolved = false;
-
-    effect(() => {
-      if (resolved) return;
-
-      if (auth.isSessionRestored()) {
-        resolved = true;
-        resolve(auth.isLoggedIn());
-      }
-    });
-
-    setTimeout(() => {
-      if (!resolved) {
-        resolved = true;
-        resolve(false);
-      }
-    }, 1000);
-  });
+  return await firstValueFrom(
+    toObservable(auth.isSessionRestored).pipe(
+      filter((restored) => restored),
+      map(() => {
+        if (!auth.isLoggedIn()) {
+          void router.navigate(['/login']);
+          return false;
+        }
+        return true;
+      }),
+    ),
+  );
 };
