@@ -8,7 +8,11 @@
   >
     <mat-icon>arrow_back</mat-icon>
   </button>
-  <mat-calendar [(selected)]="selectedDate" [dateFilter]="isDateValid" />
+
+  @if (showCalendar) {
+    <mat-calendar [(selected)]="selectedDate" [dateFilter]="isDateValid"></mat-calendar>
+  }
+
   <div class="actions">
     <button mat-button (click)="close()">
       {{ 'calendar.cancel' | translate }}

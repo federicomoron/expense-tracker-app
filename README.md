@@ -1,6 +1,6 @@
-# SpendTrack - Expense Tracker Angular App
+# Spendly - Expense Tracker Angular App
 
-**SpendTrack** is a modern, modular and mobile-first web application to manage **group and personal expenses**, inspired by Splitwise.  
+**Spendly** is a modern, modular and mobile-first web application to manage **group and personal expenses**, inspired by Splitwise.  
 Built with **Angular 20**, **standalone components**, **Signals**, and a clean architecture ready for production-grade projects.
 
 ![CI Pipeline](https://github.com/federicomoron/expense-tracker-app/actions/workflows/ci.yml/badge.svg)

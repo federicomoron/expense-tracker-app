@@ -1,8 +1,9 @@
-import { Component, computed, inject } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ApiStatusService } from '@app/core/services/api-status.service';
+import { LayoutService } from '@app/core/services/layout.service';
 import { SnackbarService } from '@app/core/services/snackbar.service';
 import { FooterComponent } from '@app/features/footer/footer.component';
 
@@ -17,13 +18,9 @@ export class AppLayoutComponent {
   private apiStatus = inject(ApiStatusService);
   private snackbar = inject(SnackbarService);
   private translate = inject(TranslateService);
-  private router = inject(Router);
+  layout = inject(LayoutService);
 
-  readonly shouldRemovePaddingTop = computed(() => {
-    const url = this.router.url;
-    const match = url.match(/^\/groups\/\d+$/);
-    return !!match;
-  });
+  readonly shouldRemovePaddingTop = this.layout.removeTopPadding;
 
   constructor() {
     if (!this.apiStatus.isReachable()) {

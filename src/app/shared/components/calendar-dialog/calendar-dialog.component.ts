@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCalendar } from '@angular/material/datepicker';
 import { MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
+import { I18nService } from '@app/core/services/i18n.service';
 import { SharedUiModule } from '@app/shared/shared-ui.module';
 
 @Component({
@@ -14,10 +16,26 @@ import { SharedUiModule } from '@app/shared/shared-ui.module';
   templateUrl: './calendar-dialog.component.html',
   styleUrls: ['./calendar-dialog.component.scss'],
 })
-export class CalendarDialogComponent {
+export class CalendarDialogComponent implements OnDestroy {
   selectedDate: Date = new Date();
 
-  constructor(private dialogRef: MatDialogRef<CalendarDialogComponent>) {}
+  showCalendar = true;
+
+  private langChangeSub: Subscription;
+
+  constructor(
+    private dialogRef: MatDialogRef<CalendarDialogComponent>,
+    private i18n: I18nService,
+  ) {
+    this.langChangeSub = this.i18n.langChange$.subscribe(() => {
+      this.showCalendar = false;
+      setTimeout(() => (this.showCalendar = true), 0);
+    });
+  }
+
+  ngOnDestroy() {
+    this.langChangeSub.unsubscribe();
+  }
 
   close() {
     this.dialogRef.close();

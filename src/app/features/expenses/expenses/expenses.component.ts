@@ -13,7 +13,6 @@ import { AuthService } from '@services/auth.service';
 import { getCategoryIcon } from '@shared/helpers/get-category-icon';
 import { SharedUiModule } from '@shared/shared-ui.module';
 
-import { ExpenseDetailComponent } from '../expense-detail/expense-detail.component';
 import { ExpenseFormComponent } from '../expense-form/expense-form.component';
 
 @Component({
@@ -159,38 +158,7 @@ export class ExpensesComponent {
   }
 
   openExpenseDetail(expense: Expense) {
-    const mergedExpense = { ...expense, groupId: this.groupId };
-
-    const dialogRef = this.dialog.open(ExpenseDetailComponent, {
-      data: { expense: mergedExpense },
-      width: '100vw',
-      height: '100vh',
-      maxWidth: '100vw',
-      panelClass: 'full-screen-modal',
-    });
-
-    const popStateListener = () => dialogRef.close();
-    window.addEventListener('popstate', popStateListener);
-
-    dialogRef.afterClosed().subscribe((result: any) => {
-      window.removeEventListener('popstate', popStateListener);
-      if (!result) return;
-
-      if (result.action === 'edit') {
-        if (result.expense?.id && result.expense?.groupId) {
-          void this.router.navigate(['../expenses', result.expense.id, 'edit'], {
-            relativeTo: this.route,
-            state: { expense: result.expense },
-          });
-        } else {
-          console.warn('No se pudo redirigir: falta expense.id o groupId');
-        }
-      }
-
-      if (result.action === 'delete') {
-        this.deleteExpense(result.expense);
-      }
-    });
+    void this.router.navigate(['/groups', this.groupId, 'expenses', expense.id]);
   }
 
   openExpenseForm(expense: Expense) {

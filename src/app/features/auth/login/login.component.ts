@@ -12,7 +12,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
   standalone: true,
   imports: [SharedUiModule, RouterModule, ExpButtonComponent, TranslateModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
   email = signal('');

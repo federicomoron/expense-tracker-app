@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "control-de-gastos": {
+    "spendly": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/control-de-gastos",
+            "outputPath": "dist/spendly",
             "index": "src/index.html",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
@@ -71,14 +71,14 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "buildTarget": "control-de-gastos:build"
+            "buildTarget": "spendly:build"
           },
           "configurations": {
             "production": {
-              "buildTarget": "control-de-gastos:build:production"
+              "buildTarget": "spendly:build:production"
             },
             "development": {
-              "buildTarget": "control-de-gastos:build:development"
+              "buildTarget": "spendly:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -106,7 +106,7 @@
             "i18n": {
               "sourceLocale": "es",
               "locales": ["en", "es"],
-              "outputPath": "dist/control-de-gastos/assets/i18n/"
+              "outputPath": "dist/spendly/assets/i18n/"
             },
             "styles": ["src/styles.scss"],
             "scripts": []

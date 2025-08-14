@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { GroupType } from '@app/core/models/group-type.enum';
+import { LayoutService } from '@app/core/services/layout.service';
 import { SnackbarService } from '@app/core/services/snackbar.service';
 import { getGroupImage } from '@app/shared/helpers/group-type-image-map';
 import { CurrencySymbolPipe } from '@app/shared/pipes/currency-symbol.pipe';
@@ -28,12 +29,13 @@ import { SharedUiModule } from '@shared/shared-ui.module';
   styleUrls: ['./group-detail.component.scss'],
 })
 export class GroupDetailComponent implements OnInit {
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private groupService = inject(GroupService);
-  private authService = inject(AuthService);
-  private snackbar = inject(SnackbarService);
-  private translate = inject(TranslateService);
+  private readonly layout = inject(LayoutService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly snackbar = inject(SnackbarService);
+  private readonly translate = inject(TranslateService);
+  private readonly groupService = inject(GroupService);
+  private readonly authService = inject(AuthService);
 
   readonly GroupType = GroupType;
 
@@ -63,9 +65,11 @@ export class GroupDetailComponent implements OnInit {
   expenses = computed(() => this.group()?.expenses ?? []);
 
   ngOnInit() {
+    this.layout.disableTopPadding();
     this.groupService.getGroupDetail(this.groupId()).subscribe({
       next: (data) => {
         this.group.set(data as GroupDetailWithExpenses);
+        (window as any).currentGroupDetail = data;
         this.loading.set(false);
       },
       error: (err) => {
@@ -74,6 +78,10 @@ export class GroupDetailComponent implements OnInit {
         this.snackbar.show(this.translate.instant('groupDetail.errorLoading'));
       },
     });
+  }
+
+  ngOnDestroy() {
+    this.layout.enableTopPadding();
   }
 
   goToNewExpense() {
