@@ -100,7 +100,7 @@ export class ExpenseDetailComponent {
     });
   }
 
-  onDelete() {
+  onDelete(): void {
     const expense = this.expense();
     if (!expense) return;
 
@@ -114,9 +114,21 @@ export class ExpenseDetailComponent {
     });
 
     confirmDialog.afterClosed().subscribe((confirmed: boolean) => {
-      if (confirmed) {
-        void this.router.navigate(['/groups', expense.groupId]);
-      }
+      if (!confirmed) return;
+
+      this.expenseService.deleteExpense(expense.id!).subscribe({
+        next: () => {
+          this.snackbar.open(this.translate.instant('expenses.deletedSuccess'), 'OK', {
+            duration: 2000,
+          });
+          void this.router.navigate(['/groups', expense.groupId]);
+        },
+        error: () => {
+          this.snackbar.open(this.translate.instant('expenses.deleteError'), 'OK', {
+            duration: 3000,
+          });
+        },
+      });
     });
   }
 
