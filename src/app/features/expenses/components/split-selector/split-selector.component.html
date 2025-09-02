@@ -7,17 +7,7 @@
       aria-label="splitSelector.paidBy"
     >
       <mat-icon>person</mat-icon>
-      <span
-        >{{ 'splitSelector.paidBy' | translate }}:
-        {{ selectedPayer()?.name || ('splitSelector.select' | translate) }}</span
-      >
+      <span>{{ getPaidByLabel() }}</span>
     </button>
-
-    <!--
-    <button type="button" class="selector-button" (click)="openSplitTypeDialog()" aria-label="splitSelector.splitType">
-      <mat-icon>call_split</mat-icon>
-      <span>{{ 'splitSelector.split' | translate }}: {{ selectedSplitType() || ('splitSelector.select' | translate) }}</span>
-    </button>
-    -->
   }
 </div>

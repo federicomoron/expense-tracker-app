@@ -109,7 +109,11 @@
     "userNotLoggedIn": "User not logged in",
     "noPayerSelected": "⚠️ No payer selected – expense not submitted",
     "createError": "Error creating the expense",
-    "invalidGroupIdOnGoBack": "⚠️ Invalid groupId on goBack"
+    "invalidGroupIdOnGoBack": "⚠️ Invalid groupId on goBack",
+    "defaultLabel": "Paid by you, split equally",
+    "optionYouAreOwed": "They owe the total amount",
+    "optionOtherPaidEqual": "Paid by {{name}}, split equally",
+    "optionOtherIsOwed": "You owe the total amount"
   },
   "expenseDetail": {
     "title": "Expense Details",
@@ -176,5 +180,13 @@
   "calendar": {
     "cancel": "Cancel",
     "accept": "Confirm"
+  },
+  "paidByQuickDialog": {
+    "title": "How was this expense split?",
+    "youPaidEqual": "You paid, split equally",
+    "youAreOwed": "You are owed the total amount",
+    "otherPaidEqual": "{{name}} paid, split equally",
+    "otherIsOwed": "{{name}} is owed the total amount",
+    "moreOptions": "More options"
   }
 }

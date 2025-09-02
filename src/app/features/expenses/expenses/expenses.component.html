@@ -39,8 +39,8 @@
               </div>
 
               <div class="expense-lend-amount">
-                {{ exp.currency | currencySymbol }}
-                {{ Math.abs(getUserLent(exp)) | number: '1.2-2' }}
+                {{ exp.currency | currencySymbol
+                }}{{ Math.abs(getUserLent(exp)) | number: '1.2-2' }}
               </div>
             </div>
           </div>

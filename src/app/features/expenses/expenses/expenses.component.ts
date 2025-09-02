@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ExpenseService } from '@app/core/services/expenses.service';
 import { CURRENCY_SYMBOLS } from '@app/shared/helpers/currency-symbols';
+import { detectQuickOptionFromParticipants } from '@app/shared/helpers/expense.utils';
 import { CurrencySymbolPipe } from '@app/shared/pipes/currency-symbol.pipe';
 import { Expense, ExpenseExtended, ExpenseUser } from '@models/expenses.model';
 import { AuthService } from '@services/auth.service';
@@ -24,6 +25,7 @@ import { ExpenseFormComponent } from '../expense-form/expense-form.component';
 })
 export class ExpensesComponent {
   Math = Math;
+
   @Input() expenses: Expense[] = [];
   @Input() loading = false;
   @Input() groupMembers: { userId: number; name: string }[] = [];
@@ -36,7 +38,6 @@ export class ExpensesComponent {
   private snackbar = inject(MatSnackBar);
   private expenseService = inject(ExpenseService);
   private router = inject(Router);
-  private route = inject(ActivatedRoute);
 
   totalAmount = 0;
 
@@ -85,13 +86,22 @@ export class ExpensesComponent {
   }
 
   getSplits(exp: Expense) {
-    return (exp as any).splits || exp.participants || [];
+    const rawSplits = (exp as any).splits || exp.participants || [];
+    const userMap = new Map<number, number>();
+    for (const s of rawSplits) {
+      const prev = userMap.get(s.userId) || 0;
+      userMap.set(s.userId, prev + Number(s.amount));
+    }
+    return Array.from(userMap.entries()).map(([userId, amount]) => ({
+      userId,
+      amount: Math.max(0, Math.round(amount * 100) / 100),
+    }));
   }
 
   getPaidByText(exp: Expense): string {
     const paidBy = this.getPaidBy(exp);
     if (!paidBy.length) return '';
-    const user = this.authService.currentUser();
+    const user = this.currentUser;
     const symbol = CURRENCY_SYMBOLS[exp.currency.toUpperCase()] || exp.currency;
 
     if (paidBy.length === 1) {
@@ -120,27 +130,63 @@ export class ExpensesComponent {
     });
   }
 
-  getUserLent(exp: Expense): number {
+  /**
+   * Calculates how much the current user lent or borrowed in a given expense.
+   * Handles edge cases where one user paid everything or owes everything.
+   */
+  getUserLent(exp: Expense, optionId?: string): number {
     const user = this.currentUser;
     if (!user) return 0;
 
-    const paidBy = this.getPaidBy(exp);
-    const userPaid = Number(paidBy.find((p: any) => p.userId === user.id)?.amount || 0);
+    const paidBy: ExpenseUser[] = this.getPaidBy(exp);
+    const splits: ExpenseUser[] = this.getSplits(exp);
+    const totalNum = Number(exp.total);
+    const userPaid = Number(paidBy.find((p) => p.userId === user.id)?.amount || 0);
+
+    // Special cases when only 2 splits exist
+    if (splits.length === 2) {
+      const currentUserSplit = splits.find((s) => s.userId === user.id);
+      const otherSplit = splits.find((s) => s.userId !== user.id);
+      if (currentUserSplit && otherSplit) {
+        if (currentUserSplit.amount === totalNum && otherSplit.amount === 0) {
+          return totalNum; // You paid all
+        }
+        if (
+          currentUserSplit.amount === totalNum &&
+          otherSplit.amount === 0 &&
+          paidBy[0].userId !== user.id
+        ) {
+          return -totalNum; // You owe all
+        }
+        if (
+          currentUserSplit.amount === 0 &&
+          otherSplit.amount === totalNum &&
+          paidBy.some((p) => p.userId === otherSplit.userId)
+        ) {
+          return -totalNum; // Other user paid all
+        }
+      }
+    }
+
+    // Default: split among valid group members
     const validUserIds = this.groupMembers.map((m) => m.userId);
     const uniqueParticipants = new Map<number, number>();
-
     for (const p of exp.participants ?? []) {
       if (!validUserIds.includes(p.userId)) continue;
       const current = uniqueParticipants.get(p.userId) || 0;
       uniqueParticipants.set(p.userId, current + Number(p.amount));
     }
 
-    const numPeople = uniqueParticipants.size;
-    const total = Number(exp.total);
-    const userShare = total / numPeople;
-    const lent = userPaid - userShare;
+    const numPeople = uniqueParticipants.size || 1;
+    const userShare = totalNum / numPeople;
+    return userPaid - userShare;
+  }
 
-    return lent;
+  getLendLabel(exp: Expense, optionId?: string): string {
+    const lent = this.getUserLent(exp, optionId);
+    if (lent > 0) return this.translate.instant('expenses.youLent');
+    if (lent < 0) return this.translate.instant('expenses.youBorrowed');
+    return '';
   }
 
   getUserPaid(exp: Expense): number {
@@ -150,20 +196,24 @@ export class ExpensesComponent {
     return paidBy.find((p: any) => p.userId === user.id)?.amount || 0;
   }
 
-  getLendLabel(exp: Expense): string {
-    const lent = this.getUserLent(exp);
-    if (lent > 0) return this.translate.instant('expenses.youLent');
-    if (lent < 0) return this.translate.instant('expenses.youBorrowed');
-    return '';
-  }
-
   openExpenseDetail(expense: Expense) {
     void this.router.navigate(['/groups', this.groupId, 'expenses', expense.id]);
   }
 
   openExpenseForm(expense: Expense) {
+    const currentUserId = this.currentUser?.id;
+    const optionId =
+      (expense as any).optionId ?? detectQuickOptionFromParticipants(expense, currentUserId);
+
+    const expenseWithOptionId: ExpenseExtended = {
+      ...expense,
+      optionId,
+      paidBy: (expense as any).paidBy,
+      splits: (expense as any).splits,
+    };
+
     const dialogRef = this.dialog.open(ExpenseFormComponent, {
-      data: { expense },
+      data: { expense: expenseWithOptionId },
       width: '100vw',
       height: '100vh',
       maxWidth: '100vw',
@@ -189,8 +239,7 @@ export class ExpensesComponent {
         this.expenseDeleted.emit(expense.id!);
         this.calculateTotal();
       },
-      error: (error) => {
-        console.error('Error deleting expense:', error);
+      error: () => {
         this.snackbar.open(this.translate.instant('expenses.deleteError'), 'OK', {
           duration: 3000,
         });

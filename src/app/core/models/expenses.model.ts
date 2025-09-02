@@ -1,3 +1,5 @@
+import { PaidByOptionId } from './paid-by-option.model';
+
 export interface Expense {
   id: number;
   groupId: number;
@@ -22,6 +24,7 @@ export interface ExpenseRequest {
   createdAt?: string;
   paidBy: ExpenseUser[];
   splits: ExpenseUser[];
+  optionId?: PaidByOptionId;
 }
 
 export interface ExpenseUser {
@@ -37,4 +40,5 @@ export interface ExpenseResponse {
 export interface ExpenseExtended extends Expense {
   paidBy?: ExpenseUser[];
   splits?: ExpenseUser[];
+  optionId?: PaidByOptionId;
 }

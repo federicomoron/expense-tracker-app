@@ -109,7 +109,11 @@
     "userNotLoggedIn": "Usuario no logueado",
     "noPayerSelected": "⚠️ No hay pagador seleccionado – gasto no enviado",
     "createError": "Error al crear el gasto",
-    "invalidGroupIdOnGoBack": "⚠️ groupId inválido en goBack"
+    "invalidGroupIdOnGoBack": "⚠️ groupId inválido en goBack",
+    "defaultLabel": "Pagado por ti y dividido a partes iguales",
+    "optionYouAreOwed": "Ellos deben la cantidad total",
+    "optionOtherPaidEqual": "Pagado por {{name}} y dividido a partes iguales",
+    "optionOtherIsOwed": "Debes la cantidad total"
   },
   "expenseDetail": {
     "title": "Detalle del gasto",
@@ -176,5 +180,13 @@
   "calendar": {
     "cancel": "Cancelar",
     "accept": "Aceptar"
+  },
+  "paidByQuickDialog": {
+    "title": "¿Cómo se dividió este gasto?",
+    "youPaidEqual": "Tú pagaste, dividido a partes iguales",
+    "youAreOwed": "Se te debe la cantidad total",
+    "otherPaidEqual": "{{name}} pagó, dividido a partes iguales",
+    "otherIsOwed": "A {{name}} se le debe la cantidad total",
+    "moreOptions": "Más opciones"
   }
 }
