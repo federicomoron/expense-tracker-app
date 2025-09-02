@@ -84,18 +84,19 @@ export class ExpenseFormComponent implements OnInit {
       : null;
     this.isEditMode = !!this.expenseId;
 
-    // Detectar groupId usando la función importada
+    // Detect groupId using the imported function
     const groupId = findGroupIdInRoute(this.route);
     if (!groupId) return;
     this.groupId = groupId;
 
-    // Cargar detalle del grupo
+    // Load group details
     this.groupService.getGroupDetail(this.groupId).subscribe({
       next: (group) => {
         this.group = group;
 
         let expenseFromState = history.state?.expense as ExpenseExtended | undefined;
 
+        // If editing, try to get the expense from state or group expenses
         if (!expenseFromState && this.isEditMode) {
           expenseFromState = group.expenses?.find((e) => e.id === this.expenseId);
         }
@@ -103,7 +104,7 @@ export class ExpenseFormComponent implements OnInit {
         if (!expenseFromState) {
           this.isEditMode = false;
 
-          // Opción rápida por defecto para un gasto nuevo
+          // Default quick option for a new expense
           this.selectedPaidByOption = {
             id: 'you_paid_equal',
             label: this.translate.instant('paidByQuickDialog.youPaidEqual'),
@@ -120,7 +121,7 @@ export class ExpenseFormComponent implements OnInit {
             }
           });
         } else {
-          // Edición de gasto existente
+          // Editing an existing expense
           if (!expenseFromState.optionId) {
             const currentUserId = this.authService.currentUser()?.id;
             expenseFromState.optionId = detectQuickOptionFromParticipants(
@@ -217,6 +218,7 @@ export class ExpenseFormComponent implements OnInit {
   }
 
   submitExpense() {
+    // Validate form and group context before submitting
     if (!this.groupId || !this.group || this.expenseForm.invalid) return;
 
     const currentUser = this.authService.currentUser();
@@ -227,13 +229,14 @@ export class ExpenseFormComponent implements OnInit {
     const groupMembers = this.group.members.map((m) => m.userId);
     const selectedOption = this.splitSelectorComponent?.selectedOption?.();
     if (!selectedOption?.id)
-      return console.error('[ExpenseForm] ❌ selectedOption.id está undefined.');
+      return console.error('[ExpenseForm] ❌ selectedOption.id is undefined.');
 
     const otherMember = this.group.members.find((m) => m.userId !== currentUser.id);
 
     let paidBy: ExpenseUser[] = [{ userId: currentUser.id, amount: total }];
     let splits: ExpenseUser[] = this.buildSplits(groupMembers, total);
 
+    // Handle split logic for two-member groups
     if (groupMembers.length === 2 && otherMember) {
       const half = Math.round((total / 2) * 100) / 100;
       switch (selectedOption.id) {
@@ -266,6 +269,7 @@ export class ExpenseFormComponent implements OnInit {
       }
     }
 
+    // Ensure all split amounts are rounded and non-negative
     splits = splits.map((s) => ({
       userId: s.userId,
       amount: Math.max(0, Math.round(s.amount * 100) / 100),
@@ -320,6 +324,7 @@ export class ExpenseFormComponent implements OnInit {
       maxWidth: '100vw',
       panelClass: 'full-screen-modal',
     });
+    // Listen for browser navigation to close dialog
     const popStateListener = () => dialogRef.close();
     window.addEventListener('popstate', popStateListener);
 
@@ -337,6 +342,7 @@ export class ExpenseFormComponent implements OnInit {
       maxWidth: '100vw',
       panelClass: 'full-screen-modal',
     });
+    // Listen for browser navigation to close dialog
     const popStateListener = () => dialogRef.close();
     window.addEventListener('popstate', popStateListener);
 
@@ -353,11 +359,13 @@ export class ExpenseFormComponent implements OnInit {
   }
 
   updateCategoryIcon(category: string): void {
+    // Update the icon for the selected category
     this.selectedCategoryIcon =
       EXPENSE_CATEGORIES.find((c) => c.key === category)?.icon || '/assets/default.svg';
   }
 
   private buildSplits(userIds: number[], total: number): ExpenseUser[] {
+    // Split the total amount equally among all users, rounding the last user's amount
     const baseAmount = Math.floor((total / userIds.length) * 100) / 100;
     let accumulated = 0;
     return userIds.map((id, index) => {
@@ -369,6 +377,7 @@ export class ExpenseFormComponent implements OnInit {
   }
 
   goBack() {
+    // Navigate back to the group view
     void this.router.navigate(['/groups', isNaN(this.groupId) ? [] : this.groupId]);
   }
 
