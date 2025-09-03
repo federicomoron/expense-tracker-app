@@ -22,7 +22,7 @@
               <div class="group-balances">
                 @for (balance of detail.balanceSummary; track $index) {
                   <div class="balance-line">
-                    {{ balance.currency }}: {{ balance.amount | number: '1.2-2' }}
+                    {{ balance.currency | currencySymbol }}{{ balance.amount | number: '1.2-2' }}
                   </div>
                 }
               </div>
@@ -32,10 +32,10 @@
                     <div class="member-line muted">
                       @if (member.userId === currentUserId) {
                         {{ 'groups.you_owe' | translate }}
-                        {{ member.amount | number: '1.2-2' }} {{ member.currency }}
+                        {{ member.currency | currencySymbol }}{{ member.amount | number: '1.2-2' }}
                       } @else {
                         {{ member.name }} {{ 'groups.owes_you' | translate }}
-                        {{ member.amount | number: '1.2-2' }} {{ member.currency }}
+                        {{ member.currency | currencySymbol }}{{ member.amount | number: '1.2-2' }}
                       }
                     </div>
                   }
