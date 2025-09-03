@@ -8,9 +8,9 @@ body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
   background-color: var(--app-bg);
-  color: var(--app-text);
   overflow-x: hidden;
   width: 100%;
+  overflow: hidden;
 }
 
 #splash-screen {
