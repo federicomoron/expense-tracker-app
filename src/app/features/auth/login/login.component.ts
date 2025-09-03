@@ -1,4 +1,5 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -6,40 +7,58 @@ import { SnackbarService } from '@app/core/services/snackbar.service';
 import { AuthService } from '@services/auth.service';
 import { ExpButtonComponent } from '@shared/components/exp-button/exp-button.component';
 import { SharedUiModule } from '@shared/shared-ui.module';
+import { nonEmpty, validEmail } from '@shared/utils/form-validators';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [SharedUiModule, RouterModule, ExpButtonComponent, TranslateModule],
+  imports: [SharedUiModule, RouterModule, ExpButtonComponent, TranslateModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-  email = signal('');
-  password = signal('');
+  form: FormGroup;
   showPassword = signal(false);
-  errorMessage = signal('');
   isLoading = signal(false);
 
+  private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
   private snackbar = inject(SnackbarService);
   private translate = inject(TranslateService);
 
-  isFormInvalid = computed(() => this.email().trim() === '' || this.password().trim() === '');
+  constructor() {
+    this.form = this.fb.group({
+      email: ['', [Validators.required, nonEmpty, validEmail]],
+      password: ['', [Validators.required, nonEmpty]],
+    });
+  }
 
-  onSubmit(event: Event) {
-    event.preventDefault();
-    this.errorMessage.set('');
+  getError(controlName: string): string | null {
+    const control = this.form.get(controlName);
+    if (!control || !control.touched || !control.invalid) return null;
 
-    if (this.isFormInvalid()) {
-      this.errorMessage.set(this.translate.instant('login.fillAllFields'));
+    if (control.errors?.['required'] || control.errors?.['nonEmpty']) {
+      return this.translate.instant('validation.nonEmpty');
+    }
+    if (control.errors?.['email'] || control.errors?.['emailInvalid']) {
+      return this.translate.instant('validation.emailInvalid');
+    }
+
+    return this.translate.instant('validation.invalidField');
+  }
+
+  onSubmit() {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
 
     this.isLoading.set(true);
 
-    this.authService.login(this.email(), this.password()).subscribe({
+    const { email, password } = this.form.value;
+
+    this.authService.login(email, password).subscribe({
       next: (res) => {
         this.isLoading.set(false);
         if (res?.success) {
@@ -60,16 +79,6 @@ export class LoginComponent {
         }
       },
     });
-  }
-
-  onEmailInput(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.email.set(input.value);
-  }
-
-  onPasswordInput(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.password.set(input.value);
   }
 
   togglePasswordVisibility() {
