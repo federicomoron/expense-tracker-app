@@ -1,30 +1,37 @@
 {
   "login": {
-    "title": "Ingresar",
+    "title": "Iniciar sesión",
     "emailLabel": "Correo electrónico",
-    "emailPlaceholder": "Ingrese su correo",
+    "emailPlaceholder": "ejemplo@correo.com",
     "passwordLabel": "Contraseña",
-    "togglePasswordVisibility": "Alternar visibilidad de la contraseña",
-    "loginButton": "Ingresar",
-    "googleSignIn": "Iniciar sesión con Google",
+    "togglePasswordVisibility": "Mostrar/ocultar contraseña",
+    "loginButton": "Iniciar sesión",
+    "googleSignIn": "Continuar con Google",
     "noAccount": "¿No tienes una cuenta?",
-    "registerHere": "Regístrate aquí",
-    "fillAllFields": "Por favor completá todos los campos.",
-    "invalidCredentials": "Correo o contraseña incorrectos.",
-    "apiUnreachable": "🚨 La API no está disponible. Por favor, intentá más tarde.",
+    "registerHere": "Crea una aquí",
+    "fillAllFields": "Por favor, completa todos los campos.",
+    "invalidCredentials": "El correo o la contraseña no son correctos.",
+    "apiUnreachable": "🚨 No se pudo conectar con la API. Intenta más tarde.",
     "unexpectedError": "Ocurrió un error inesperado.",
-    "googleError": "Error al iniciar sesión con Google"
+    "googleError": "No se pudo iniciar sesión con Google"
+  },
+  "validation": {
+    "nonEmpty": "Este campo es obligatorio.",
+    "emailInvalid": "El correo electrónico no es válido.",
+    "passwordTooShort": "La contraseña debe tener al menos 6 caracteres."
   },
   "register": {
     "nameLabel": "Nombre",
     "title": "Registrarse",
     "nameRequired": "El nombre es obligatorio",
+    "nonEmpty": "El nombre no puede estar vacío o solo espacios",
     "emailLabel": "Correo electrónico",
     "emailRequired": "El correo es obligatorio",
     "emailInvalid": "Correo inválido",
     "passwordLabel": "Contraseña",
     "passwordRequired": "La contraseña es obligatoria",
     "passwordMinLength": "Mínimo 6 caracteres",
+    "passwordWeak": "La contraseña debe tener mayúscula, minúscula y número",
     "registerButton": "Registrarse",
     "formInvalid": "Por favor completá todos los campos correctamente.",
     "registerError": "Hubo un problema con el registro.",
@@ -71,15 +78,15 @@
     "errorLoading": "No se pudieron cargar los detalles del grupo. Intentá más tarde."
   },
   "groupForm": {
-    "back": "Volver",
-    "title": "Crear un grupo",
-    "save": "Guardar",
-    "namePlaceholder": "Nombre del grupo",
-    "errorCreating": "Error al crear el grupo",
-    "typeLabel": "Tipo"
+    "title": "Nuevo Grupo",
+    "nameLabel": "Nombre del grupo",
+    "typeLabel": "Tipo",
+    "errorCreating": "Error al crear el grupo"
   },
   "common": {
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar"
   },
   "groupType": {
     "trip": "Viaje",
@@ -113,7 +120,9 @@
     "defaultLabel": "Pagado por ti y dividido a partes iguales",
     "optionYouAreOwed": "Ellos deben la cantidad total",
     "optionOtherPaidEqual": "Pagado por {{name}} y dividido a partes iguales",
-    "optionOtherIsOwed": "Debes la cantidad total"
+    "optionOtherIsOwed": "Debes la cantidad total",
+    "nonEmpty": "Este campo es obligatorio",
+    "invalidAmount": "El monto debe ser mayor a 0"
   },
   "expenseDetail": {
     "title": "Detalle del gasto",
@@ -172,10 +181,6 @@
   "confirmDelete": {
     "title": "Eliminar gasto",
     "message": "¿Estás seguro de que querés eliminar este gasto?"
-  },
-  "common": {
-    "confirm": "Confirmar",
-    "cancel": "Cancelar"
   },
   "calendar": {
     "cancel": "Cancelar",
