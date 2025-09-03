@@ -1,60 +1,77 @@
 <div class="expense-screen">
   <mat-toolbar color="primary" class="expense-form-toolbar">
-    <button type="button" mat-icon-button aria-label="expenseForm.back" (click)="goBack()">
+    <button type="button" mat-icon-button (click)="goBack()">
       <mat-icon>arrow_back</mat-icon>
     </button>
-
     <span class="toolbar-title">{{ 'expenseForm.title' | translate }}</span>
-
     <span class="spacer"></span>
-
-    <button
-      mat-icon-button
-      type="button"
-      (click)="submitExpense()"
-      [disabled]="expenseForm.invalid || isSubmitting"
-      aria-label="expenseForm.save"
-    >
-      <mat-icon>check</mat-icon>
+    <button mat-icon-button [disabled]="isSubmitting" (click)="submitExpense()">
+      @if (isSubmitting) {
+        <mat-progress-spinner
+          diameter="24"
+          mode="indeterminate"
+          class="custom-spinner-white"
+        ></mat-progress-spinner>
+      } @else {
+        <mat-icon>check</mat-icon>
+      }
     </button>
   </mat-toolbar>
 
   @if (group) {
     <form [formGroup]="expenseForm" class="expense-form" (ngSubmit)="submitExpense()">
-      <div class="field-row">
-        <button type="button" class="icon-button" (click)="openCategorySelector()">
-          @if (selectedCategoryIcon) {
-            <img [src]="selectedCategoryIcon" alt="Category Icon" width="24" height="24" />
-          } @else {
-            <mat-icon>receipt</mat-icon>
+      <!-- Description -->
+      <div class="form-section">
+        <div class="field-group">
+          <div class="field-row">
+            <button type="button" class="icon-button" (click)="openCategorySelector()">
+              @if (selectedCategoryIcon) {
+                <img [src]="selectedCategoryIcon" alt="Category Icon" width="24" height="24" />
+              } @else {
+                <mat-icon>receipt</mat-icon>
+              }
+            </button>
+            <input
+              type="text"
+              formControlName="description"
+              class="flat-input full-width"
+              [placeholder]="'expenseForm.descriptionPlaceholder' | translate"
+            />
+          </div>
+          @if (
+            expenseForm.controls['description'].touched &&
+            expenseForm.controls['description'].invalid
+          ) {
+            <div class="field-error">{{ 'validation.nonEmpty' | translate }}</div>
           }
-        </button>
-
-        <input
-          type="text"
-          formControlName="description"
-          class="flat-input full-width"
-          [placeholder]="'expenseForm.descriptionPlaceholder' | translate"
-        />
+        </div>
       </div>
 
-      <div class="field-row">
-        <button type="button" class="icon-button" (click)="openCurrencySelector()">
-          <span class="currency-label">{{ expenseForm.value.currency || '$' }}</span>
-        </button>
-
-        <input
-          type="number"
-          inputmode="numeric"
-          formControlName="total"
-          class="flat-input full-width"
-          placeholder="0.00"
-        />
+      <!-- Total -->
+      <div class="form-section">
+        <div class="field-group">
+          <div class="field-row">
+            <button type="button" class="icon-button" (click)="openCurrencySelector()">
+              <span class="currency-label">{{ expenseForm.value.currency || '$' }}</span>
+            </button>
+            <input
+              type="number"
+              inputmode="numeric"
+              formControlName="total"
+              class="flat-input full-width"
+              placeholder="0.00"
+            />
+          </div>
+          @if (expenseForm.controls['total'].touched && expenseForm.controls['total'].invalid) {
+            <div class="field-error">{{ 'expenseForm.invalidAmount' | translate }}</div>
+          }
+        </div>
       </div>
 
+      <!-- Split selector -->
       <app-split-selector
         [groupMembers]="group.members"
-        (payerChanged)="onPayerChanged($event)"
+        [selectedOptionId]="selectedOptionIdForSplit"
       ></app-split-selector>
     </form>
 
@@ -64,8 +81,6 @@
       (dateChange)="setExpenseDate($event)"
     ></app-footer>
   } @else {
-    <div class="loading-spinner">
-      <div class="custom-spinner"></div>
-    </div>
+    <div class="loading-spinner"><div class="custom-spinner"></div></div>
   }
 </div>

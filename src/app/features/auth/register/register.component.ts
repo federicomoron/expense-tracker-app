@@ -7,6 +7,7 @@ import { SnackbarService } from '@app/core/services/snackbar.service';
 import { ExpButtonComponent } from '@app/shared/components/exp-button/exp-button.component';
 import { UserService } from '@services/user.service';
 import { SharedUiModule } from '@shared/shared-ui.module';
+import { nonEmpty, strongPassword, validEmail } from '@shared/utils/form-validators';
 
 @Component({
   selector: 'app-register',
@@ -23,12 +24,13 @@ export class RegisterComponent {
   private snackbar = inject(SnackbarService);
   private userService = inject(UserService);
   private translate = inject(TranslateService);
+
   loading = false;
 
   form: FormGroup = this.fb.group({
-    name: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    name: ['', [Validators.required, nonEmpty]],
+    email: ['', [Validators.required, nonEmpty, validEmail]],
+    password: ['', [Validators.required, nonEmpty, Validators.minLength(6), strongPassword]],
   });
 
   onSubmit(): void {
@@ -70,5 +72,33 @@ export class RegisterComponent {
 
   togglePasswordVisibility() {
     this.showPassword.update((value) => !value);
+  }
+
+  getError(controlName: string): string | null {
+    const control = this.form.get(controlName);
+    if (!control || !control.touched) return null;
+
+    if (control.hasError('required')) {
+      return this.translate.instant(`register.${controlName}Required`);
+    }
+
+    if (control.hasError('nonEmpty')) {
+      return this.translate.instant(`register.nonEmpty`);
+    }
+
+    if (controlName === 'email' && control.hasError('invalidEmail')) {
+      return this.translate.instant('register.emailInvalid');
+    }
+
+    if (controlName === 'password') {
+      if (control.hasError('minlength')) {
+        return this.translate.instant('register.passwordMinLength');
+      }
+      if (control.hasError('weakPassword')) {
+        return this.translate.instant('register.passwordWeak');
+      }
+    }
+
+    return null;
   }
 }

@@ -11,9 +11,9 @@ export class CurrencySymbolPipe implements PipeTransform {
     const code = currencyCode.toUpperCase();
 
     if (code === 'USD') {
-      return 'USD';
+      return 'USD ';
     }
 
-    return CURRENCY_SYMBOLS[code] || code;
+    return (CURRENCY_SYMBOLS[code] || code) + ' ';
   }
 }

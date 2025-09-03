@@ -9,6 +9,7 @@ import { GroupDetailWithExpenses } from '@app/core/models/group-detail.model';
 import { AuthService } from '@app/core/services/auth.service';
 import { SnackbarService } from '@app/core/services/snackbar.service';
 import { getGroupImage } from '@app/shared/helpers/group-type-image-map';
+import { CurrencySymbolPipe } from '@app/shared/pipes/currency-symbol.pipe';
 import { environment } from '@environments/environment';
 import { GroupFormComponent } from '@features/groups/group-form/group-form.component';
 import { GroupType } from '@models/group-type.enum';
@@ -18,7 +19,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
 @Component({
   selector: 'app-groups',
   standalone: true,
-  imports: [SharedUiModule, RouterModule, CommonModule, TranslateModule],
+  imports: [SharedUiModule, RouterModule, CommonModule, TranslateModule, CurrencySymbolPipe],
   templateUrl: './groups.component.html',
   styleUrls: ['./groups.component.scss'],
 })
