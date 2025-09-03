@@ -5,8 +5,13 @@
     </button>
     <span class="toolbar-title">{{ 'groupForm.title' | translate }}</span>
     <span class="spacer"></span>
-    <button mat-icon-button type="button" (click)="onSubmit($event)" [disabled]="isNameInvalid()">
-      <mat-icon>check</mat-icon>
+    <button mat-icon-button [disabled]="isNameInvalid() || isSubmitting" (click)="onSubmit($event)">
+      @if (isSubmitting) {
+        <mat-progress-spinner diameter="24" mode="indeterminate" class="custom-spinner-white">
+        </mat-progress-spinner>
+      } @else {
+        <mat-icon>check</mat-icon>
+      }
     </button>
   </mat-toolbar>
 
@@ -14,9 +19,12 @@
     <input #fileInput type="file" accept="image/*" (change)="onImageSelected($event)" hidden />
 
     <div class="field-row">
-      <!-- TODO: Habilitar selector de imagen cuando se implemente la carga de imágenes en el backend-->
+      <div class="flat-input-container">
+        <label class="flat-input-label">{{ 'groupForm.nameLabel' | translate }}</label>
 
-      <!-- <div class="image-selector" (click)="triggerFileInput()" role="button">
+        <!-- TODO: Habilitar selector de imagen cuando se implemente la carga de imágenes en el backend-->
+
+        <!-- <div class="image-selector" (click)="triggerFileInput()" role="button">
         @if (imagePreview(); as preview) {
           <img [src]="preview" alt="Group Image" class="image-preview" />
         } @else {
@@ -27,18 +35,21 @@
         }
       </div> -->
 
-      <input
-        type="text"
-        [value]="name()"
-        (input)="onNameInput($event)"
-        class="flat-input full-width"
-        [placeholder]="'groupForm.namePlaceholder' | translate"
-      />
+        <input
+          type="text"
+          [value]="name()"
+          (input)="onNameInput($event)"
+          class="flat-input"
+          autocomplete="off"
+        />
+        @if (isNameInvalid()) {
+          <div class="error-message">{{ 'validation.nonEmpty' | translate }}</div>
+        }
+      </div>
     </div>
 
-    <div class="field-column full-width">
+    <div class="field-column">
       <label class="section-label">{{ 'groupForm.typeLabel' | translate }}</label>
-
       <div class="type-options">
         @for (option of groupTypeOptions; track option.value) {
           <button

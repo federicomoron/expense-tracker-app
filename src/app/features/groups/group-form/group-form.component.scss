@@ -28,14 +28,28 @@
   padding: 24px 16px;
   gap: 24px;
   background-color: var(--app-bg);
+  width: 100%;
 }
 
 .field-row {
+  position: relative;
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  gap: 4px;
   width: 100%;
   max-width: 300px;
+}
+
+.flat-input-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.flat-input-label {
+  font-size: 12px;
+  color: var(--app-muted);
+  margin-bottom: 4px;
 }
 
 .flat-input {
@@ -43,23 +57,21 @@
   border-bottom: 2px solid var(--app-primary);
   background: transparent;
   font-size: 16px;
-  padding: 8px 4px;
+  padding: 4px 0;
   color: var(--app-text);
   outline: none;
-  flex: 1;
+  width: 100%;
 }
 
 .flat-input::placeholder {
   color: var(--app-muted);
 }
 
-.flat-select .mat-mdc-form-field-subscript-wrapper {
-  display: none;
-}
-
-.flat-select .mat-mdc-form-field-flex {
-  padding: 0 4px;
-  border-bottom: 2px solid var(--app-primary);
+.error-message {
+  color: var(--app-error, #d32f2f);
+  font-size: 14px;
+  margin: 0;
+  padding-left: 4px;
 }
 
 .image-selector {
@@ -110,12 +122,6 @@
   }
 }
 
-.icon-label {
-  color: var(--app-text);
-  font-size: 24px;
-  padding: 0 4px;
-}
-
 .field-column {
   display: flex;
   flex-direction: column;
@@ -158,4 +164,13 @@
     border: 2px solid var(--app-primary);
     background-color: rgba(var(--app-primary-rgb), 0.1);
   }
+}
+
+.custom-spinner-white {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
