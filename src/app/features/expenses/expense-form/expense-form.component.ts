@@ -23,6 +23,7 @@ import { AuthService } from '@services/auth.service';
 import { ExpenseService } from '@services/expenses.service';
 import { GroupService } from '@services/group.service';
 import { SharedUiModule } from '@shared/shared-ui.module';
+import { nonEmpty } from '@shared/utils/form-validators';
 
 import { PaidByDialogComponent } from '../components/paid-by-dialog/paid-by-dialog.component';
 import { PaidByQuickDialogComponent } from '../components/paid-by-quick-dialog/paid-by-quick-dialog.component';
@@ -66,8 +67,8 @@ export class ExpenseFormComponent implements OnInit {
   selectedPayer: { userId: number; name: string } | null = null;
 
   expenseForm: FormGroup = this.fb.group({
-    description: ['', Validators.required],
-    total: [null, [Validators.required, Validators.min(0.01)]],
+    description: ['', [Validators.required, Validators.minLength(2), nonEmpty]],
+    total: [null, [Validators.required, Validators.min(0.01), Validators.max(10000000)]],
     currency: ['ARS', Validators.required],
     createdAt: [new Date(), Validators.required],
     category: [''],
@@ -218,25 +219,35 @@ export class ExpenseFormComponent implements OnInit {
   }
 
   submitExpense() {
-    // Validate form and group context before submitting
-    if (!this.groupId || !this.group || this.expenseForm.invalid) return;
+    if (!this.groupId || !this.group) return;
+
+    this.expenseForm.markAllAsTouched();
+
+    if (this.expenseForm.invalid) return;
 
     const currentUser = this.authService.currentUser();
     if (!currentUser) return console.error(this.translate.instant('expenseForm.userNotLoggedIn'));
 
     const { description, currency, createdAt } = this.expenseForm.value;
     const total = Number(this.expenseForm.value.total);
+
+    if (total <= 0) {
+      console.error(this.translate.instant('expenseForm.invalidAmount'));
+      return;
+    }
+
     const groupMembers = this.group.members.map((m) => m.userId);
     const selectedOption = this.splitSelectorComponent?.selectedOption?.();
-    if (!selectedOption?.id)
-      return console.error('[ExpenseForm] ❌ selectedOption.id is undefined.');
+    if (!selectedOption?.id) {
+      console.error(this.translate.instant('expenseForm.noPayerSelected'));
+      return;
+    }
 
     const otherMember = this.group.members.find((m) => m.userId !== currentUser.id);
 
     let paidBy: ExpenseUser[] = [{ userId: currentUser.id, amount: total }];
     let splits: ExpenseUser[] = this.buildSplits(groupMembers, total);
 
-    // Handle split logic for two-member groups
     if (groupMembers.length === 2 && otherMember) {
       const half = Math.round((total / 2) * 100) / 100;
       switch (selectedOption.id) {
@@ -269,7 +280,6 @@ export class ExpenseFormComponent implements OnInit {
       }
     }
 
-    // Ensure all split amounts are rounded and non-negative
     splits = splits.map((s) => ({
       userId: s.userId,
       amount: Math.max(0, Math.round(s.amount * 100) / 100),
@@ -277,19 +287,6 @@ export class ExpenseFormComponent implements OnInit {
 
     const createdAtIso =
       createdAt instanceof Date ? createdAt.toISOString() : new Date(createdAt).toISOString();
-    const extendedExpense: ExpenseExtended = {
-      id: this.isEditMode ? this.expenseId! : Date.now(),
-      groupId: this.groupId,
-      description,
-      total,
-      currency,
-      createdAt: createdAtIso,
-      updatedAt: new Date().toISOString(),
-      participants: paidBy,
-      paidBy,
-      splits,
-      optionId: selectedOption.id,
-    };
     const expenseRequest: ExpenseRequest = {
       groupId: this.groupId,
       description,
@@ -305,6 +302,7 @@ export class ExpenseFormComponent implements OnInit {
     const obs$ = this.isEditMode
       ? this.expenseService.updateExpense(this.expenseId!, expenseRequest)
       : this.expenseService.createExpense(expenseRequest);
+
     obs$.subscribe({
       next: () => void this.router.navigate(['/groups', this.groupId]),
       error: (error) => {
