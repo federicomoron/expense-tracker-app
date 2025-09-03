@@ -8,14 +8,13 @@
     </nav>
   } @else if (!isExpenseForm) {
     <nav class="footer-nav">
-      <button type="button" (click)="goTo('/account')" [class.active]="isActive('/account')">
-        <mat-icon>person</mat-icon>
-        <span>{{ 'footer.account' | translate }}</span>
-      </button>
-
       <button type="button" (click)="goTo('/groups')" [class.active]="isActive('/groups')">
         <mat-icon>group</mat-icon>
         <span>{{ 'footer.groups' | translate }}</span>
+      </button>
+      <button type="button" (click)="goTo('/account')" [class.active]="isActive('/account')">
+        <mat-icon>person</mat-icon>
+        <span>{{ 'footer.account' | translate }}</span>
       </button>
 
       <!-- Botón para historial si se decide habilitar más adelante -->

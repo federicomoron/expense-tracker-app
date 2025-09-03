@@ -1,35 +1,40 @@
 <div class="login-container">
   <img class="logo logo-light" src="/assets/spendly-dark.png" alt="Logo claro" />
   <img class="logo logo-dark" src="/assets/spendly-light.png" alt="Logo oscuro" />
+
   <h1 class="login-title">{{ 'login.title' | translate }}</h1>
 
-  <form (submit)="onSubmit($event)" class="login-form">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+    <!-- Email -->
     <mat-form-field appearance="outline" floatLabel="always" class="form-field-dark">
       <mat-label>{{ 'login.emailLabel' | translate }}</mat-label>
-      <input matInput type="email" [value]="email()" (input)="onEmailInput($event)" />
+      <input matInput type="email" formControlName="email" />
+      @if (getError('email')) {
+        <mat-error>{{ getError('email') }}</mat-error>
+      }
     </mat-form-field>
 
+    <!-- Password -->
     <mat-form-field appearance="outline" floatLabel="always" class="form-field-dark">
       <mat-label>{{ 'login.passwordLabel' | translate }}</mat-label>
-      <input
-        matInput
-        [type]="showPassword() ? 'text' : 'password'"
-        [value]="password()"
-        (input)="onPasswordInput($event)"
-      />
+      <input matInput [type]="showPassword() ? 'text' : 'password'" formControlName="password" />
       <button
         mat-icon-button
         matSuffix
+        type="button"
         (click)="togglePasswordVisibility()"
         [attr.aria-label]="'login.togglePasswordVisibility' | translate"
         [attr.aria-pressed]="showPassword()"
-        type="button"
       >
         <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
       </button>
+      @if (getError('password')) {
+        <mat-error>{{ getError('password') }}</mat-error>
+      }
     </mat-form-field>
 
-    <app-exp-button type="submit" color="primary" [disabled]="isLoading()">
+    <!-- Submit -->
+    <app-exp-button type="submit" color="primary" [disabled]="isLoading() || form.invalid">
       @if (isLoading()) {
         <mat-progress-spinner
           mode="indeterminate"
@@ -41,12 +46,6 @@
         {{ 'login.loginButton' | translate }}
       }
     </app-exp-button>
-
-    @if (errorMessage()) {
-      <div class="error-message">
-        {{ errorMessage() }}
-      </div>
-    }
 
     <!-- Uncomment if Google login is needed -->
     <!-- <button
@@ -64,7 +63,6 @@
         />
         {{ 'login.googleSignIn' | translate }}
       </button> -->
-
     <p class="register-link">
       {{ 'login.noAccount' | translate }}
       <a class="login-register" routerLink="/register">{{ 'login.registerHere' | translate }}</a>

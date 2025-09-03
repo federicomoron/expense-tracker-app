@@ -17,13 +17,15 @@ import { SharedUiModule } from '@shared/shared-ui.module';
 export class GroupFormComponent {
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
-  imagePreview = signal<string | null>(null);
-  selectedImage: File | null = null;
-
   name = signal('');
+  submitted = signal(false);
   type = signal<GroupType>(GroupType.TRIP);
-  isNameInvalid = computed(() => this.name().trim() === '');
+  isNameInvalid = computed(() => this.submitted() && this.name().trim().length === 0);
   groupTypeOptions = GROUP_TYPE_OPTIONS;
+
+  selectedImage: File | null = null;
+  imagePreview = signal<string | null>(null);
+  isSubmitting = false;
 
   private groupService = inject(GroupService);
   private router = inject(Router);
@@ -73,7 +75,11 @@ export class GroupFormComponent {
 
   onSubmit(event: Event) {
     event.preventDefault();
-    if (this.isNameInvalid()) return;
+    this.submitted.set(true);
+
+    if (this.name().trim().length === 0) return;
+
+    this.isSubmitting = true;
 
     this.groupService
       .createGroup({
@@ -82,9 +88,7 @@ export class GroupFormComponent {
         imageUrl: undefined,
       })
       .subscribe({
-        next: () => {
-          void this.router.navigate(['/groups']);
-        },
+        next: () => void this.router.navigate(['/groups']),
         error: () => {
           this.snackBar.open(
             this.translate.instant('groupForm.errorCreating'),

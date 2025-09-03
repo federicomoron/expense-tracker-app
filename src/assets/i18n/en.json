@@ -1,30 +1,37 @@
 {
   "login": {
-    "title": "Login",
+    "title": "Sign in",
     "emailLabel": "Email",
-    "emailPlaceholder": "Enter your email",
+    "emailPlaceholder": "example@email.com",
     "passwordLabel": "Password",
-    "togglePasswordVisibility": "Toggle password visibility",
-    "loginButton": "Login",
-    "googleSignIn": "Sign in with Google",
+    "togglePasswordVisibility": "Show/Hide password",
+    "loginButton": "Sign in",
+    "googleSignIn": "Continue with Google",
     "noAccount": "Don't have an account?",
-    "registerHere": "Register here",
-    "fillAllFields": "Please fill in all fields.",
+    "registerHere": "Create one here",
+    "fillAllFields": "Please complete all fields.",
     "invalidCredentials": "Incorrect email or password.",
-    "apiUnreachable": "🚨 API is not reachable. Please try again later.",
+    "apiUnreachable": "🚨 Could not connect to the API. Please try again later.",
     "unexpectedError": "An unexpected error occurred.",
-    "googleError": "Error with Google login"
+    "googleError": "Google sign-in failed"
+  },
+  "validation": {
+    "nonEmpty": "This field is required.",
+    "emailInvalid": "Invalid email address.",
+    "passwordTooShort": "Password must be at least 6 characters long."
   },
   "register": {
     "nameLabel": "Name",
     "title": "Register",
     "nameRequired": "Name is required",
+    "nonEmpty": "Name cannot be empty or spaces only",
     "emailLabel": "Email",
     "emailRequired": "Email is required",
     "emailInvalid": "Invalid email",
     "passwordLabel": "Password",
     "passwordRequired": "Password is required",
     "passwordMinLength": "Minimum 6 characters",
+    "passwordWeak": "Password must contain upper, lower, number",
     "registerButton": "Register",
     "formInvalid": "Please complete all fields correctly.",
     "registerError": "There was a problem with the registration.",
@@ -71,15 +78,15 @@
     "errorLoading": "Could not load group details. Try again later."
   },
   "groupForm": {
-    "back": "Back",
-    "title": "Create group",
-    "save": "Save",
-    "namePlaceholder": "Group Name",
-    "errorCreating": "Error creating group",
-    "typeLabel": "Type"
+    "title": "New Group",
+    "nameLabel": "Group name",
+    "typeLabel": "Type",
+    "errorCreating": "Error creating group"
   },
   "common": {
-    "close": "Close"
+    "close": "Close",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
   },
   "groupType": {
     "trip": "Trip",
@@ -91,8 +98,8 @@
     "loading": "Loading expenses...",
     "empty": "No expenses recorded.",
     "youPaid": "You paid {{currency}} {{amount}}",
-    "paidBy": "{{name}} paid {{amount}} {{currency}}",
-    "paidByMultiple": "{{names}} paid {{total}} {{currency}}",
+    "paidBy": "{{name}} paid {{currency}} {{amount}}",
+    "paidByMultiple": "{{names}} paid {{currency}} {{total}}",
     "youLent": "You lent",
     "youBorrowed": "You borrowed",
     "deletedSuccess": "Expense deleted successfully.",
@@ -109,7 +116,13 @@
     "userNotLoggedIn": "User not logged in",
     "noPayerSelected": "⚠️ No payer selected – expense not submitted",
     "createError": "Error creating the expense",
-    "invalidGroupIdOnGoBack": "⚠️ Invalid groupId on goBack"
+    "invalidGroupIdOnGoBack": "⚠️ Invalid groupId on goBack",
+    "defaultLabel": "Paid by you, split equally",
+    "optionYouAreOwed": "They owe the total amount",
+    "optionOtherPaidEqual": "Paid by {{name}}, split equally",
+    "optionOtherIsOwed": "You owe the total amount",
+    "nonEmpty": "This field is required",
+    "invalidAmount": "Amount must be greater than 0"
   },
   "expenseDetail": {
     "title": "Expense Details",
@@ -169,12 +182,16 @@
     "title": "Delete Expense",
     "message": "Are you sure you want to delete this expense?"
   },
-  "common": {
-    "confirm": "Confirm",
-    "cancel": "Cancel"
-  },
   "calendar": {
     "cancel": "Cancel",
     "accept": "Confirm"
+  },
+  "paidByQuickDialog": {
+    "title": "How was this expense split?",
+    "youPaidEqual": "You paid, split equally",
+    "youAreOwed": "You are owed the total amount",
+    "otherPaidEqual": "{{name}} paid, split equally",
+    "otherIsOwed": "{{name}} is owed the total amount",
+    "moreOptions": "More options"
   }
 }

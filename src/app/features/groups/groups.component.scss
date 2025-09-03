@@ -62,7 +62,6 @@
 
 .settled-toggle {
   text-align: center;
-  padding: 1rem;
 
   .placeholder {
     margin-bottom: 0.5rem;
@@ -139,6 +138,7 @@
 .member-line {
   font-size: 0.825rem;
   margin-bottom: 2px;
+  color: var(--app-text);
 }
 
 .muted {

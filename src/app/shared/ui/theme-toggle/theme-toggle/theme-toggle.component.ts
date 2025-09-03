@@ -11,7 +11,7 @@ import { applyTheme, ThemeOption } from '@app/core/services/theme.service';
   imports: [TranslateModule],
 })
 export class ThemeToggleComponent {
-  options: ThemeOption[] = ['light', 'dark', 'system'];
+  options: ThemeOption[] = ['light', 'dark'];
   theme = signal<ThemeOption>(this.getInitialTheme());
 
   setTheme(option: ThemeOption) {
@@ -21,6 +21,6 @@ export class ThemeToggleComponent {
   }
 
   private getInitialTheme(): ThemeOption {
-    return (localStorage.getItem('theme') as ThemeOption) ?? 'system';
+    return (localStorage.getItem('theme') as ThemeOption) ?? 'light';
   }
 }

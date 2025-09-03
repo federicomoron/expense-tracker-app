@@ -1,0 +1,5 @@
+@use 'shared/styles/dialog-common.scss';
+
+:host ::ng-deep .mdc-list-item__primary-text {
+  color: var(--app-text) !important;
+}
