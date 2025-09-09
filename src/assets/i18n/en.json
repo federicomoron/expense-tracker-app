@@ -68,7 +68,8 @@
     "settled_hidden": "Settled groups are hidden",
     "show_settled_groups_one": "Show 1 settled group",
     "show_settled_groups_many": "Show {{count}} settled groups",
-    "hide_settled_groups": "Hide settled groups"
+    "hide_settled_groups": "Hide settled groups",
+    "they_owe_you": "They owe you"
   },
   "groupDetail": {
     "theyOweYou": "They owe you",
@@ -145,12 +146,17 @@
   },
   "expenseCategories": {
     "Food": "Food",
-    "Groceries": "Groceries",
+    "Restaurant": "Restaurant",
+    "Greengrocery": "Greengrocery",
+    "Meat": "Butcher shop",
     "Rent": "Rent",
     "Utilities": "Utilities",
-    "Transport": "Transport",
-    "Health": "Health",
-    "Clothing": "Clothing",
+    "Electricity": "Electricity",
+    "Water": "Water",
+    "Gas": "Gas",
+    "Car": "Car",
+    "Healthcare": "Healthcare",
+    "Clothes": "Clothes",
     "Entertainment": "Entertainment",
     "Subscriptions": "Subscriptions",
     "Other": "Other"

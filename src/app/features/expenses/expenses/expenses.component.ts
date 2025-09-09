@@ -6,12 +6,12 @@ import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ExpenseService } from '@app/core/services/expenses.service';
+import { EXPENSE_CATEGORIES } from '@app/shared/data/expense-categories';
 import { CURRENCY_SYMBOLS } from '@app/shared/helpers/currency-symbols';
 import { detectQuickOptionFromParticipants } from '@app/shared/helpers/expense.utils';
 import { CurrencySymbolPipe } from '@app/shared/pipes/currency-symbol.pipe';
 import { Expense, ExpenseExtended, ExpenseUser } from '@models/expenses.model';
 import { AuthService } from '@services/auth.service';
-import { getCategoryIcon } from '@shared/helpers/get-category-icon';
 import { SharedUiModule } from '@shared/shared-ui.module';
 
 import { ExpenseFormComponent } from '../expense-form/expense-form.component';
@@ -40,8 +40,6 @@ export class ExpensesComponent {
   private router = inject(Router);
 
   totalAmount = 0;
-
-  getCategoryIcon = getCategoryIcon;
 
   ngOnInit() {
     this.calculateTotal();
@@ -72,6 +70,25 @@ export class ExpensesComponent {
 
   get currentUser() {
     return this.authService.currentUser();
+  }
+
+  getCategoryIconFromDescription(description: string): string {
+    if (!description) return '/assets/category-default.svg';
+    const desc = description.toLowerCase();
+
+    // First try to match by exact label or inclusion
+    let category =
+      EXPENSE_CATEGORIES.find((c) => c.label.toLowerCase() === desc) ||
+      EXPENSE_CATEGORIES.find((c) => c.label.toLowerCase().includes(desc));
+
+    // If no match by label, search keywords
+    if (!category) {
+      category = EXPENSE_CATEGORIES.find((c) =>
+        c.keywords?.some((k) => desc.includes(k.toLowerCase())),
+      );
+    }
+
+    return category?.icon || '/assets/category-default.svg';
   }
 
   getUserName(userId: number): string {

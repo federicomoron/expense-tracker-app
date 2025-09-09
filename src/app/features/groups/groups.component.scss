@@ -94,7 +94,7 @@
 
 .group-item {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 1rem;
   padding: 0.75rem 0;
   cursor: pointer;
@@ -109,11 +109,12 @@
 }
 
 .group-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+  width: 72px;
+  height: auto;
+  border-radius: 18px;
   object-fit: cover;
   background-color: var(--app-border);
+  align-self: stretch;
 }
 
 .group-info {
@@ -134,7 +135,12 @@
   color: var(--app-text);
 }
 
-.balance-line,
+.balance-line {
+  font-size: 0.825rem;
+  margin-bottom: 2px;
+  color: var(--app-text);
+}
+
 .member-line {
   font-size: 0.825rem;
   margin-bottom: 2px;
@@ -152,4 +158,14 @@
   background-color: var(--app-border);
   color: var(--app-text);
   font-size: 24px;
+}
+
+.group-members {
+  opacity: 0.8;
+
+  .member-line {
+    font-size: 0.65rem !important;
+    color: var(--app-muted);
+    opacity: 0.9;
+  }
 }

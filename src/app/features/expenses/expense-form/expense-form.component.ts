@@ -57,6 +57,10 @@ export class ExpenseFormComponent implements OnInit {
   @ViewChild(FooterComponent) footerComponent!: FooterComponent;
 
   expenseToEdit = signal<ExpenseExtended | null>(null);
+  selectedCategory = signal<string | null>(null);
+  selectedCategoryLabel = signal<string | null>(null);
+  selectedCategoryIcon = signal<string | null>(null);
+
   selectedPaidByOption: PaidByOption | null = null;
   selectedOptionIdForSplit: PaidByOptionId | null = null;
 
@@ -74,9 +78,6 @@ export class ExpenseFormComponent implements OnInit {
     category: [''],
   });
 
-  selectedCategory = '';
-  selectedCategoryIcon = '';
-  selectedCategoryLabel = '';
   isSubmitting = false;
 
   ngOnInit() {
@@ -174,6 +175,36 @@ export class ExpenseFormComponent implements OnInit {
             }
           }, 0);
         }
+
+        this.expenseForm.get('description')?.valueChanges.subscribe((desc: string) => {
+          const lowerDesc = desc?.toLowerCase() || '';
+
+          const matchedCategory = EXPENSE_CATEGORIES.find(
+            (c) =>
+              c.label.toLowerCase() === lowerDesc ||
+              c.key.toLowerCase() === lowerDesc ||
+              c.keywords?.some((k) => lowerDesc.includes(k)),
+          );
+
+          if (matchedCategory) {
+            // Matched with an official category
+            // Update signals for key, label, and icon
+            this.selectedCategory.set(matchedCategory.key);
+            this.selectedCategoryLabel.set(matchedCategory.label);
+            this.selectedCategoryIcon.set(matchedCategory.icon);
+          } else {
+            // No match in official categories → reset signals to default
+            this.selectedCategory.set(null);
+            this.selectedCategoryLabel.set(null);
+            this.selectedCategoryIcon.set('/assets/category-default.svg');
+          }
+
+          // Update the form's category field (even if null), without triggering valueChanges
+          this.expenseForm.patchValue(
+            { category: matchedCategory?.key || null },
+            { emitEvent: false },
+          );
+        });
       },
       error: (err) => {
         this.snackbar.show(this.translate.instant('expenseForm.loadGroupError'));
@@ -344,22 +375,20 @@ export class ExpenseFormComponent implements OnInit {
     const popStateListener = () => dialogRef.close();
     window.addEventListener('popstate', popStateListener);
 
-    dialogRef.afterClosed().subscribe((selectedCategory: string) => {
-      window.removeEventListener('popstate', popStateListener);
-      if (selectedCategory) {
-        this.selectedCategory = selectedCategory;
-        this.selectedCategoryLabel =
-          EXPENSE_CATEGORIES.find((c) => c.key === selectedCategory)?.label || '';
-        this.updateCategoryIcon(selectedCategory);
-        this.expenseForm.patchValue({ category: selectedCategory });
+    dialogRef.afterClosed().subscribe((category) => {
+      if (category) {
+        this.selectedCategory.set(category.key);
+        this.selectedCategoryLabel.set(category.label);
+        this.selectedCategoryIcon.set(category.icon);
+        this.expenseForm.patchValue({ category: category.key });
       }
     });
   }
 
   updateCategoryIcon(category: string): void {
-    // Update the icon for the selected category
-    this.selectedCategoryIcon =
-      EXPENSE_CATEGORIES.find((c) => c.key === category)?.icon || '/assets/default.svg';
+    const icon =
+      EXPENSE_CATEGORIES.find((c) => c.key === category)?.icon || '/assets/category-default.svg';
+    this.selectedCategoryIcon.set(icon);
   }
 
   private buildSplits(userIds: number[], total: number): ExpenseUser[] {
