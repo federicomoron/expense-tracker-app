@@ -1,10 +1,10 @@
 import { GroupType } from '@models/group-type.enum';
 
 export const GROUP_TYPE_IMAGES: Record<GroupType, string> = {
-  [GroupType.TRIP]: '/assets/trip.jpg',
-  [GroupType.HOME]: '/assets/home.jpeg',
-  [GroupType.COUPLE]: '/assets/couple.jpeg',
-  [GroupType.OTHER]: '/assets/other.jpeg',
+  [GroupType.TRIP]: '/assets/group-trip.jpg',
+  [GroupType.HOME]: '/assets/group-home.jpeg',
+  [GroupType.COUPLE]: '/assets/group-couple.jpeg',
+  [GroupType.OTHER]: '/assets/group-other.jpeg',
 };
 
 export function getGroupImage(type: string | undefined, imageUrl?: string): string {
@@ -12,12 +12,12 @@ export function getGroupImage(type: string | undefined, imageUrl?: string): stri
 
   switch (type) {
     case 'trip':
-      return '/assets/trip.jpg';
+      return '/assets/group-trip.jpg';
     case 'home':
-      return '/assets/home.jpeg';
+      return '/assets/group-home.jpeg';
     case 'couple':
-      return '/assets/couple.jpeg';
+      return '/assets/group-couple.jpeg';
     default:
-      return '/assets/other.jpeg';
+      return '/assets/group-other.jpeg';
   }
 }
