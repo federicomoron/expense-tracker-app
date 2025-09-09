@@ -21,8 +21,11 @@ export class CategorySelectorComponent {
 
   selectedCategory = signal('');
 
-  chooseCategory(category: string): void {
-    this.dialogRef.close(category);
+  chooseCategory(categoryKey: string): void {
+    const category = this.categories().find((c) => c.key === categoryKey);
+    if (category) {
+      this.dialogRef.close(category);
+    }
   }
 
   closeDialog(): void {

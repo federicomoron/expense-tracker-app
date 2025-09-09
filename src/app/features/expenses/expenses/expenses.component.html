@@ -17,7 +17,7 @@
 
             <div class="expense-icon">
               <img
-                [src]="getCategoryIcon(exp.description || '')"
+                [src]="getCategoryIconFromDescription(exp.description || '')"
                 alt="{{ 'expenses.iconAlt' | translate }}"
               />
             </div>

@@ -68,7 +68,8 @@
     "settled_hidden": "Se ocultan los grupos con cuentas saldadas",
     "show_settled_groups_one": "Mostrar 1 grupo con cuentas saldadas",
     "show_settled_groups_many": "Mostrar {{count}} grupos con cuentas saldadas",
-    "hide_settled_groups": "Ocultar grupos con cuentas saldadas"
+    "hide_settled_groups": "Ocultar grupos con cuentas saldadas",
+    "they_owe_you": "Te deben"
   },
   "groupDetail": {
     "theyOweYou": "Te deben",
@@ -145,12 +146,17 @@
   },
   "expenseCategories": {
     "Food": "Comida",
-    "Groceries": "Supermercado",
+    "Restaurant": "Restaurante",
+    "Greengrocery": "Verduleria",
+    "Meat": "Carnicería",
     "Rent": "Alquiler",
     "Utilities": "Servicios",
-    "Transport": "Transporte",
-    "Health": "Salud",
-    "Clothing": "Ropa",
+    "Electricity": "Electricidad",
+    "Water": "Agua",
+    "Gas": "Gas",
+    "Car": "Auto",
+    "Healthcare": "Salud",
+    "Clothes": "Ropa",
     "Entertainment": "Entretenimiento",
     "Subscriptions": "Suscripciones",
     "Other": "Otro"
