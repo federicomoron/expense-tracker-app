@@ -206,7 +206,7 @@ export class ExpenseFormComponent implements OnInit {
           );
         });
       },
-      error: (err) => {
+      error: () => {
         this.snackbar.show(this.translate.instant('expenseForm.loadGroupError'));
       },
     });

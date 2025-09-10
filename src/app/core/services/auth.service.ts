@@ -86,7 +86,7 @@ export class AuthService {
         const user = JSON.parse(userJson);
         this._isLoggedIn.set(true);
         this._currentUser.set(user);
-      } catch (e) {
+      } catch {
         this.clearSession();
       }
     } else {
