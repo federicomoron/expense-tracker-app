@@ -2,12 +2,12 @@
   <img class="logo logo-light" src="/assets/spendly-dark.png" alt="Logo claro" />
   <img class="logo logo-dark" src="/assets/spendly-light.png" alt="Logo oscuro" />
 
-  <h1 class="login-title">{{ 'login.title' | translate }}</h1>
+  <h1 class="login-title">{{ title }}</h1>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
     <!-- Email -->
     <mat-form-field appearance="outline" floatLabel="always" class="form-field-dark">
-      <mat-label>{{ 'login.emailLabel' | translate }}</mat-label>
+      <mat-label>{{ emailLabel }}</mat-label>
       <input matInput type="email" formControlName="email" />
       @if (getError('email')) {
         <mat-error>{{ getError('email') }}</mat-error>
@@ -16,14 +16,14 @@
 
     <!-- Password -->
     <mat-form-field appearance="outline" floatLabel="always" class="form-field-dark">
-      <mat-label>{{ 'login.passwordLabel' | translate }}</mat-label>
-      <input matInput [type]="showPassword() ? 'text' : 'password'" formControlName="password" />
+      <mat-label>{{ passwordLabel }}</mat-label>
+      <input matInput [type]="inputPasswordType" formControlName="password" />
       <button
         mat-icon-button
         matSuffix
         type="button"
         (click)="togglePasswordVisibility()"
-        [attr.aria-label]="'login.togglePasswordVisibility' | translate"
+        [attr.aria-label]="togglePasswordVisibilityLabel"
         [attr.aria-pressed]="showPassword()"
       >
         <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
@@ -34,20 +34,11 @@
     </mat-form-field>
 
     <!-- Submit -->
-    <app-exp-button type="submit" color="primary" [disabled]="isLoading() || form.invalid">
-      @if (isLoading()) {
-        <mat-progress-spinner
-          mode="indeterminate"
-          diameter="20"
-          color="accent"
-          class="spinner"
-        ></mat-progress-spinner>
-      } @else {
-        {{ 'login.loginButton' | translate }}
-      }
-    </app-exp-button>
+    <app-exp-button-spinner type="submit" [isLoading]="isLoading()" [disabled]="form.invalid">
+      {{ button }}
+    </app-exp-button-spinner>
 
-    <!-- Uncomment if Google login is needed -->
+    <!-- Todo: Uncomment if Google login is needed -->
     <!-- <button
         mat-stroked-button
         color="primary"
@@ -64,8 +55,8 @@
         {{ 'login.googleSignIn' | translate }}
       </button> -->
     <p class="register-link">
-      {{ 'login.noAccount' | translate }}
-      <a class="login-register" routerLink="/register">{{ 'login.registerHere' | translate }}</a>
+      {{ noAccount }}
+      <a class="login-register" routerLink="/register">{{ registerHere }}</a>
     </p>
   </form>
 </div>
