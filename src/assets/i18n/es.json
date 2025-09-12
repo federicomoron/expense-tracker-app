@@ -91,7 +91,7 @@
   },
   "groupType": {
     "trip": "Viaje",
-    "home": "Casa",
+    "house": "Casa",
     "couple": "Pareja",
     "other": "Otro"
   },
