@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ApiStatusService } from '@app/core/services/api-status.service';
 import { LayoutService } from '@app/core/services/layout.service';
 import { SnackbarService } from '@app/core/services/snackbar.service';
-import { FooterComponent } from '@app/features/footer/footer.component';
+import { FooterComponent } from '@app/shared/components/footer/footer.component';
 
 @Component({
   standalone: true,
