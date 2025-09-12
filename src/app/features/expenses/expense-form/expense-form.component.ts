@@ -7,6 +7,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { PaidByOption, PaidByOptionId } from '@app/core/models/paid-by-option.model';
 import { SnackbarService } from '@app/core/services/snackbar.service';
+import { FooterComponent } from '@app/shared/components/footer/footer.component';
 import { EXPENSE_CATEGORIES } from '@app/shared/data/expense-categories';
 import {
   detectQuickOptionFromParticipants,
@@ -16,7 +17,6 @@ import {
 import { CategorySelectorComponent } from '@features/expenses/components/category-selector/category-selector.component';
 import { CurrencySelectorComponent } from '@features/expenses/components/currency-selector/currency-selector.component';
 import { SplitSelectorComponent } from '@features/expenses/components/split-selector/split-selector.component';
-import { FooterComponent } from '@features/footer/footer.component';
 import { ExpenseExtended, ExpenseRequest, ExpenseUser } from '@models/expenses.model';
 import { GroupDetail } from '@models/group-detail.model';
 import { AuthService } from '@services/auth.service';
