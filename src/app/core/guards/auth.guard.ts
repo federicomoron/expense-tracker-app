@@ -3,6 +3,7 @@ import { toObservable } from '@angular/core/rxjs-interop';
 import { CanActivateFn, Router } from '@angular/router';
 import { filter, firstValueFrom, map } from 'rxjs';
 
+import { NAVIGATION_ROUTES } from '@constants/routes';
 import { AuthService } from '@services/auth.service';
 
 export const authGuard: CanActivateFn = async () => {
@@ -14,7 +15,7 @@ export const authGuard: CanActivateFn = async () => {
       filter((restored) => restored),
       map(() => {
         if (!auth.isLoggedIn()) {
-          void router.navigate(['/login']);
+          void router.navigate([NAVIGATION_ROUTES.LOGIN]);
           return false;
         }
         return true;

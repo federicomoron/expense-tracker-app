@@ -3,11 +3,11 @@ import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 
 import { API_ENDPOINTS } from '@constants/api-endpoints';
+import { NAVIGATION_ROUTES } from '@constants/routes';
 import { STORAGE_KEYS } from '@constants/storage-keys';
 import { environment } from '@environments/environment';
+import { LoginResponse, User } from '@models/auth.model';
 import { HttpService } from '@services/http.service';
-
-import { LoginResponse, User } from '../models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -53,12 +53,9 @@ export class AuthService {
   logout(redirect = true) {
     this._isLoggedIn.set(false);
     this._currentUser.set(null);
+    this.clearSession();
 
-    localStorage.removeItem(STORAGE_KEYS.IS_LOGGED_IN);
-    localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
-    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
-
-    if (redirect) void this.router.navigate(['/login']);
+    if (redirect) void this.router.navigate([NAVIGATION_ROUTES.LOGIN]);
   }
 
   private isTokenValid(token: string): boolean {
