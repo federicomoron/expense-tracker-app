@@ -1,9 +1,10 @@
 export const CURRENCY_SYMBOLS: Record<string, string> = {
   ARS: '$',
+  BRL: 'R$',
+  CLP: '$',
   EUR: '€',
   GBP: '£',
   JPY: '¥',
-  BRL: 'R$',
-  CLP: '$',
   MXN: '$',
+  USD: 'US$',
 };

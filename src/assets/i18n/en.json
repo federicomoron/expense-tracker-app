@@ -91,7 +91,7 @@
   },
   "groupType": {
     "trip": "Trip",
-    "home": "Home",
+    "house": "House",
     "couple": "Couple",
     "other": "Other"
   },
@@ -99,12 +99,13 @@
     "loading": "Loading expenses...",
     "empty": "No expenses recorded.",
     "youPaid": "You paid {{currency}} {{amount}}",
-    "paidBy": "{{name}} paid {{currency}} {{amount}}",
+    "paidBy": "{{name}} {{currency}} {{amount}}",
     "paidByMultiple": "{{names}} paid {{currency}} {{total}}",
     "youLent": "You lent",
     "youBorrowed": "You borrowed",
     "deletedSuccess": "Expense deleted successfully.",
-    "deleteError": "Error deleting expense."
+    "deleteError": "Error deleting expense.",
+    "equalParts": "Equal parts"
   },
   "expenseForm": {
     "back": "Go back",
@@ -138,7 +139,11 @@
   "splitSelector": {
     "paidBy": "Paid by",
     "split": "Split",
-    "select": "Select"
+    "select": "Select",
+    "you": "you"
+  },
+  "splitType": {
+    "equalParts": "equal parts"
   },
   "categorySelector": {
     "close": "Close category selector",
@@ -197,6 +202,7 @@
     "youPaidEqual": "You paid, split equally",
     "youAreOwed": "You are owed the total amount",
     "otherPaidEqual": "{{name}} paid, split equally",
+    "otherPaidEquale": "{{name}}",
     "otherIsOwed": "{{name}} is owed the total amount",
     "moreOptions": "More options"
   }

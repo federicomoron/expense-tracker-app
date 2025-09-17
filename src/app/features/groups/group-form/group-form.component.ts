@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
+import { NAVIGATION_ROUTES } from '@constants/routes';
 import { GROUP_TYPE_OPTIONS, GroupType } from '@models/group-type.enum';
 import { GroupService } from '@services/group.service';
 import { SharedUiModule } from '@shared/shared-ui.module';
@@ -32,7 +33,7 @@ export class GroupFormComponent {
   private snackBar = inject(MatSnackBar);
   private translate = inject(TranslateService);
 
-  //Cuando el backend agrege para poder cargar img reemplazamos el Onsubit por el comentado
+  // TODO:Cuando el backend agrege para poder cargar img reemplazamos el Onsubit por el comentado
 
   // onSubmit(event: Event) {
   //   event.preventDefault();
@@ -47,7 +48,7 @@ export class GroupFormComponent {
   //       })
   //       .subscribe({
   //         next: () => {
-  //           void this.router.navigate(['/groups']);
+  //           void this.router.navigate([NAVIGATION_ROUTES.GROUPS]);
   //         },
   //         error: () => {
   //           this.snackBar.open(
@@ -73,34 +74,8 @@ export class GroupFormComponent {
   //   }
   // }
 
-  onSubmit(event: Event) {
-    event.preventDefault();
-    this.submitted.set(true);
-
-    if (this.name().trim().length === 0) return;
-
-    this.isSubmitting = true;
-
-    this.groupService
-      .createGroup({
-        name: this.name(),
-        type: this.type(),
-        imageUrl: undefined,
-      })
-      .subscribe({
-        next: () => void this.router.navigate(['/groups']),
-        error: () => {
-          this.snackBar.open(
-            this.translate.instant('groupForm.errorCreating'),
-            this.translate.instant('common.close'),
-            { duration: 3000 },
-          );
-        },
-      });
-  }
-
   onCancel() {
-    void this.router.navigate(['/groups']);
+    void this.router.navigate([NAVIGATION_ROUTES.GROUPS]);
   }
 
   onNameInput(event: Event) {
@@ -124,5 +99,35 @@ export class GroupFormComponent {
       reader.onload = () => this.imagePreview.set(reader.result as string);
       reader.readAsDataURL(this.selectedImage);
     }
+  }
+
+  onSubmit(event: Event) {
+    event.preventDefault();
+    this.submitted.set(true);
+
+    if (!this.isFormValid()) return;
+
+    this.isSubmitting = true;
+
+    this.groupService
+      .createGroup({
+        name: this.name(),
+        type: this.type(),
+        imageUrl: undefined,
+      })
+      .subscribe({
+        next: () => void this.router.navigate([NAVIGATION_ROUTES.GROUPS]),
+        error: () => {
+          this.snackBar.open(
+            this.translate.instant('groupForm.errorCreating'),
+            this.translate.instant('common.close'),
+            { duration: 3000 },
+          );
+        },
+      });
+  }
+
+  private isFormValid() {
+    return this.name().trim().length > 0;
   }
 }

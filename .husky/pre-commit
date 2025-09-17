@@ -1,0 +1,9 @@
+
+# Run linters in all files
+yarn lint --max-warnings=0
+
+# Run Prettier to check formatting
+yarn format:check
+
+# Run TypeScript type check
+npx tsc --noEmit

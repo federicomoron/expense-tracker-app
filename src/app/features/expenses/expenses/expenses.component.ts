@@ -151,7 +151,7 @@ export class ExpensesComponent {
    * Calculates how much the current user lent or borrowed in a given expense.
    * Handles edge cases where one user paid everything or owes everything.
    */
-  getUserLent(exp: Expense, optionId?: string): number {
+  getUserLent(exp: Expense, _optionId?: string): number {
     const user = this.currentUser;
     if (!user) return 0;
 

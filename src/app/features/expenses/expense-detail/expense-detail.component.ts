@@ -6,9 +6,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { Expense, ExpenseExtended } from '@app/core/models/expenses.model';
+import { Expense, ExpenseExtended, ExpenseUser } from '@app/core/models/expenses.model';
 import { AuthService } from '@app/core/services/auth.service';
 import { ExpenseService } from '@app/core/services/expenses.service';
+import { EXPENSE_CATEGORIES } from '@app/shared/data/expense-categories';
 import {
   detectQuickOptionFromParticipants,
   findGroupIdInRoute,
@@ -84,15 +85,85 @@ export class ExpenseDetailComponent {
       return;
     }
 
+    const participants = expense.participants ?? [];
+    const groupSize = participants.length;
+
+    let paidBy: ExpenseUser[] =
+      Array.isArray(expense.paidBy) && expense.paidBy.length
+        ? expense.paidBy.map((p) => ({ userId: p.userId, amount: Number(p.amount) }))
+        : [];
+
+    // if paidBy is empty, try to find participants with amount > 0 (in case paidBy was not saved but participants was)
+    if (paidBy.length === 0) {
+      const payerParticipants = participants.filter((p) => Number(p.amount) > 0);
+      if (payerParticipants.length > 0) {
+        // if multiple, take them all (could be a group payment)
+        paidBy = payerParticipants.map((p) => ({ userId: p.userId, amount: Number(p.amount) }));
+      }
+    }
+
+    // Fallback: if no paidBy, try to find a payer in participants, otherwise use currentUser as last resort
+    if (paidBy.length === 0) {
+      const payer = participants.find((p) => Number(p.amount) > 0);
+      if (payer) {
+        paidBy = [{ userId: payer.userId, amount: Number(payer.amount) }];
+      } else {
+        const currentUserId = this.currentUserId ?? null;
+        if (currentUserId) {
+          paidBy = [{ userId: currentUserId, amount: Number(expense.total) }];
+        }
+      }
+    }
+
+    let splits: ExpenseUser[] =
+      Array.isArray(expense.splits) && expense.splits.length
+        ? expense.splits.map((s) => ({ userId: s.userId, amount: Number(s.amount) }))
+        : [];
+
+    if (splits.length === 0 && groupSize >= 1) {
+      // if splits is empty, use participants amounts as  fallback
+      splits = participants.map((p) => ({ userId: p.userId, amount: Number(p.amount) }));
+
+      // if the sum is 0 (no amounts), split equally
+      const sum = splits.reduce((acc, s) => acc + s.amount, 0);
+      if (Math.abs(sum) < 0.0001) {
+        const totalNum = Number(expense.total);
+        const equalSplit = Math.floor((totalNum / groupSize) * 100) / 100;
+        splits = participants.map((p, i) => ({
+          userId: p.userId,
+          amount:
+            i === groupSize - 1
+              ? Math.round((totalNum - equalSplit * (groupSize - 1)) * 100) / 100
+              : equalSplit,
+        }));
+      }
+    }
+
     const optionId =
       expense.optionId ?? detectQuickOptionFromParticipants(expense, this.currentUserId);
+
+    // Try to infer category if not set
+    let category = expense.category;
+    if (!category && expense.description) {
+      // Try to infer category from description
+      const desc = expense.description.toLowerCase();
+      const matchedCategory = EXPENSE_CATEGORIES.find(
+        (c: any) =>
+          c.label.toLowerCase() === desc ||
+          c.key.toLowerCase() === desc ||
+          (c.keywords && c.keywords.some((k: string) => desc.includes(k))),
+      );
+      if (matchedCategory) {
+        category = matchedCategory.key;
+      }
+    }
 
     const expenseForEdit: ExpenseExtended = {
       ...expense,
       optionId,
-      paidBy: expense.paidBy,
-      splits: expense.splits,
-      category: expense.category,
+      paidBy,
+      splits,
+      category,
     };
 
     void this.router.navigate(['/groups', expense.groupId, 'expenses', expense.id, 'edit'], {

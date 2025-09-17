@@ -42,17 +42,6 @@ export class SplitSelectorComponent {
         label: this.getPaidByLabelFromId(currentOption.id),
       });
     }
-
-    // Set current user as default payer if no payer selected yet
-    if (members.length && !this.selectedPayer()) {
-      const currentUserId = this.authService.currentUser()?.id;
-      if (currentUserId) {
-        const member = members.find((m) => m.userId === currentUserId);
-        if (member) {
-          this.selectedPayer.set(member);
-        }
-      }
-    }
   }
 
   options = signal<PaidByOption[]>([
@@ -94,29 +83,6 @@ export class SplitSelectorComponent {
   selectedPayer = signal<{ userId: number; name: string } | null>(null);
   selectedSplitType = signal<string | null>(null);
   selectedOption = signal<PaidByOption | null>(null);
-
-  /** Returns label for a given optionId, using other member's name if needed */
-  private getPaidByLabelFromId(optionId: PaidByOptionId): string {
-    const currentUserId = this.authService.currentUser()?.id;
-    const otherMember = this.groupMembers.find((m) => m.userId !== currentUserId);
-
-    switch (optionId) {
-      case 'you_paid_equal':
-        return this.translate.instant('paidByQuickDialog.youPaidEqual');
-      case 'you_are_owed':
-        return this.translate.instant('paidByQuickDialog.youAreOwed');
-      case 'other_paid_equal':
-        return this.translate.instant('paidByQuickDialog.otherPaidEqual', {
-          name: otherMember?.name || '',
-        });
-      case 'other_is_owed':
-        return this.translate.instant('paidByQuickDialog.otherIsOwed', {
-          name: otherMember?.name || '',
-        });
-      default:
-        return this.translate.instant('expenseForm.defaultLabel');
-    }
-  }
 
   openPaidByDialog() {
     if (!this.groupMembers || this.groupMembers.length === 0) return;
@@ -175,9 +141,13 @@ export class SplitSelectorComponent {
   }
 
   setPayer(userId: number) {
+    // search member by userId, but if not found, still set userId with empty name
     const member = this.groupMembers.find((m) => m.userId === userId);
     if (member) {
       this.selectedPayer.set(member);
+    } else {
+      // fallback: set userId even if not in the list
+      this.selectedPayer.set({ userId, name: '' });
     }
   }
 
@@ -186,7 +156,52 @@ export class SplitSelectorComponent {
   }
 
   getPaidByLabel(): string {
-    const option = this.selectedOption();
-    return option?.label || this.translate.instant('expenseForm.defaultLabel');
+    // special case: group of 2 people
+    if (this.groupMembers.length === 2) {
+      const option = this.selectedOption();
+      return option?.label || this.translate.instant('expenseForm.defaultLabel');
+    }
+
+    // special case: group of 1 person
+    if (this.groupMembers.length === 1) {
+      return this.translate.instant('splitSelector.you');
+    }
+
+    // special case: 3 or more members
+    const payer = this.selectedPayer();
+    const currentUserId = this.authService.currentUser()?.id;
+    if (payer) {
+      return payer.userId === currentUserId
+        ? this.translate.instant('splitSelector.you')
+        : payer.name;
+    }
+    return '';
+  }
+
+  getSplitTypeLabel(): string {
+    // Always show "Equal parts" as default/fallback
+    return this.selectedSplitType() || this.translate.instant('splitType.equalParts');
+  }
+
+  private getPaidByLabelFromId(optionId: PaidByOptionId, payerName?: string): string {
+    const currentUserId = this.authService.currentUser()?.id;
+    const otherMember = this.groupMembers.find((m) => m.userId !== currentUserId);
+
+    switch (optionId) {
+      case 'you_paid_equal':
+        return this.translate.instant('paidByQuickDialog.youPaidEqual');
+      case 'you_are_owed':
+        return this.translate.instant('paidByQuickDialog.youAreOwed');
+      case 'other_paid_equal':
+        return this.translate.instant('paidByQuickDialog.otherPaidEqual', {
+          name: payerName ?? otherMember?.name ?? '',
+        });
+      case 'other_is_owed':
+        return this.translate.instant('paidByQuickDialog.otherIsOwed', {
+          name: payerName ?? otherMember?.name ?? '',
+        });
+      default:
+        return this.translate.instant('expenseForm.defaultLabel');
+    }
   }
 }

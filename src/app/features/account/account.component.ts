@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { TranslocoModule } from '@jsverse/transloco';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { I18nService } from '@app/core/services/i18n.service';
@@ -18,7 +17,6 @@ import { SharedUiModule } from '@shared/shared-ui.module';
     SharedUiModule,
     ThemeToggleComponent,
     PwaInstallButtonComponent,
-    TranslocoModule,
     TranslateModule,
   ],
   templateUrl: './account.component.html',

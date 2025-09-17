@@ -77,7 +77,7 @@
   font-weight: 500;
   border: none;
   background: transparent;
-  color: var(--app-text);
+  color: var(--app-error);
   cursor: pointer;
   border-radius: 8px;
   transition: background-color 0.2s ease;
@@ -113,7 +113,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 15px;
 }
 
 .lang-flag {

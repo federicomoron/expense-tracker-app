@@ -1,13 +1,13 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs/operators';
+import { mergeMap, of, throwError } from 'rxjs';
 
 import { API_ENDPOINTS } from '@constants/api-endpoints';
+import { NAVIGATION_ROUTES } from '@constants/routes';
 import { STORAGE_KEYS } from '@constants/storage-keys';
 import { environment } from '@environments/environment';
+import { LoginResponse, User } from '@models/auth.model';
 import { HttpService } from '@services/http.service';
-
-import { LoginResponse, User } from '../models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -26,18 +26,19 @@ export class AuthService {
 
   login(email: string, password: string) {
     const loginRequest = { email, password };
+
     return this.http
       .post<
         LoginResponse,
         typeof loginRequest
       >(`${this.apiUrl}${API_ENDPOINTS.LOGIN}`, loginRequest)
       .pipe(
-        tap((res) => {
+        mergeMap((res) => {
           const user = res.data?.user;
           const token = res.data?.token;
 
           if (!res.success || !user || !token) {
-            throw new Error('Invalid response from server');
+            return throwError(() => new Error('Invalid response from server'));
           }
 
           this._isLoggedIn.set(true);
@@ -46,6 +47,8 @@ export class AuthService {
           localStorage.setItem(STORAGE_KEYS.IS_LOGGED_IN, 'true');
           localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
           localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
+
+          return of(res);
         }),
       );
   }
@@ -53,12 +56,9 @@ export class AuthService {
   logout(redirect = true) {
     this._isLoggedIn.set(false);
     this._currentUser.set(null);
+    this.clearSession();
 
-    localStorage.removeItem(STORAGE_KEYS.IS_LOGGED_IN);
-    localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
-    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
-
-    if (redirect) void this.router.navigate(['/login']);
+    if (redirect) void this.router.navigate([NAVIGATION_ROUTES.LOGIN]);
   }
 
   private isTokenValid(token: string): boolean {
@@ -86,7 +86,7 @@ export class AuthService {
         const user = JSON.parse(userJson);
         this._isLoggedIn.set(true);
         this._currentUser.set(user);
-      } catch (e) {
+      } catch {
         this.clearSession();
       }
     } else {

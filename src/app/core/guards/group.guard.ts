@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, CanActivateFn, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+import { NAVIGATION_ROUTES } from '@constants/routes';
 import { AuthService } from '@services/auth.service';
 import { GroupService } from '@services/group.service';
 
@@ -22,7 +23,7 @@ export const groupGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   const groupId = idParam ? Number(idParam) : NaN;
 
   if (!userEmail || isNaN(groupId)) {
-    void router.navigate(['/groups']);
+    void router.navigate([NAVIGATION_ROUTES.GROUPS]);
     return of(false);
   }
 
@@ -32,13 +33,13 @@ export const groupGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
       const belongsToGroup = groups.some((g) => g.id === groupId);
 
       if (!belongsToGroup) {
-        void router.navigate(['/groups']);
+        void router.navigate([NAVIGATION_ROUTES.GROUPS]);
       }
 
       return belongsToGroup;
     }),
     catchError(() => {
-      void router.navigate(['/groups']);
+      void router.navigate([NAVIGATION_ROUTES.GROUPS]);
       return of(false);
     }),
   );

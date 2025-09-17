@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+import { ROUTES } from '@constants/routes';
 import { authGuard } from '@core/guards/auth.guard';
 
 import { AppLayoutComponent } from './layouts/app-layout/app-layout.component';
@@ -7,7 +8,7 @@ import { FullscreenLayoutComponent } from './layouts/fulllscreen-layout/fullscre
 
 export const routes: Routes = [
   {
-    path: 'groups/new',
+    path: ROUTES.NEW_GROUP,
     component: FullscreenLayoutComponent,
     children: [
       {
@@ -30,7 +31,7 @@ export const routes: Routes = [
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'groups' },
       {
-        path: 'groups/new',
+        path: ROUTES.NEW_GROUP,
         loadComponent: () =>
           import('@features/groups/group-form/group-form.component').then(
             (m) => m.GroupFormComponent,
