@@ -1,6 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs/operators';
+import { mergeMap, of, throwError } from 'rxjs';
 
 import { API_ENDPOINTS } from '@constants/api-endpoints';
 import { NAVIGATION_ROUTES } from '@constants/routes';
@@ -26,18 +26,19 @@ export class AuthService {
 
   login(email: string, password: string) {
     const loginRequest = { email, password };
+
     return this.http
       .post<
         LoginResponse,
         typeof loginRequest
       >(`${this.apiUrl}${API_ENDPOINTS.LOGIN}`, loginRequest)
       .pipe(
-        tap((res) => {
+        mergeMap((res) => {
           const user = res.data?.user;
           const token = res.data?.token;
 
           if (!res.success || !user || !token) {
-            throw new Error('Invalid response from server');
+            return throwError(() => new Error('Invalid response from server'));
           }
 
           this._isLoggedIn.set(true);
@@ -46,6 +47,8 @@ export class AuthService {
           localStorage.setItem(STORAGE_KEYS.IS_LOGGED_IN, 'true');
           localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
           localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
+
+          return of(res);
         }),
       );
   }
