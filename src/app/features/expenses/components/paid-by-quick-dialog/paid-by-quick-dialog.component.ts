@@ -4,6 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { PaidByOption } from '@app/core/models/paid-by-option.model';
+import { AuthService } from '@app/core/services/auth.service';
 import { SharedUiModule } from '@shared/shared-ui.module';
 
 @Component({
@@ -16,6 +17,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
 export class PaidByQuickDialogComponent {
   private dialogRef = inject(MatDialogRef<PaidByQuickDialogComponent>);
   private translate = inject(TranslateService);
+  private authService = inject(AuthService);
   private data = inject(MAT_DIALOG_DATA) as {
     members: { userId: number; name: string }[];
     selectedOption?: PaidByOption | null;
@@ -25,9 +27,9 @@ export class PaidByQuickDialogComponent {
   options = signal<PaidByOption[]>([]);
 
   constructor() {
-    const otherMember = this.data.members.find((m) => m.userId !== 0);
+    const currentUserId = this.authService.currentUser()?.id;
+    const otherMember = this.data.members.find((m) => m.userId !== currentUserId);
 
-    // Define default quick options
     const defaultOptions: PaidByOption[] = [
       { id: 'you_paid_equal', label: this.translate.instant('paidByQuickDialog.youPaidEqual') },
       { id: 'you_are_owed', label: this.translate.instant('paidByQuickDialog.youAreOwed') },
@@ -47,7 +49,6 @@ export class PaidByQuickDialogComponent {
 
     this.options.set(defaultOptions);
 
-    // Set initial selection
     const selectedId = this.data.selectedOption?.id;
     const selected = defaultOptions.find((o) => o.id === selectedId);
     this._selectedOption.set(selected ?? defaultOptions[0]);
