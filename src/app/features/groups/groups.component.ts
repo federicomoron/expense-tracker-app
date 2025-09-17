@@ -10,6 +10,7 @@ import { AuthService } from '@app/core/services/auth.service';
 import { SnackbarService } from '@app/core/services/snackbar.service';
 import { getGroupImage } from '@app/shared/helpers/group-type-image-map';
 import { CurrencySymbolPipe } from '@app/shared/pipes/currency-symbol.pipe';
+import { NAVIGATION_ROUTES } from '@constants/routes';
 import { environment } from '@environments/environment';
 import { GroupFormComponent } from '@features/groups/group-form/group-form.component';
 import { GroupType } from '@models/group-type.enum';
@@ -24,6 +25,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
   styleUrls: ['./groups.component.scss'],
 })
 export class GroupsComponent implements OnInit {
+  NAVIGATION_ROUTES = NAVIGATION_ROUTES;
   readonly showForm = signal(false);
   readonly groups = computed(() => this.groupService.groups());
   readonly GroupType = GroupType;
@@ -112,7 +114,7 @@ export class GroupsComponent implements OnInit {
   }
 
   goToNewGroup() {
-    void this.router.navigateByUrl('/groups/new');
+    void this.router.navigateByUrl(NAVIGATION_ROUTES.NEW_GROUP);
   }
 
   readonly activeGroups = computed(() =>

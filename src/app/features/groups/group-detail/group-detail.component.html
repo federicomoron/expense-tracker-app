@@ -1,9 +1,11 @@
 <div class="group-detail-container">
-  <img
-    class="group-banner"
-    [src]="getGroupImage(group()?.type, group()?.imageUrl)"
-    alt="Group banner"
-  />
+  @if (!loading() && group()) {
+    <img
+      class="group-banner"
+      [src]="getGroupImage(group()?.type, group()?.imageUrl)"
+      alt="Group banner"
+    />
+  }
 
   <h2 class="group-title">{{ group()?.name }}</h2>
 

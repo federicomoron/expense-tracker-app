@@ -2,6 +2,8 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 
+import { environment } from '@environments/environment';
+
 import { ApiStatusService } from './api-status.service';
 
 @Injectable({ providedIn: 'root' })
@@ -10,12 +12,15 @@ export class HttpService {
   private apiStatus = inject(ApiStatusService);
 
   private handleError(error: HttpErrorResponse, method: string) {
-    console.error(`[HTTP ${method} error]`, error);
-
     if (error.status === 0) {
       this.apiStatus.setReachable(false);
     } else {
       this.apiStatus.setReachable(true);
+    }
+
+    // only log in development
+    if (!environment.production) {
+      console.warn(`[HTTP ${method} warning]`, error.status, error.message);
     }
 
     return throwError(() => error);

@@ -72,6 +72,7 @@
       <app-split-selector
         [groupMembers]="group.members"
         [selectedOptionId]="selectedOptionIdForSplit"
+        (payerChanged)="onPayerChanged($event)"
       ></app-split-selector>
     </form>
 

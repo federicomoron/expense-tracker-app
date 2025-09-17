@@ -1,13 +1,43 @@
 <div class="selector-buttons">
   @if (groupMembers && groupMembers.length > 0) {
-    <button
-      type="button"
-      class="selector-button"
-      (click)="openPaidByDialog()"
-      aria-label="splitSelector.paidBy"
-    >
-      <mat-icon>person</mat-icon>
-      <span>{{ getPaidByLabel() }}</span>
-    </button>
+    <!-- Groups 2 members, only one button -->
+    @if (groupMembers.length === 2) {
+      <button
+        type="button"
+        class="selector-button"
+        (click)="openPaidByDialog()"
+        aria-label="splitSelector.paidBy"
+      >
+        <mat-icon>person</mat-icon>
+        <span>{{ getPaidByLabel() }}</span>
+      </button>
+    } @else {
+      <!-- Groups 1 member, 3 or more members, two buttons -->
+      <div class="selector-container">
+        <div class="selector-row">
+          <span class="label">Pagado por</span>
+          <button
+            type="button"
+            class="selector-button"
+            (click)="openPaidByDialog()"
+            aria-label="splitSelector.paidBy"
+          >
+            <span>{{ getPaidByLabel() }}</span>
+          </button>
+        </div>
+
+        <div class="selector-row">
+          <span class="label">y dividido</span>
+          <button
+            type="button"
+            class="selector-button"
+            (click)="openSplitTypeDialog()"
+            aria-label="splitSelector.splitType"
+          >
+            <span>{{ getSplitTypeLabel() }}</span>
+          </button>
+        </div>
+      </div>
+    }
   }
 </div>

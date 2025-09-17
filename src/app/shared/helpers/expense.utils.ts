@@ -31,7 +31,6 @@ export function detectQuickOptionFromParticipants(
     else if (amt < 0) neg.set(p.userId, (neg.get(p.userId) || 0) + Math.abs(amt));
   }
 
-  const totalPos = Math.round(sumMap(pos) * 100) / 100;
   const totalNeg = Math.round(sumMap(neg) * 100) / 100;
   const eq = (a: number, b: number, tol = 0.01) => Math.abs(a - b) <= tol;
 
@@ -70,7 +69,7 @@ export function detectQuickOptionFromParticipants(
 export function resolvePayerNameFromExpense(
   expense: Expense | ExpenseExtended,
   members: GroupMember[] | undefined,
-  currentUserId?: number | null,
+  _currentUserId?: number | null,
 ): string {
   const paidBy = (expense as any).paidBy;
   if (Array.isArray(paidBy) && paidBy.length > 0) {

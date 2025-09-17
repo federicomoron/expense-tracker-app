@@ -91,7 +91,7 @@
   },
   "groupType": {
     "trip": "Viaje",
-    "home": "Casa",
+    "house": "Casa",
     "couple": "Pareja",
     "other": "Otro"
   },
@@ -99,12 +99,13 @@
     "loading": "Cargando gastos...",
     "empty": "No hay gastos registrados.",
     "youPaid": "Pagaste {{currency}} {{amount}}",
-    "paidBy": "{{name}} pagó {{currency}} {{amount}}",
+    "paidBy": "{{name}} {{currency}} {{amount}}",
     "paidByMultiple": "{{names}} pagaron {{currency}} {{total}}",
     "youLent": "prestaste",
     "youBorrowed": "pediste",
     "deletedSuccess": "Gasto eliminado correctamente.",
-    "deleteError": "Error al eliminar el gasto."
+    "deleteError": "Error al eliminar el gasto.",
+    "equalParts": "a partes iguales"
   },
   "expenseForm": {
     "back": "Volver",
@@ -138,7 +139,11 @@
   "splitSelector": {
     "paidBy": "Pagado por",
     "split": "Dividir",
-    "select": "Seleccionar"
+    "select": "Seleccionar",
+    "you": "ti"
+  },
+  "splitType": {
+    "equalParts": "a partes iguales"
   },
   "categorySelector": {
     "close": "Cerrar selector de categoría",
@@ -176,7 +181,7 @@
     "close": "Cerrar diálogo de tipo de división",
     "title": "Tipo de división",
     "options": {
-      "equal": "Igual",
+      "equal": "A partes iguales",
       "percentage": "Porcentaje",
       "shares": "Participaciones"
     }
@@ -197,6 +202,7 @@
     "youPaidEqual": "Tú pagaste, dividido a partes iguales",
     "youAreOwed": "Se te debe la cantidad total",
     "otherPaidEqual": "{{name}} pagó, dividido a partes iguales",
+    "otherPaidEquale": "{{name}}",
     "otherIsOwed": "A {{name}} se le debe la cantidad total",
     "moreOptions": "Más opciones"
   }

@@ -5,6 +5,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { SnackbarService } from '@app/core/services/snackbar.service';
 import { ExpButtonComponent } from '@app/shared/components/exp-button/exp-button.component';
+import { NAVIGATION_ROUTES } from '@constants/routes';
 import { UserService } from '@services/user.service';
 import { SharedUiModule } from '@shared/shared-ui.module';
 import { nonEmpty, strongPassword, validEmail } from '@shared/utils/form-validators';
@@ -67,7 +68,7 @@ export class RegisterComponent {
   }
 
   goBack() {
-    void this.router.navigate(['/login']);
+    void this.router.navigate([NAVIGATION_ROUTES.LOGIN]);
   }
 
   togglePasswordVisibility() {

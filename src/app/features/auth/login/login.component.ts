@@ -4,15 +4,21 @@ import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { SnackbarService } from '@app/core/services/snackbar.service';
+import { ExpButtonSpinnerComponent } from '@app/shared/components/exp-button-spinner/exp-button-spinner.component';
 import { AuthService } from '@services/auth.service';
-import { ExpButtonComponent } from '@shared/components/exp-button/exp-button.component';
 import { SharedUiModule } from '@shared/shared-ui.module';
 import { nonEmpty, validEmail } from '@shared/utils/form-validators';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [SharedUiModule, RouterModule, ExpButtonComponent, TranslateModule, ReactiveFormsModule],
+  imports: [
+    SharedUiModule,
+    RouterModule,
+    ExpButtonSpinnerComponent,
+    TranslateModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
@@ -34,14 +40,50 @@ export class LoginComponent {
     });
   }
 
+  get inputPasswordType(): string {
+    return this.showPassword() ? 'text' : 'password';
+  }
+
+  get title(): string {
+    return this.translate.instant('login.title');
+  }
+
+  get emailLabel(): string {
+    return this.translate.instant('login.emailLabel');
+  }
+
+  get button(): string {
+    return this.translate.instant('login.loginButton');
+  }
+
+  get noAccount(): string {
+    return this.translate.instant('login.noAccount');
+  }
+
+  get registerHere(): string {
+    return this.translate.instant('login.registerHere');
+  }
+
+  get passwordLabel(): string {
+    return this.translate.instant('login.passwordLabel');
+  }
+
+  get togglePasswordVisibilityLabel(): string {
+    return this.showPassword()
+      ? this.translate.instant('login.hidePassword')
+      : this.translate.instant('login.showPassword');
+  }
+
   getError(controlName: string): string | null {
     const control = this.form.get(controlName);
     if (!control || !control.touched || !control.invalid) return null;
 
-    if (control.errors?.['required'] || control.errors?.['nonEmpty']) {
+    const controlError = control.errors;
+
+    if (controlError?.['required'] || controlError?.['nonEmpty']) {
       return this.translate.instant('validation.nonEmpty');
     }
-    if (control.errors?.['email'] || control.errors?.['emailInvalid']) {
+    if (controlError?.['email'] || controlError?.['emailInvalid']) {
       return this.translate.instant('validation.emailInvalid');
     }
 

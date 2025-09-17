@@ -4,7 +4,6 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { provideServiceWorker } from '@angular/service-worker';
 import { TranslateService } from '@ngx-translate/core';
 
-import { provideTranslocoConfig } from '@app/core/config/transloco.config';
 import { applyTheme } from '@app/core/services/theme.service';
 
 import { AppComponent } from './app/app.component';
@@ -21,7 +20,6 @@ void bootstrapApplication(AppComponent, {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:3000',
     }),
-    provideTranslocoConfig(),
   ],
 }).then((appRef) => {
   const translate = appRef.injector.get(TranslateService);
