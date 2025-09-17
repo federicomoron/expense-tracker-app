@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { SharedUiModule } from '@shared/shared-ui.module';
 
@@ -14,11 +14,11 @@ import { SharedUiModule } from '@shared/shared-ui.module';
 })
 export class SplitTypeDialogComponent {
   private dialogRef = inject(MatDialogRef<SplitTypeDialogComponent>);
-  options = signal(['Equally', 'Unequally']);
-  selectedOption = signal<string | null>(null);
+  private translate = inject(TranslateService);
+
+  options = [this.translate.instant('splitType.equalParts')];
 
   choose(option: string): void {
-    this.selectedOption.set(option);
     this.dialogRef.close(option);
   }
 

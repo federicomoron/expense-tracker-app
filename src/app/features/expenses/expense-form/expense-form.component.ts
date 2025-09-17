@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,7 +12,6 @@ import { EXPENSE_CATEGORIES } from '@app/shared/data/expense-categories';
 import {
   detectQuickOptionFromParticipants,
   findGroupIdInRoute,
-  resolvePayerNameFromExpense,
 } from '@app/shared/helpers/expense.utils';
 import { CategorySelectorComponent } from '@features/expenses/components/category-selector/category-selector.component';
 import { CurrencySelectorComponent } from '@features/expenses/components/currency-selector/currency-selector.component';
@@ -52,6 +51,7 @@ export class ExpenseFormComponent implements OnInit {
   private groupService = inject(GroupService);
   private snackbar = inject(SnackbarService);
   private translate = inject(TranslateService);
+  private cdr = inject(ChangeDetectorRef);
 
   @ViewChild(SplitSelectorComponent) splitSelectorComponent!: SplitSelectorComponent;
   @ViewChild(FooterComponent) footerComponent!: FooterComponent;
@@ -86,57 +86,54 @@ export class ExpenseFormComponent implements OnInit {
       : null;
     this.isEditMode = !!this.expenseId;
 
-    // Detect groupId using the imported function
     const groupId = findGroupIdInRoute(this.route);
     if (!groupId) return;
     this.groupId = groupId;
 
-    // Load group details
     this.groupService.getGroupDetail(this.groupId).subscribe({
       next: (group) => {
         this.group = group;
 
         let expenseFromState = history.state?.expense as ExpenseExtended | undefined;
 
-        // If editing, try to get the expense from state or group expenses
+        // if we are editing, look for the expense in the state or in the group's expenses
         if (!expenseFromState && this.isEditMode) {
           expenseFromState = group.expenses?.find((e) => e.id === this.expenseId);
         }
 
         if (!expenseFromState) {
+          // new expense
           this.isEditMode = false;
-
-          // Default quick option for a new expense
           this.selectedPaidByOption = {
             id: 'you_paid_equal',
             label: this.translate.instant('paidByQuickDialog.youPaidEqual'),
           };
           this.selectedOptionIdForSplit = 'you_paid_equal';
 
-          setTimeout(() => {
-            this.splitSelectorComponent?.selectedOption.set(this.selectedPaidByOption);
-            const currentUserId = this.authService.currentUser()?.id;
-            if (currentUserId) {
-              this.splitSelectorComponent?.setPayer(currentUserId);
-              const payerSignal = this.splitSelectorComponent?.getSelectedPayerSignal();
-              if (payerSignal) this.selectedPayer = payerSignal();
-            }
-          });
-        } else {
-          // Editing an existing expense
-          if (!expenseFromState.optionId) {
-            const currentUserId = this.authService.currentUser()?.id;
-            expenseFromState.optionId = detectQuickOptionFromParticipants(
-              expenseFromState,
-              currentUserId,
-            );
+          // set default payer as current user
+          const currentUserId = this.authService.currentUser()?.id;
+          if (currentUserId) {
+            const member = this.group?.members.find((m) => m.userId === currentUserId);
+            this.selectedPayer = member
+              ? { userId: member.userId, name: member.name }
+              : { userId: currentUserId, name: '' };
           }
 
-          this.initializeSelectedOption(expenseFromState);
+          setTimeout(() => {
+            if (this.splitSelectorComponent) {
+              this.splitSelectorComponent.selectedOption.set(this.selectedPaidByOption);
+              if (this.selectedPayer) {
+                this.splitSelectorComponent.setPayer(this.selectedPayer.userId);
+              }
+            }
+          }, 60);
+        } else {
+          // editing existing expense
+          this.isEditMode = true;
           this.expenseToEdit.set(expenseFromState);
           this.expenseId = expenseFromState.id;
-          this.isEditMode = true;
 
+          // patch form
           this.expenseForm.patchValue({
             description: expenseFromState.description,
             total: expenseFromState.total,
@@ -149,36 +146,58 @@ export class ExpenseFormComponent implements OnInit {
             this.updateCategoryIcon(expenseFromState.category);
           }
 
+          // detect payer and quick option
           const currentUserId = this.authService.currentUser()?.id;
-          const payerName = resolvePayerNameFromExpense(
-            expenseFromState,
-            group.members,
-            currentUserId,
-          );
-
-          if (expenseFromState.optionId) {
-            const optionId = expenseFromState.optionId as PaidByOptionId;
-            const newLabel = this.mapOptionIdToLabel(optionId, payerName);
-            this.selectedPaidByOption = { id: optionId, label: newLabel };
-            setTimeout(() => {
-              this.splitSelectorComponent?.selectedOption.set(this.selectedPaidByOption);
-              this.selectedOptionIdForSplit = optionId;
-            });
+          let optionId = expenseFromState.optionId as PaidByOptionId | undefined;
+          if (!optionId) {
+            optionId = detectQuickOptionFromParticipants(expenseFromState, currentUserId);
           }
 
+          // determine real payer
+          let payerId: number | undefined;
+          if (expenseFromState.paidBy && expenseFromState.paidBy.length > 0) {
+            payerId = expenseFromState.paidBy[0].userId;
+          } else if (expenseFromState.participants && expenseFromState.participants.length > 0) {
+            const payer = expenseFromState.participants.find((p) => Number(p.amount) > 0);
+            payerId = payer?.userId;
+          }
+
+          // search payer name
+          let payerName = '';
+          if (payerId) {
+            const member = group.members.find((m) => m.userId === payerId);
+            payerName = member?.name ?? '';
+          }
+
+          // build PaidByOption
+          const newLabel = this.mapOptionIdToLabel(optionId!, payerName);
+          this.selectedPaidByOption = { id: optionId!, label: newLabel };
+          this.selectedOptionIdForSplit = optionId!;
+
+          // set selected payer
+          if (payerId) {
+            const member = group.members.find((m) => m.userId === payerId);
+            this.selectedPayer = member ? { userId: member.userId, name: member.name } : null;
+          }
+
+          // synchronize SplitSelectorComponent after rendering
           setTimeout(() => {
-            const currentUserId = this.authService.currentUser()?.id;
-            if (currentUserId) {
-              this.splitSelectorComponent?.setPayer(currentUserId);
-              const payerSignal = this.splitSelectorComponent?.getSelectedPayerSignal();
-              if (payerSignal) this.selectedPayer = payerSignal();
+            if (this.splitSelectorComponent) {
+              // clear payer before setting it to avoid setter overwriting
+              this.splitSelectorComponent.selectedPayer.set(null);
+              if (this.selectedPayer) {
+                this.splitSelectorComponent.setPayer(this.selectedPayer.userId);
+              }
+              this.splitSelectorComponent.selectedOption.set(this.selectedPaidByOption);
+              // force change detection to update view
+              this.cdr.detectChanges();
             }
-          }, 0);
+          }, 60);
         }
 
+        // update category automatically based on description
         this.expenseForm.get('description')?.valueChanges.subscribe((desc: string) => {
           const lowerDesc = desc?.toLowerCase() || '';
-
           const matchedCategory = EXPENSE_CATEGORIES.find(
             (c) =>
               c.label.toLowerCase() === lowerDesc ||
@@ -187,19 +206,15 @@ export class ExpenseFormComponent implements OnInit {
           );
 
           if (matchedCategory) {
-            // Matched with an official category
-            // Update signals for key, label, and icon
             this.selectedCategory.set(matchedCategory.key);
             this.selectedCategoryLabel.set(matchedCategory.label);
             this.selectedCategoryIcon.set(matchedCategory.icon);
           } else {
-            // No match in official categories → reset signals to default
             this.selectedCategory.set(null);
             this.selectedCategoryLabel.set(null);
             this.selectedCategoryIcon.set('/assets/category-default.svg');
           }
 
-          // Update the form's category field (even if null), without triggering valueChanges
           this.expenseForm.patchValue(
             { category: matchedCategory?.key || null },
             { emitEvent: false },
@@ -212,24 +227,25 @@ export class ExpenseFormComponent implements OnInit {
     });
   }
 
-  private initializeSelectedOption(expense: ExpenseExtended) {
-    const validOptions: PaidByOptionId[] = [
-      'you_paid_equal',
-      'you_are_owed',
-      'other_paid_equal',
-      'other_is_owed',
-    ];
-    if (expense.optionId && validOptions.includes(expense.optionId)) {
-      this.selectedPaidByOption = {
-        id: expense.optionId,
-        label: this.mapOptionIdToLabel(expense.optionId),
-      };
-      this.splitSelectorComponent?.selectedOption.set(this.selectedPaidByOption);
-      this.selectedOptionIdForSplit = expense.optionId;
-    } else {
-      this.selectedPaidByOption = null;
-      this.selectedOptionIdForSplit = null;
-    }
+  ngAfterViewInit() {
+    setTimeout(() => {
+      if (this.isEditMode && this.expenseToEdit() && this.splitSelectorComponent) {
+        const expense = this.expenseToEdit();
+        let payerId: number | undefined;
+        if (expense?.paidBy && expense.paidBy.length > 0) {
+          payerId = expense.paidBy[0].userId;
+        } else if (expense?.participants && expense.participants.length > 0) {
+          const payer = expense.participants.find((p) => Number(p.amount) > 0);
+          payerId = payer?.userId;
+        }
+        if (payerId) {
+          this.splitSelectorComponent.setPayer(payerId);
+        }
+        if (this.selectedPaidByOption) {
+          this.splitSelectorComponent.selectedOption.set(this.selectedPaidByOption);
+        }
+      }
+    }, 0);
   }
 
   mapOptionIdToLabel(optionId: PaidByOptionId, payerName?: string): string {
@@ -253,7 +269,6 @@ export class ExpenseFormComponent implements OnInit {
     if (!this.groupId || !this.group) return;
 
     this.expenseForm.markAllAsTouched();
-
     if (this.expenseForm.invalid) return;
 
     const currentUser = this.authService.currentUser();
@@ -269,17 +284,21 @@ export class ExpenseFormComponent implements OnInit {
 
     const groupMembers = this.group.members.map((m) => m.userId);
     const selectedOption = this.splitSelectorComponent?.selectedOption?.();
+    const selectedPayer = this.splitSelectorComponent?.selectedPayer()?.userId ?? currentUser.id;
+
     if (!selectedOption?.id) {
       console.error(this.translate.instant('expenseForm.noPayerSelected'));
       return;
     }
 
-    const otherMember = this.group.members.find((m) => m.userId !== currentUser.id);
-
     let paidBy: ExpenseUser[] = [{ userId: currentUser.id, amount: total }];
-    let splits: ExpenseUser[] = this.buildSplits(groupMembers, total);
+    let splits: ExpenseUser[] = [];
 
-    if (groupMembers.length === 2 && otherMember) {
+    // special case: group of 2 people
+    if (groupMembers.length === 2) {
+      const otherMember = this.group.members.find((m) => m.userId !== currentUser.id);
+      if (!otherMember) return;
+
       const half = Math.round((total / 2) * 100) / 100;
       switch (selectedOption.id) {
         case 'you_paid_equal':
@@ -288,12 +307,14 @@ export class ExpenseFormComponent implements OnInit {
             { userId: otherMember.userId, amount: total - half },
           ];
           break;
+
         case 'you_are_owed':
           splits = [
             { userId: currentUser.id, amount: 0 },
             { userId: otherMember.userId, amount: total },
           ];
           break;
+
         case 'other_paid_equal':
           splits = [
             { userId: currentUser.id, amount: half },
@@ -301,6 +322,7 @@ export class ExpenseFormComponent implements OnInit {
           ];
           paidBy = [{ userId: otherMember.userId, amount: total }];
           break;
+
         case 'other_is_owed':
           splits = [
             { userId: currentUser.id, amount: total },
@@ -309,8 +331,20 @@ export class ExpenseFormComponent implements OnInit {
           paidBy = [{ userId: otherMember.userId, amount: total }];
           break;
       }
+    } else {
+      // general case: 3 or more people (or group of 1 → only you)
+      splits = groupMembers.map((userId) => ({
+        userId,
+        amount: Math.floor((total / groupMembers.length) * 100) / 100,
+      }));
+
+      const sumSplits = splits.reduce((acc, s) => acc + s.amount, 0);
+      splits[splits.length - 1].amount += Math.round((total - sumSplits) * 100) / 100;
+
+      paidBy = [{ userId: selectedPayer, amount: total }];
     }
 
+    // normalize splits
     splits = splits.map((s) => ({
       userId: s.userId,
       amount: Math.max(0, Math.round(s.amount * 100) / 100),
@@ -318,6 +352,7 @@ export class ExpenseFormComponent implements OnInit {
 
     const createdAtIso =
       createdAt instanceof Date ? createdAt.toISOString() : new Date(createdAt).toISOString();
+
     const expenseRequest: ExpenseRequest = {
       groupId: this.groupId,
       description,
@@ -330,6 +365,7 @@ export class ExpenseFormComponent implements OnInit {
     };
 
     this.isSubmitting = true;
+
     const obs$ = this.isEditMode
       ? this.expenseService.updateExpense(this.expenseId!, expenseRequest)
       : this.expenseService.createExpense(expenseRequest);
@@ -353,7 +389,7 @@ export class ExpenseFormComponent implements OnInit {
       maxWidth: '100vw',
       panelClass: 'full-screen-modal',
     });
-    // Listen for browser navigation to close dialog
+    // listen for browser navigation to close dialog
     const popStateListener = () => dialogRef.close();
     window.addEventListener('popstate', popStateListener);
 
@@ -371,7 +407,7 @@ export class ExpenseFormComponent implements OnInit {
       maxWidth: '100vw',
       panelClass: 'full-screen-modal',
     });
-    // Listen for browser navigation to close dialog
+    // listen for browser navigation to close dialog
     const popStateListener = () => dialogRef.close();
     window.addEventListener('popstate', popStateListener);
 
@@ -392,7 +428,7 @@ export class ExpenseFormComponent implements OnInit {
   }
 
   private buildSplits(userIds: number[], total: number): ExpenseUser[] {
-    // Split the total amount equally among all users, rounding the last user's amount
+    // split the total amount equally among all users, rounding the last user's amount
     const baseAmount = Math.floor((total / userIds.length) * 100) / 100;
     let accumulated = 0;
     return userIds.map((id, index) => {
@@ -404,7 +440,7 @@ export class ExpenseFormComponent implements OnInit {
   }
 
   goBack() {
-    // Navigate back to the group view
+    // navigate back to the group view
     void this.router.navigate(['/groups', isNaN(this.groupId) ? [] : this.groupId]);
   }
 
@@ -447,5 +483,23 @@ export class ExpenseFormComponent implements OnInit {
       this.selectedPayer = selectedMember;
       this.splitSelectorComponent?.setPayer(selectedMember.userId);
     });
+  }
+
+  onPayerChanged(result: { userId: number; name: string } | PaidByOption) {
+    if ('userId' in result) {
+      this.selectedPayer = result;
+
+      this.selectedPaidByOption = {
+        id: 'other_paid_equal',
+        label: this.mapOptionIdToLabel('other_paid_equal', result.name),
+      };
+      this.selectedOptionIdForSplit = 'other_paid_equal';
+
+      this.splitSelectorComponent.selectedOption.set(this.selectedPaidByOption);
+    } else {
+      // case 2 members and quick option selected
+      this.selectedPaidByOption = result;
+      this.selectedOptionIdForSplit = result.id;
+    }
   }
 }
