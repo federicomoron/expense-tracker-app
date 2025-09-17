@@ -170,3 +170,18 @@
     opacity: 0.9;
   }
 }
+
+.groups-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  gap: 1rem;
+
+  .placeholder {
+    color: var(--app-muted);
+    font-size: 1rem;
+    text-align: center;
+  }
+}
