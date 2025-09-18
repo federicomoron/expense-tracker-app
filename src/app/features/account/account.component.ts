@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { I18nService } from '@app/core/services/i18n.service';
 import { PwaInstallService } from '@app/core/services/pwa-install.service';
 import { PwaInstallButtonComponent } from '@app/shared/components/pwa-install-button/pwa-install-button.component';
-import { ThemeToggleComponent } from '@app/shared/ui/theme-toggle/theme-toggle/theme-toggle.component';
+import { ThemeToggleComponent } from '@app/shared/ui/theme-toggle/theme-toggle.component';
 import { AuthService } from '@services/auth.service';
 import { SharedUiModule } from '@shared/shared-ui.module';
 

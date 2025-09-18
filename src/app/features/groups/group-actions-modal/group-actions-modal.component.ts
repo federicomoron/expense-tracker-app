@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { SharedUiModule } from '@app/shared/shared-ui.module';
+import { ConfirmDialogComponent } from '@app/shared/ui/dialogs/confirm-dialog.component';
 import { GroupService } from '@services/group.service';
 import { SnackbarService } from '@services/snackbar.service';
-import { ConfirmDialogComponent } from '@shared/ui/theme-toggle/dialogs/confirm-dialog.component';
 
 @Component({
   selector: 'app-group-actions-modal',

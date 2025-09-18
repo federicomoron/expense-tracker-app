@@ -14,7 +14,7 @@ import {
   findGroupIdInRoute,
 } from '@app/shared/helpers/expense.utils';
 import { SharedUiModule } from '@app/shared/shared-ui.module';
-import { ConfirmDialogComponent } from '@app/shared/ui/theme-toggle/dialogs/confirm-dialog.component';
+import { ConfirmDialogComponent } from '@app/shared/ui/dialogs/confirm-dialog.component';
 
 @Component({
   selector: 'app-expense-detail',
