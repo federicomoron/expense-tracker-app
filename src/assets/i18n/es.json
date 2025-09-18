@@ -69,7 +69,9 @@
     "show_settled_groups_one": "Mostrar 1 grupo con cuentas saldadas",
     "show_settled_groups_many": "Mostrar {{count}} grupos con cuentas saldadas",
     "hide_settled_groups": "Ocultar grupos con cuentas saldadas",
-    "they_owe_you": "Te deben"
+    "they_owe_you": "Te deben",
+    "no_groups": "Todavía no tenés grupos",
+    "create_first_group": "Crear tu primer grupo"
   },
   "groupDetail": {
     "theyOweYou": "Te deben",
