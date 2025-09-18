@@ -74,3 +74,31 @@ mat-list-item {
   max-height: 100dvh;
   overflow: hidden;
 }
+
+.group-actions-list {
+  padding-top: 8px;
+
+  .delete-group-button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    font-size: 0.875rem;
+    font-weight: normal;
+    border: none;
+    background: transparent;
+    color: var(--app-warn);
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 0.2s ease;
+
+    mat-icon {
+      color: var(--app-warn);
+    }
+
+    &:hover {
+      background-color: rgba(var(--app-text-rgb), 0.05);
+    }
+  }
+}
