@@ -1,4 +1,13 @@
-@if (!hasAnyDetail()) {
+@if (groups().length === 0) {
+  <div class="groups-empty">
+    <p class="placeholder">
+      {{ 'groups.no_groups' | translate }}
+    </p>
+    <button mat-raised-button color="primary" (click)="goToNewGroup()" type="button">
+      {{ 'groups.create_first_group' | translate }}
+    </button>
+  </div>
+} @else if (!hasAnyDetail()) {
   <div class="groups-loading">
     <mat-spinner></mat-spinner>
   </div>

@@ -28,6 +28,7 @@
     font-weight: 500;
     margin-top: 1rem;
     margin-bottom: 1rem;
+    color: var(--app-text);
   }
 
   .register-form {
@@ -88,6 +89,9 @@
     ::ng-deep .mdc-notched-outline__trailing {
       border-color: var(--app-text) !important;
       border-width: 1px !important;
+    }
+    ::ng-deep button[mat-icon-button] {
+      color: var(--app-text);
     }
   }
 }

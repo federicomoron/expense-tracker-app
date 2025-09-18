@@ -69,7 +69,9 @@
     "show_settled_groups_one": "Show 1 settled group",
     "show_settled_groups_many": "Show {{count}} settled groups",
     "hide_settled_groups": "Hide settled groups",
-    "they_owe_you": "They owe you"
+    "they_owe_you": "They owe you",
+    "no_groups": "You don't have any groups yet",
+    "create_first_group": "Create your first group"
   },
   "groupDetail": {
     "theyOweYou": "They owe you",
