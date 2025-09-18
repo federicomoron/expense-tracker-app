@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -20,7 +19,7 @@ import { ConfirmDialogComponent } from '@app/shared/ui/theme-toggle/dialogs/conf
 @Component({
   selector: 'app-expense-detail',
   standalone: true,
-  imports: [CommonModule, MatIconModule, SharedUiModule, TranslateModule],
+  imports: [CommonModule, SharedUiModule, TranslateModule],
   templateUrl: './expense-detail.component.html',
   styleUrls: ['./expense-detail.component.scss'],
 })
