@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -9,6 +10,7 @@ import { SnackbarService } from '@app/core/services/snackbar.service';
 import { getGroupImage } from '@app/shared/helpers/group-type-image-map';
 import { CurrencySymbolPipe } from '@app/shared/pipes/currency-symbol.pipe';
 import { ExpensesComponent } from '@features/expenses/expenses/expenses.component';
+import { GroupActionsModalComponent } from '@features/groups/group-actions-modal/group-actions-modal.component';
 import { GroupDetailWithExpenses } from '@models/group-detail.model';
 import { AuthService } from '@services/auth.service';
 import { GroupService } from '@services/group.service';
@@ -36,6 +38,7 @@ export class GroupDetailComponent implements OnInit {
   private readonly translate = inject(TranslateService);
   private readonly groupService = inject(GroupService);
   private readonly authService = inject(AuthService);
+  private readonly dialog = inject(MatDialog);
 
   readonly GroupType = GroupType;
 
@@ -97,6 +100,16 @@ export class GroupDetailComponent implements OnInit {
         console.error('Error reloading group after expense delete', err);
         this.snackbar.show('Error al actualizar el grupo');
       },
+    });
+  }
+
+  openGroupActionsModal() {
+    this.dialog.open(GroupActionsModalComponent, {
+      width: '100vw',
+      height: '100vh',
+      maxWidth: '100vw',
+      panelClass: 'full-screen-modal',
+      data: { groupId: this.groupId(), groupName: this.group()?.name },
     });
   }
 }

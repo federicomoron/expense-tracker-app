@@ -1,0 +1,17 @@
+<div class="dialog-container">
+  <!-- Header -->
+  <div class="header">
+    <button type="button" mat-icon-button aria-label="back" (click)="close()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h2>{{ 'groupActions.title' | translate }}</h2>
+  </div>
+
+  <!-- Modal content -->
+  <div class="group-actions-list">
+    <button type="button" class="delete-group-button" (click)="confirmDeleteGroup()">
+      <mat-icon>delete</mat-icon>
+      <span>{{ 'groupActions.delete' | translate }}</span>
+    </button>
+  </div>
+</div>

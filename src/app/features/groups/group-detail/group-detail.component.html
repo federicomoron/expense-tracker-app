@@ -1,12 +1,17 @@
 <div class="group-detail-container">
-  @if (!loading() && group()) {
-    <img
-      class="group-banner"
-      [src]="getGroupImage(group()?.type, group()?.imageUrl)"
-      alt="Group banner"
-    />
-  }
+  <div class="group-banner-container">
+    @if (!loading() && group()) {
+      <img
+        class="group-banner"
+        [src]="getGroupImage(group()?.type, group()?.imageUrl)"
+        alt="Group banner"
+      />
+    }
 
+    <button class="group-actions-button" mat-icon-button (click)="openGroupActionsModal()">
+      <mat-icon>settings</mat-icon>
+    </button>
+  </div>
   <h2 class="group-title">{{ group()?.name }}</h2>
 
   <div class="floating-balance-summary">

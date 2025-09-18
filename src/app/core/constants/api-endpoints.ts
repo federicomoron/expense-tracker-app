@@ -7,4 +7,5 @@ export const API_ENDPOINTS = {
   CREATE_EXPENSE: '/expenses/create',
   // GET_EXPENSES_BY_GROUP: (groupId: number) => `/expenses/group/${groupId}`,
   UPLOAD_GROUP_IMAGE: '/uploads/groups',
+  DELETE_GROUP: (groupId: number) => `/groups/${groupId}`,
 };

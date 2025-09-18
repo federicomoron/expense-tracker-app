@@ -105,4 +105,20 @@ export class GroupService {
       >(`${this.apiUrl}${API_ENDPOINTS.UPLOAD_GROUP_IMAGE}`, formData)
       .pipe(map((res) => res.data.url));
   }
+
+  deleteGroup(groupId: number): Observable<{ success: boolean; data: any }> {
+    return this.http
+      .delete<{
+        success: boolean;
+        data: any;
+      }>(`${this.apiUrl}${API_ENDPOINTS.DELETE_GROUP(groupId)}`)
+      .pipe(
+        tap((res) => {
+          if (res.success) {
+            this._groupsSignal.update((groups) => groups.filter((g) => g.id !== groupId));
+            this.saveToStorage();
+          }
+        }),
+      );
+  }
 }

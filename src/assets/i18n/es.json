@@ -86,6 +86,17 @@
     "typeLabel": "Tipo",
     "errorCreating": "Error al crear el grupo"
   },
+  "groupActions": {
+    "title": "Configuración del grupo",
+    "delete": "Eliminar grupo",
+    "confirmDelete": "¿Estás seguro de que deseas eliminar este grupo?",
+    "groupDeleted": "Grupo eliminado correctamente",
+    "errorDeleting": "Error al eliminar el grupo"
+  },
+  "confirmDeleteGroup": {
+    "title": "Confirmar eliminación",
+    "message": "¿Estás seguro de que quieres eliminar este grupo?"
+  },
   "common": {
     "close": "Cerrar",
     "confirm": "Confirmar",
