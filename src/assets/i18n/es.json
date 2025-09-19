@@ -88,14 +88,19 @@
   },
   "groupActions": {
     "title": "Configuración del grupo",
+    "addMember": "Añadir personas al grupo",
+    "members": "Miembros del Grupo",
     "delete": "Eliminar grupo",
-    "confirmDelete": "¿Estás seguro de que deseas eliminar este grupo?",
+    "userNotFound": "Usuario no encontrado",
+    "invitationSent": "Invitación enviada correctamente",
+    "errorSendingInvitation": "Error enviando invitación",
+    "errorSearchingUser": "Error buscando usuario",
     "groupDeleted": "Grupo eliminado correctamente",
-    "errorDeleting": "Error al eliminar el grupo"
+    "errorDeleting": "Error eliminando el grupo"
   },
   "confirmDeleteGroup": {
-    "title": "Confirmar eliminación",
-    "message": "¿Estás seguro de que quieres eliminar este grupo?"
+    "title": "Confirmar Eliminación",
+    "message": "¿Estás seguro que deseas eliminar este grupo?"
   },
   "common": {
     "close": "Cerrar",

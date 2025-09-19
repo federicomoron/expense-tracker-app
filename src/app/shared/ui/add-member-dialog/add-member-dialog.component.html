@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>{{ 'groupActions.addMember' | translate }}</h2>
+<mat-dialog-content>
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Email</mat-label>
+    <input matInput [(ngModel)]="email" type="email" />
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>{{ 'common.cancel' | translate }}</button>
+  <button mat-button color="primary" (click)="addMember()">
+    {{ 'common.confirm' | translate }}
+  </button>
+</mat-dialog-actions>

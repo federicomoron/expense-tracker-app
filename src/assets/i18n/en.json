@@ -88,10 +88,15 @@
   },
   "groupActions": {
     "title": "Group Settings",
+    "addMember": "Add Members to the group",
+    "members": "Group Members",
     "delete": "Delete Group",
-    "confirmDelete": "Are you sure you want to delete this group?",
+    "userNotFound": "User not found",
+    "invitationSent": "Invitation sent successfully",
+    "errorSendingInvitation": "Error sending invitation",
+    "errorSearchingUser": "Error searching for user",
     "groupDeleted": "Group deleted successfully",
-    "errorDeleting": "Error deleting the group"
+    "errorDeleting": "Error deleting group"
   },
   "confirmDeleteGroup": {
     "title": "Confirm Delete",
