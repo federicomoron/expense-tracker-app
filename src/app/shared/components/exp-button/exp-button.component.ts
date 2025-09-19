@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
+
+import { SharedUiModule } from '@app/shared/shared-ui.module';
 
 @Component({
   selector: 'app-exp-button',
   standalone: true,
-  imports: [MatButtonModule],
+  imports: [SharedUiModule],
   templateUrl: './exp-button.component.html',
   styleUrls: ['./exp-button.component.scss'],
 })

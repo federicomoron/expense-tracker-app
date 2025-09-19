@@ -1,7 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCalendar } from '@angular/material/datepicker';
 import { MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -12,7 +10,7 @@ import { SharedUiModule } from '@app/shared/shared-ui.module';
 @Component({
   selector: 'app-calendar-dialog',
   standalone: true,
-  imports: [CommonModule, MatCalendar, MatButtonModule, TranslateModule, SharedUiModule],
+  imports: [CommonModule, TranslateModule, SharedUiModule],
   templateUrl: './calendar-dialog.component.html',
   styleUrls: ['./calendar-dialog.component.scss'],
 })
