@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { PaidByOption, PaidByOptionId } from '@app/core/models/paid-by-option.model';
+import { DialogService } from '@app/core/services/dialog.service';
 import { PaidByDialogComponent } from '@features/expenses/components/paid-by-dialog/paid-by-dialog.component';
 import { SplitTypeDialogComponent } from '@features/expenses/components/split-type-dialog/split-type-dialog.component';
 import { AuthService } from '@services/auth.service';
@@ -20,7 +20,7 @@ import { PaidByQuickDialogComponent } from '../paid-by-quick-dialog/paid-by-quic
 })
 export class SplitSelectorComponent {
   private authService = inject(AuthService);
-  private dialog = inject(MatDialog);
+  private dialogService = inject(DialogService);
   private translate = inject(TranslateService);
 
   private _groupMembers: { userId: number; name: string }[] = [];
@@ -89,30 +89,15 @@ export class SplitSelectorComponent {
 
     const dialogRef =
       this.groupMembers.length === 2
-        ? this.dialog.open(PaidByQuickDialogComponent, {
-            width: '100vw',
-            height: '100vh',
-            maxWidth: '100vw',
-            panelClass: 'full-screen-modal',
-            data: {
-              members: this.groupMembers,
-              selectedOption: this.selectedOption(),
-            },
+        ? this.dialogService.openFullScreen(PaidByQuickDialogComponent, {
+            members: this.groupMembers,
+            selectedOption: this.selectedOption(),
           })
-        : this.dialog.open(PaidByDialogComponent, {
-            width: '100vw',
-            height: '100vh',
-            maxWidth: '100vw',
-            panelClass: 'full-screen-modal',
-            data: { members: this.groupMembers },
+        : this.dialogService.openFullScreen(PaidByDialogComponent, {
+            members: this.groupMembers,
           });
 
-    const popStateListener = () => dialogRef.close();
-    window.addEventListener('popstate', popStateListener);
-
     dialogRef.afterClosed().subscribe((result) => {
-      window.removeEventListener('popstate', popStateListener);
-
       if (result?.id) {
         this.selectedOption.set(result);
         this.payerChanged.emit(result);
@@ -124,18 +109,8 @@ export class SplitSelectorComponent {
   }
 
   openSplitTypeDialog() {
-    const dialogRef = this.dialog.open(SplitTypeDialogComponent, {
-      width: '100vw',
-      height: '100vh',
-      maxWidth: '100vw',
-      panelClass: 'full-screen-modal',
-    });
-
-    const popStateListener = () => dialogRef.close();
-    window.addEventListener('popstate', popStateListener);
-
+    const dialogRef = this.dialogService.openFullScreen(SplitTypeDialogComponent);
     dialogRef.afterClosed().subscribe((result) => {
-      window.removeEventListener('popstate', popStateListener);
       if (result) this.selectedSplitType.set(result);
     });
   }

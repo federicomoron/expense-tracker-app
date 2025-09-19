@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { Expense, ExpenseExtended, ExpenseUser } from '@app/core/models/expenses.model';
 import { AuthService } from '@app/core/services/auth.service';
+import { DialogService } from '@app/core/services/dialog.service';
 import { ExpenseService } from '@app/core/services/expenses.service';
 import { EXPENSE_CATEGORIES } from '@app/shared/data/expense-categories';
 import {
@@ -27,10 +27,10 @@ export class ExpenseDetailComponent {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private translate = inject(TranslateService);
-  private dialog = inject(MatDialog);
   private authService = inject(AuthService);
   private snackbar = inject(MatSnackBar);
   private expenseService = inject(ExpenseService);
+  private dialogService = inject(DialogService);
 
   expense = signal<Expense | null>(null);
   currentUserId = this.authService.currentUser()?.id;
@@ -174,13 +174,11 @@ export class ExpenseDetailComponent {
     const expense = this.expense();
     if (!expense) return;
 
-    const confirmDialog = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: this.translate.instant('confirmDelete.title'),
-        message: this.translate.instant('confirmDelete.message'),
-        confirmText: this.translate.instant('common.confirm'),
-        cancelText: this.translate.instant('common.cancel'),
-      },
+    const confirmDialog = this.dialogService.openFixed(ConfirmDialogComponent, '400px', {
+      title: this.translate.instant('confirmDelete.title'),
+      message: this.translate.instant('confirmDelete.message'),
+      confirmText: this.translate.instant('common.confirm'),
+      cancelText: this.translate.instant('common.cancel'),
     });
 
     confirmDialog.afterClosed().subscribe((confirmed: boolean) => {

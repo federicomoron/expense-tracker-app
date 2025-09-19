@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
+import { DialogService } from '@app/core/services/dialog.service';
 import { ExpenseService } from '@app/core/services/expenses.service';
 import { EXPENSE_CATEGORIES } from '@app/shared/data/expense-categories';
 import { CURRENCY_SYMBOLS } from '@app/shared/helpers/currency-symbols';
@@ -34,10 +34,10 @@ export class ExpensesComponent {
 
   private authService = inject(AuthService);
   private translate = inject(TranslateService);
-  private dialog = inject(MatDialog);
   private snackbar = inject(MatSnackBar);
   private expenseService = inject(ExpenseService);
   private router = inject(Router);
+  private dialogService = inject(DialogService);
 
   totalAmount = 0;
 
@@ -229,20 +229,11 @@ export class ExpensesComponent {
       splits: (expense as any).splits,
     };
 
-    const dialogRef = this.dialog.open(ExpenseFormComponent, {
-      data: { expense: expenseWithOptionId },
-      width: '100vw',
-      height: '100vh',
-      maxWidth: '100vw',
-      panelClass: 'full-screen-modal',
+    const dialogRef = this.dialogService.openFullScreen(ExpenseFormComponent, {
+      expense: expenseWithOptionId,
     });
 
-    const popStateListener = () => dialogRef.close();
-    window.addEventListener('popstate', popStateListener);
-
-    dialogRef.afterClosed().subscribe(() => {
-      window.removeEventListener('popstate', popStateListener);
-    });
+    dialogRef.afterClosed().subscribe(() => {});
   }
 
   deleteExpense(expense: Expense) {

@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 
 import { GroupDetailWithExpenses } from '@app/core/models/group-detail.model';
 import { AuthService } from '@app/core/services/auth.service';
+import { DialogService } from '@app/core/services/dialog.service';
 import { SnackbarService } from '@app/core/services/snackbar.service';
 import { getGroupImage } from '@app/shared/helpers/group-type-image-map';
 import { CurrencySymbolPipe } from '@app/shared/pipes/currency-symbol.pipe';
@@ -50,7 +50,7 @@ export class GroupsComponent implements OnInit {
   private groupService = inject(GroupService);
   private snackbar = inject(SnackbarService);
   private router = inject(Router);
-  private dialog = inject(MatDialog);
+  private dialogService = inject(DialogService);
 
   getGroupDetails = (id: number) =>
     computed(() => {
@@ -97,15 +97,9 @@ export class GroupsComponent implements OnInit {
   }
 
   openGroupForm() {
-    const dialogRef = this.dialog.open(GroupFormComponent, {
-      width: '90%',
-      maxWidth: '400px',
-    });
-
+    const dialogRef = this.dialogService.openFixed(GroupFormComponent, '400px');
     dialogRef.afterClosed().subscribe((data) => {
-      if (data) {
-        this.addGroup(data);
-      }
+      if (data) this.addGroup(data);
     });
   }
 

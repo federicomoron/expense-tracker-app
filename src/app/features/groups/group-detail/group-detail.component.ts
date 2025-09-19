@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { GroupType } from '@app/core/models/group-type.enum';
+import { DialogService } from '@app/core/services/dialog.service';
 import { LayoutService } from '@app/core/services/layout.service';
 import { SnackbarService } from '@app/core/services/snackbar.service';
 import { getGroupImage } from '@app/shared/helpers/group-type-image-map';
@@ -38,7 +38,7 @@ export class GroupDetailComponent implements OnInit {
   private readonly translate = inject(TranslateService);
   private readonly groupService = inject(GroupService);
   private readonly authService = inject(AuthService);
-  private readonly dialog = inject(MatDialog);
+  private readonly dialogService = inject(DialogService);
 
   readonly GroupType = GroupType;
 
@@ -104,12 +104,9 @@ export class GroupDetailComponent implements OnInit {
   }
 
   openGroupActionsModal() {
-    this.dialog.open(GroupActionsModalComponent, {
-      width: '100vw',
-      height: '100vh',
-      maxWidth: '100vw',
-      panelClass: 'full-screen-modal',
-      data: { groupId: this.groupId(), groupName: this.group()?.name },
+    this.dialogService.openFullScreen(GroupActionsModalComponent, {
+      groupId: this.groupId(),
+      groupName: this.group()?.name,
     });
   }
 }

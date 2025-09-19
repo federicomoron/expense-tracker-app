@@ -1,8 +1,9 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
+import { DialogService } from '@app/core/services/dialog.service';
 import { SharedUiModule } from '@app/shared/shared-ui.module';
 import { ConfirmDialogComponent } from '@app/shared/ui/dialogs/confirm-dialog.component';
 import { GroupService } from '@services/group.service';
@@ -24,7 +25,7 @@ export class GroupActionsModalComponent implements OnInit {
   private snackbar = inject(SnackbarService);
   private router = inject(Router);
   private translate = inject(TranslateService);
-  private dialog = inject(MatDialog);
+  private dialogService = inject(DialogService);
 
   members = signal<
     { name: string; email: string; status: 'confirmed' | 'pending'; invitedUserId?: number }[]
@@ -68,15 +69,12 @@ export class GroupActionsModalComponent implements OnInit {
   }
 
   openAddMemberDialog() {
-    const dialogRef = this.dialog.open(AddMemberDialogComponent, {
-      width: '400px',
-      data: { groupId: this.data.groupId },
+    const dialogRef = this.dialogService.openFixed(AddMemberDialogComponent, '400px', {
+      groupId: this.data.groupId,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result?.added) {
-        this.loadGroupMembers();
-      }
+      if (result?.added) this.loadGroupMembers();
     });
   }
 
@@ -85,13 +83,11 @@ export class GroupActionsModalComponent implements OnInit {
   }
 
   confirmDeleteGroup(): void {
-    const confirmDialog = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: this.translate.instant('confirmDeleteGroup.title'),
-        message: this.translate.instant('confirmDeleteGroup.message'),
-        confirmText: this.translate.instant('common.confirm'),
-        cancelText: this.translate.instant('common.cancel'),
-      },
+    const confirmDialog = this.dialogService.openFixed(ConfirmDialogComponent, '400px', {
+      title: this.translate.instant('confirmDeleteGroup.title'),
+      message: this.translate.instant('confirmDeleteGroup.message'),
+      confirmText: this.translate.instant('common.confirm'),
+      cancelText: this.translate.instant('common.cancel'),
     });
 
     confirmDialog.afterClosed().subscribe((confirmed: boolean) => {

@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { PaidByOption, PaidByOptionId } from '@app/core/models/paid-by-option.model';
+import { DialogService } from '@app/core/services/dialog.service';
 import { SnackbarService } from '@app/core/services/snackbar.service';
 import { FooterComponent } from '@app/shared/components/footer/footer.component';
 import { EXPENSE_CATEGORIES } from '@app/shared/data/expense-categories';
@@ -47,11 +47,11 @@ export class ExpenseFormComponent implements OnInit {
   private authService = inject(AuthService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private dialog = inject(MatDialog);
   private groupService = inject(GroupService);
   private snackbar = inject(SnackbarService);
   private translate = inject(TranslateService);
   private cdr = inject(ChangeDetectorRef);
+  private dialogService = inject(DialogService);
 
   @ViewChild(SplitSelectorComponent) splitSelectorComponent!: SplitSelectorComponent;
   @ViewChild(FooterComponent) footerComponent!: FooterComponent;
@@ -383,34 +383,15 @@ export class ExpenseFormComponent implements OnInit {
   }
 
   openCurrencySelector() {
-    const dialogRef = this.dialog.open(CurrencySelectorComponent, {
-      width: '100vw',
-      height: '100vh',
-      maxWidth: '100vw',
-      panelClass: 'full-screen-modal',
-    });
-    // listen for browser navigation to close dialog
-    const popStateListener = () => dialogRef.close();
-    window.addEventListener('popstate', popStateListener);
-
+    const dialogRef = this.dialogService.openFullScreen(CurrencySelectorComponent);
     dialogRef.componentInstance.selected.subscribe((currency: string) => {
-      window.removeEventListener('popstate', popStateListener);
       this.expenseForm.get('currency')?.setValue(currency);
       dialogRef.close();
     });
   }
 
   openCategorySelector(): void {
-    const dialogRef = this.dialog.open(CategorySelectorComponent, {
-      width: '100vw',
-      height: '100vh',
-      maxWidth: '100vw',
-      panelClass: 'full-screen-modal',
-    });
-    // listen for browser navigation to close dialog
-    const popStateListener = () => dialogRef.close();
-    window.addEventListener('popstate', popStateListener);
-
+    const dialogRef = this.dialogService.openFullScreen(CategorySelectorComponent);
     dialogRef.afterClosed().subscribe((category) => {
       if (category) {
         this.selectedCategory.set(category.key);
@@ -458,10 +439,10 @@ export class ExpenseFormComponent implements OnInit {
     const useQuick = this.group.members.length <= 2;
 
     if (useQuick) {
-      const dialogRef = this.dialog.open(PaidByQuickDialogComponent, {
-        width: '300px',
-        data: { members: this.group.members },
+      const dialogRef = this.dialogService.openFixed(PaidByQuickDialogComponent, '300px', {
+        members: this.group.members,
       });
+
       dialogRef
         .afterClosed()
         .subscribe((result: { selectedOption?: PaidByOption; moreOptions?: boolean }) => {
@@ -474,10 +455,10 @@ export class ExpenseFormComponent implements OnInit {
 
   openFullPaidByDialog(): void {
     if (!this.group) return;
-    const dialogRef = this.dialog.open(PaidByDialogComponent, {
-      width: '300px',
-      data: { members: this.group.members },
+    const dialogRef = this.dialogService.openFixed(PaidByDialogComponent, '300px', {
+      members: this.group.members,
     });
+
     dialogRef.afterClosed().subscribe((selectedMember) => {
       if (!selectedMember) return;
       this.selectedPayer = selectedMember;

@@ -1,9 +1,9 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { DialogService } from '@app/core/services/dialog.service';
 import { CalendarDialogComponent } from '@app/shared/components/calendar-dialog/calendar-dialog.component';
 import { SharedUiModule } from '@shared/shared-ui.module';
 
@@ -19,8 +19,8 @@ export class FooterComponent {
   @Input() date: Date = new Date();
   @Output() dateChange = new EventEmitter<Date>();
 
-  private dialog = inject(MatDialog);
   private router = inject(Router);
+  private dialogService = inject(DialogService);
 
   get isExpenseForm(): boolean {
     return this.router.url.includes('/expenses/new');
@@ -40,17 +40,9 @@ export class FooterComponent {
   }
 
   openCalendar() {
-    const dialogRef = this.dialog.open(CalendarDialogComponent, {
-      width: '100vw',
-      height: '100vh',
-      maxWidth: '100vw',
-      panelClass: 'full-screen-modal',
-    });
-
+    const dialogRef = this.dialogService.openFullScreen(CalendarDialogComponent);
     dialogRef.afterClosed().subscribe((date: Date | undefined) => {
-      if (date) {
-        this.dateChange.emit(date);
-      }
+      if (date) this.dateChange.emit(date);
     });
   }
 }
