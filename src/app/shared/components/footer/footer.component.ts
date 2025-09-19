@@ -3,7 +3,7 @@ import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { DialogService } from '@app/core/services/dialog.service';
+import { DialogService } from '@core/services/dialog.service';
 import { CalendarDialogComponent } from '@shared/components/calendar-dialog/calendar-dialog.component';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 

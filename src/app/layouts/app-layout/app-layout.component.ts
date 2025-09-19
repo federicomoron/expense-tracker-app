@@ -2,9 +2,9 @@ import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ApiStatusService } from '@app/core/services/api-status.service';
-import { LayoutService } from '@app/core/services/layout.service';
-import { SnackbarService } from '@app/core/services/snackbar.service';
+import { ApiStatusService } from '@core/services/api-status.service';
+import { LayoutService } from '@core/services/layout.service';
+import { SnackbarService } from '@core/services/snackbar.service';
 import { FooterComponent } from '@shared/components/footer/footer.component';
 
 @Component({

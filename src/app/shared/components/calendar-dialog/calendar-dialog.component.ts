@@ -4,7 +4,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
-import { I18nService } from '@app/core/services/i18n.service';
+import { I18nService } from '@core/services/i18n.service';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({

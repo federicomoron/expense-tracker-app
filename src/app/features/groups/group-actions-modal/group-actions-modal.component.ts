@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { DialogService } from '@app/core/services/dialog.service';
+import { DialogService } from '@core/services/dialog.service';
 import { GroupService } from '@services/group.service';
 import { SnackbarService } from '@services/snackbar.service';
 import { SharedMaterialModule } from '@shared/shared-material.module';

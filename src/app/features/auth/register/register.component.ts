@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { SnackbarService } from '@app/core/services/snackbar.service';
 import { NAVIGATION_ROUTES } from '@constants/routes';
+import { SnackbarService } from '@core/services/snackbar.service';
 import { UserService } from '@services/user.service';
 import { ExpButtonComponent } from '@shared/components/exp-button/exp-button.component';
 import { SharedMaterialModule } from '@shared/shared-material.module';

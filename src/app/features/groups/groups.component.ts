@@ -4,11 +4,11 @@ import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 
-import { GroupDetailWithExpenses } from '@app/core/models/group-detail.model';
-import { AuthService } from '@app/core/services/auth.service';
-import { DialogService } from '@app/core/services/dialog.service';
-import { SnackbarService } from '@app/core/services/snackbar.service';
 import { NAVIGATION_ROUTES } from '@constants/routes';
+import { GroupDetailWithExpenses } from '@core/models/group-detail.model';
+import { AuthService } from '@core/services/auth.service';
+import { DialogService } from '@core/services/dialog.service';
+import { SnackbarService } from '@core/services/snackbar.service';
 import { environment } from '@environments/environment';
 import { GroupFormComponent } from '@features/groups/group-form/group-form.component';
 import { GroupType } from '@models/group-type.enum';

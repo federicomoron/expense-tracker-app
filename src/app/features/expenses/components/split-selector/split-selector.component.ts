@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { PaidByOption, PaidByOptionId } from '@app/core/models/paid-by-option.model';
-import { DialogService } from '@app/core/services/dialog.service';
+import { PaidByOption, PaidByOptionId } from '@core/models/paid-by-option.model';
+import { DialogService } from '@core/services/dialog.service';
 import { PaidByDialogComponent } from '@features/expenses/components/paid-by-dialog/paid-by-dialog.component';
 import { SplitTypeDialogComponent } from '@features/expenses/components/split-type-dialog/split-type-dialog.component';
 import { AuthService } from '@services/auth.service';

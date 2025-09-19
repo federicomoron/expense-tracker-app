@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { applyTheme, ThemeOption } from '@app/core/services/theme.service';
+import { applyTheme, ThemeOption } from '@core/services/theme.service';
 
 @Component({
   standalone: true,

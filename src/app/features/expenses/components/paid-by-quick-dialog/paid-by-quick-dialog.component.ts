@@ -3,8 +3,8 @@ import { Component, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { PaidByOption } from '@app/core/models/paid-by-option.model';
-import { AuthService } from '@app/core/services/auth.service';
+import { PaidByOption } from '@core/models/paid-by-option.model';
+import { AuthService } from '@core/services/auth.service';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({

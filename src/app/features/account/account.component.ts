@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { I18nService } from '@app/core/services/i18n.service';
-import { PwaInstallService } from '@app/core/services/pwa-install.service';
+import { I18nService } from '@core/services/i18n.service';
+import { PwaInstallService } from '@core/services/pwa-install.service';
 import { AuthService } from '@services/auth.service';
 import { PwaInstallButtonComponent } from '@shared/components/pwa-install-button/pwa-install-button.component';
 import { SharedMaterialModule } from '@shared/shared-material.module';

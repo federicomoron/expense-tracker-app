@@ -3,10 +3,10 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { GroupType } from '@app/core/models/group-type.enum';
-import { DialogService } from '@app/core/services/dialog.service';
-import { LayoutService } from '@app/core/services/layout.service';
-import { SnackbarService } from '@app/core/services/snackbar.service';
+import { GroupType } from '@core/models/group-type.enum';
+import { DialogService } from '@core/services/dialog.service';
+import { LayoutService } from '@core/services/layout.service';
+import { SnackbarService } from '@core/services/snackbar.service';
 import { ExpensesComponent } from '@features/expenses/expenses/expenses.component';
 import { GroupActionsModalComponent } from '@features/groups/group-actions-modal/group-actions-modal.component';
 import { GroupDetailWithExpenses } from '@models/group-detail.model';

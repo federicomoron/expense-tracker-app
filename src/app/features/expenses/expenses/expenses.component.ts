@@ -4,8 +4,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { DialogService } from '@app/core/services/dialog.service';
-import { ExpenseService } from '@app/core/services/expenses.service';
+import { DialogService } from '@core/services/dialog.service';
+import { ExpenseService } from '@core/services/expenses.service';
 import { Expense, ExpenseExtended, ExpenseUser } from '@models/expenses.model';
 import { AuthService } from '@services/auth.service';
 import { EXPENSE_CATEGORIES } from '@shared/data/expense-categories';

@@ -1,6 +1,6 @@
-import { Expense, ExpenseExtended, ExpenseUser } from '@app/core/models/expenses.model';
-import { GroupMember } from '@app/core/models/group-detail.model';
-import { PaidByOptionId } from '@app/core/models/paid-by-option.model';
+import { Expense, ExpenseExtended, ExpenseUser } from '@core/models/expenses.model';
+import { GroupMember } from '@core/models/group-detail.model';
+import { PaidByOptionId } from '@core/models/paid-by-option.model';
 
 type AnyExpense = Expense | ExpenseExtended;
 

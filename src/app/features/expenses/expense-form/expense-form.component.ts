@@ -4,9 +4,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { PaidByOption, PaidByOptionId } from '@app/core/models/paid-by-option.model';
-import { DialogService } from '@app/core/services/dialog.service';
-import { SnackbarService } from '@app/core/services/snackbar.service';
+import { PaidByOption, PaidByOptionId } from '@core/models/paid-by-option.model';
+import { DialogService } from '@core/services/dialog.service';
+import { SnackbarService } from '@core/services/snackbar.service';
 import { CategorySelectorComponent } from '@features/expenses/components/category-selector/category-selector.component';
 import { CurrencySelectorComponent } from '@features/expenses/components/currency-selector/currency-selector.component';
 import { SplitSelectorComponent } from '@features/expenses/components/split-selector/split-selector.component';

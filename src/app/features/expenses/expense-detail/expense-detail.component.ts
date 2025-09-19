@@ -4,10 +4,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { Expense, ExpenseExtended, ExpenseUser } from '@app/core/models/expenses.model';
-import { AuthService } from '@app/core/services/auth.service';
-import { DialogService } from '@app/core/services/dialog.service';
-import { ExpenseService } from '@app/core/services/expenses.service';
+import { Expense, ExpenseExtended, ExpenseUser } from '@core/models/expenses.model';
+import { AuthService } from '@core/services/auth.service';
+import { DialogService } from '@core/services/dialog.service';
+import { ExpenseService } from '@core/services/expenses.service';
 import { EXPENSE_CATEGORIES } from '@shared/data/expense-categories';
 import {
   detectQuickOptionFromParticipants,
