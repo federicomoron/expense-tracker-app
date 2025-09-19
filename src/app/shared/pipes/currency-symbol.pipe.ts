@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { CURRENCY_SYMBOLS } from '../helpers/currency-symbols';
+import { CURRENCY_SYMBOLS } from '@shared/helpers/currency-symbols';
 
 @Pipe({
   name: 'currencySymbol',

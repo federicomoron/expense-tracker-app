@@ -6,6 +6,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { DialogService } from '@core/services/dialog.service';
 import { ExpenseService } from '@core/services/expenses.service';
+import { ExpenseFormComponent } from '@features/expenses/expense-form/expense-form.component';
 import { Expense, ExpenseExtended, ExpenseUser } from '@models/expenses.model';
 import { AuthService } from '@services/auth.service';
 import { EXPENSE_CATEGORIES } from '@shared/data/expense-categories';
@@ -13,8 +14,6 @@ import { CURRENCY_SYMBOLS } from '@shared/helpers/currency-symbols';
 import { detectQuickOptionFromParticipants } from '@shared/helpers/expense.utils';
 import { CurrencySymbolPipe } from '@shared/pipes/currency-symbol.pipe';
 import { SharedMaterialModule } from '@shared/shared-material.module';
-
-import { ExpenseFormComponent } from '../expense-form/expense-form.component';
 
 @Component({
   selector: 'app-expenses',

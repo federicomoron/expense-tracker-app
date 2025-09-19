@@ -9,6 +9,8 @@ import { DialogService } from '@core/services/dialog.service';
 import { SnackbarService } from '@core/services/snackbar.service';
 import { CategorySelectorComponent } from '@features/expenses/components/category-selector/category-selector.component';
 import { CurrencySelectorComponent } from '@features/expenses/components/currency-selector/currency-selector.component';
+import { PaidByDialogComponent } from '@features/expenses/components/paid-by-dialog/paid-by-dialog.component';
+import { PaidByQuickDialogComponent } from '@features/expenses/components/paid-by-quick-dialog/paid-by-quick-dialog.component';
 import { SplitSelectorComponent } from '@features/expenses/components/split-selector/split-selector.component';
 import { ExpenseExtended, ExpenseRequest, ExpenseUser } from '@models/expenses.model';
 import { GroupDetail } from '@models/group-detail.model';
@@ -23,9 +25,6 @@ import {
 } from '@shared/helpers/expense.utils';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 import { nonEmpty } from '@shared/utils/form-validators';
-
-import { PaidByDialogComponent } from '../components/paid-by-dialog/paid-by-dialog.component';
-import { PaidByQuickDialogComponent } from '../components/paid-by-quick-dialog/paid-by-quick-dialog.component';
 
 @Component({
   selector: 'app-expense-form',

@@ -4,10 +4,10 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { provideServiceWorker } from '@angular/service-worker';
 import { TranslateService } from '@ngx-translate/core';
 
+import { appConfig } from '@config/app.config';
 import { applyTheme } from '@core/services/theme.service';
 
 import { AppComponent } from './app/app.component';
-import { appConfig } from './app/app.config';
 
 applyTheme();
 

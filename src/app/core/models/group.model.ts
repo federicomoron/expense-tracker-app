@@ -1,4 +1,4 @@
-import { GroupType } from './group-type.enum';
+import { GroupType } from '@models/group-type.enum';
 
 export interface Group {
   id: number;

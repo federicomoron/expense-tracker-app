@@ -1,5 +1,5 @@
-import { GroupType } from './group-type.enum';
-import { Group } from './group.model';
+import { GroupType } from '@models/group-type.enum';
+import { Group } from '@models/group.model';
 
 export interface CreateGroupPayload {
   name: string;

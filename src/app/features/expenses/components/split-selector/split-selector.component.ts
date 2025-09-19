@@ -5,11 +5,10 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PaidByOption, PaidByOptionId } from '@core/models/paid-by-option.model';
 import { DialogService } from '@core/services/dialog.service';
 import { PaidByDialogComponent } from '@features/expenses/components/paid-by-dialog/paid-by-dialog.component';
+import { PaidByQuickDialogComponent } from '@features/expenses/components/paid-by-quick-dialog/paid-by-quick-dialog.component';
 import { SplitTypeDialogComponent } from '@features/expenses/components/split-type-dialog/split-type-dialog.component';
 import { AuthService } from '@services/auth.service';
 import { SharedMaterialModule } from '@shared/shared-material.module';
-
-import { PaidByQuickDialogComponent } from '../paid-by-quick-dialog/paid-by-quick-dialog.component';
 
 @Component({
   standalone: true,

@@ -1,4 +1,4 @@
-import { PaidByOptionId } from './paid-by-option.model';
+import { PaidByOptionId } from '@models/paid-by-option.model';
 
 export interface Expense {
   id: number;

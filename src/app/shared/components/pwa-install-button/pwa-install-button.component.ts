@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { PwaInstallService } from '@services/pwa-install.service';
 import { SharedMaterialModule } from '@shared/shared-material.module';
-import { PwaInstallService } from 'src/app/core/services/pwa-install.service';
 
 @Component({
   standalone: true,

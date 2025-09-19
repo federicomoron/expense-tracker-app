@@ -5,10 +5,9 @@ import { API_ENDPOINTS } from '@constants/api-endpoints';
 import { STORAGE_KEYS } from '@constants/storage-keys';
 import { environment } from '@environments/environment';
 import { GroupDetailResponse, GroupDetailWithExpenses } from '@models/group-detail.model';
+import { CreateGroupPayload, CreateGroupResponse } from '@models/group-request.model';
 import { Group } from '@models/group.model';
 import { HttpService } from '@services/http.service';
-
-import { CreateGroupPayload, CreateGroupResponse } from '../models/group-request.model';
 
 @Injectable({
   providedIn: 'root',

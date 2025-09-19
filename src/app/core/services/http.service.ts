@@ -3,8 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 
 import { environment } from '@environments/environment';
-
-import { ApiStatusService } from './api-status.service';
+import { ApiStatusService } from '@services/api-status.service';
 
 @Injectable({ providedIn: 'root' })
 export class HttpService {

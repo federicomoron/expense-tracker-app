@@ -3,9 +3,8 @@ import { Observable } from 'rxjs';
 
 import { API_ENDPOINTS } from '@constants/api-endpoints';
 import { environment } from '@environments/environment';
+import { RegisterPayload, RegisterResponse } from '@models/user.model';
 import { HttpService } from '@services/http.service';
-
-import { RegisterPayload, RegisterResponse } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',

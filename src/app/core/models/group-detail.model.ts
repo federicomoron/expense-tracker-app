@@ -1,4 +1,4 @@
-import { Expense } from './expenses.model';
+import { Expense } from '@models/expenses.model';
 
 export interface GroupMember {
   userId: number;

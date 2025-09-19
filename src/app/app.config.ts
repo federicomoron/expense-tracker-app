@@ -19,11 +19,10 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { authTokenInterceptor } from '@core/interceptors/auth-token.interceptor';
 import { unauthorizedInterceptor } from '@core/interceptors/unauthorized.interceptor';
-
-import { routes } from './app.routes';
-import { AuthService } from './core/services/auth.service';
-import { i18nInitializer } from './core/services/i18n-init';
-import { I18nService } from './core/services/i18n.service';
+import { routes } from '@routes/app.routes';
+import { AuthService } from '@services/auth.service';
+import { i18nInitializer } from '@services/i18n-init';
+import { I18nService } from '@services/i18n.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, '/assets/i18n/', '.json');
