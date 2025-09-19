@@ -14,7 +14,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
-export const SharedUiModule = [
+export const SharedMaterialModule = [
   MatIconModule,
   MatButtonModule,
   MatToolbarModule,

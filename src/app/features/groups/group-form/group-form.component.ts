@@ -6,12 +6,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NAVIGATION_ROUTES } from '@constants/routes';
 import { GROUP_TYPE_OPTIONS, GroupType } from '@models/group-type.enum';
 import { GroupService } from '@services/group.service';
-import { SharedUiModule } from '@shared/shared-ui.module';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
   selector: 'app-group-form',
   standalone: true,
-  imports: [SharedUiModule, TranslateModule],
+  imports: [SharedMaterialModule, TranslateModule],
   templateUrl: './group-form.component.html',
   styleUrls: ['./group-form.component.scss'],
 })

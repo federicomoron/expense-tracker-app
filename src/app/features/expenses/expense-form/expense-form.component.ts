@@ -7,12 +7,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { PaidByOption, PaidByOptionId } from '@app/core/models/paid-by-option.model';
 import { DialogService } from '@app/core/services/dialog.service';
 import { SnackbarService } from '@app/core/services/snackbar.service';
-import { FooterComponent } from '@app/shared/components/footer/footer.component';
-import { EXPENSE_CATEGORIES } from '@app/shared/data/expense-categories';
-import {
-  detectQuickOptionFromParticipants,
-  findGroupIdInRoute,
-} from '@app/shared/helpers/expense.utils';
 import { CategorySelectorComponent } from '@features/expenses/components/category-selector/category-selector.component';
 import { CurrencySelectorComponent } from '@features/expenses/components/currency-selector/currency-selector.component';
 import { SplitSelectorComponent } from '@features/expenses/components/split-selector/split-selector.component';
@@ -21,7 +15,13 @@ import { GroupDetail } from '@models/group-detail.model';
 import { AuthService } from '@services/auth.service';
 import { ExpenseService } from '@services/expenses.service';
 import { GroupService } from '@services/group.service';
-import { SharedUiModule } from '@shared/shared-ui.module';
+import { FooterComponent } from '@shared/components/footer/footer.component';
+import { EXPENSE_CATEGORIES } from '@shared/data/expense-categories';
+import {
+  detectQuickOptionFromParticipants,
+  findGroupIdInRoute,
+} from '@shared/helpers/expense.utils';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 import { nonEmpty } from '@shared/utils/form-validators';
 
 import { PaidByDialogComponent } from '../components/paid-by-dialog/paid-by-dialog.component';
@@ -32,7 +32,7 @@ import { PaidByQuickDialogComponent } from '../components/paid-by-quick-dialog/p
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    SharedUiModule,
+    SharedMaterialModule,
     CommonModule,
     SplitSelectorComponent,
     FooterComponent,

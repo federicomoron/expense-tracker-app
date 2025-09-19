@@ -5,12 +5,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { PaidByOption } from '@app/core/models/paid-by-option.model';
 import { AuthService } from '@app/core/services/auth.service';
-import { SharedUiModule } from '@shared/shared-ui.module';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
   standalone: true,
   selector: 'app-paid-by-quick-dialog',
-  imports: [CommonModule, SharedUiModule, TranslateModule],
+  imports: [CommonModule, SharedMaterialModule, TranslateModule],
   templateUrl: './paid-by-quick-dialog.component.html',
   styleUrls: ['./paid-by-quick-dialog.component.scss'],
 })

@@ -6,20 +6,20 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { DialogService } from '@app/core/services/dialog.service';
 import { ExpenseService } from '@app/core/services/expenses.service';
-import { EXPENSE_CATEGORIES } from '@app/shared/data/expense-categories';
-import { CURRENCY_SYMBOLS } from '@app/shared/helpers/currency-symbols';
-import { detectQuickOptionFromParticipants } from '@app/shared/helpers/expense.utils';
-import { CurrencySymbolPipe } from '@app/shared/pipes/currency-symbol.pipe';
 import { Expense, ExpenseExtended, ExpenseUser } from '@models/expenses.model';
 import { AuthService } from '@services/auth.service';
-import { SharedUiModule } from '@shared/shared-ui.module';
+import { EXPENSE_CATEGORIES } from '@shared/data/expense-categories';
+import { CURRENCY_SYMBOLS } from '@shared/helpers/currency-symbols';
+import { detectQuickOptionFromParticipants } from '@shared/helpers/expense.utils';
+import { CurrencySymbolPipe } from '@shared/pipes/currency-symbol.pipe';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 
 import { ExpenseFormComponent } from '../expense-form/expense-form.component';
 
 @Component({
   selector: 'app-expenses',
   standalone: true,
-  imports: [CommonModule, SharedUiModule, TranslateModule, CurrencySymbolPipe],
+  imports: [CommonModule, SharedMaterialModule, TranslateModule, CurrencySymbolPipe],
   templateUrl: './expenses.component.html',
   styleUrls: ['./expenses.component.scss'],
 })

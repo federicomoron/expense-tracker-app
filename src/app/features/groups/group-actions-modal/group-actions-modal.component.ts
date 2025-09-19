@@ -4,16 +4,16 @@ import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { DialogService } from '@app/core/services/dialog.service';
-import { SharedUiModule } from '@app/shared/shared-ui.module';
-import { ConfirmDialogComponent } from '@app/shared/ui/dialogs/confirm-dialog.component';
 import { GroupService } from '@services/group.service';
 import { SnackbarService } from '@services/snackbar.service';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 import { AddMemberDialogComponent } from '@shared/ui/add-member-dialog/add-member-dialog.component';
+import { ConfirmDialogComponent } from '@shared/ui/dialogs/confirm-dialog.component';
 
 @Component({
   selector: 'app-group-actions-modal',
   standalone: true,
-  imports: [SharedUiModule, TranslateModule],
+  imports: [SharedMaterialModule, TranslateModule],
   templateUrl: './group-actions-modal.component.html',
   styleUrls: ['./group-actions-modal.component.scss'],
 })

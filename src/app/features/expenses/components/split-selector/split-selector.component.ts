@@ -7,14 +7,14 @@ import { DialogService } from '@app/core/services/dialog.service';
 import { PaidByDialogComponent } from '@features/expenses/components/paid-by-dialog/paid-by-dialog.component';
 import { SplitTypeDialogComponent } from '@features/expenses/components/split-type-dialog/split-type-dialog.component';
 import { AuthService } from '@services/auth.service';
-import { SharedUiModule } from '@shared/shared-ui.module';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 
 import { PaidByQuickDialogComponent } from '../paid-by-quick-dialog/paid-by-quick-dialog.component';
 
 @Component({
   standalone: true,
   selector: 'app-split-selector',
-  imports: [CommonModule, SharedUiModule, TranslateModule],
+  imports: [CommonModule, SharedMaterialModule, TranslateModule],
   templateUrl: './split-selector.component.html',
   styleUrls: ['./split-selector.component.scss'],
 })

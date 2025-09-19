@@ -4,13 +4,13 @@ import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { DialogService } from '@app/core/services/dialog.service';
-import { CalendarDialogComponent } from '@app/shared/components/calendar-dialog/calendar-dialog.component';
-import { SharedUiModule } from '@shared/shared-ui.module';
+import { CalendarDialogComponent } from '@shared/components/calendar-dialog/calendar-dialog.component';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
   selector: 'app-footer',
   standalone: true,
-  imports: [SharedUiModule, TranslateModule, DatePipe],
+  imports: [SharedMaterialModule, TranslateModule, DatePipe],
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
 })

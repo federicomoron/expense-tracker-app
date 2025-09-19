@@ -4,13 +4,13 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { SnackbarService } from '@app/core/services/snackbar.service';
-import { SharedUiModule } from '@app/shared/shared-ui.module';
 import { GroupService } from '@services/group.service';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
   selector: 'app-add-member-dialog',
   standalone: true,
-  imports: [SharedUiModule, FormsModule, TranslateModule],
+  imports: [SharedMaterialModule, FormsModule, TranslateModule],
   templateUrl: './add-member-dialog.component.html',
   styleUrls: ['./add-member-dialog.component.scss'],
 })

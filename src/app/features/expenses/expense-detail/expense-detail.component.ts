@@ -8,18 +8,18 @@ import { Expense, ExpenseExtended, ExpenseUser } from '@app/core/models/expenses
 import { AuthService } from '@app/core/services/auth.service';
 import { DialogService } from '@app/core/services/dialog.service';
 import { ExpenseService } from '@app/core/services/expenses.service';
-import { EXPENSE_CATEGORIES } from '@app/shared/data/expense-categories';
+import { EXPENSE_CATEGORIES } from '@shared/data/expense-categories';
 import {
   detectQuickOptionFromParticipants,
   findGroupIdInRoute,
-} from '@app/shared/helpers/expense.utils';
-import { SharedUiModule } from '@app/shared/shared-ui.module';
-import { ConfirmDialogComponent } from '@app/shared/ui/dialogs/confirm-dialog.component';
+} from '@shared/helpers/expense.utils';
+import { SharedMaterialModule } from '@shared/shared-material.module';
+import { ConfirmDialogComponent } from '@shared/ui/dialogs/confirm-dialog.component';
 
 @Component({
   selector: 'app-expense-detail',
   standalone: true,
-  imports: [CommonModule, SharedUiModule, TranslateModule],
+  imports: [CommonModule, SharedMaterialModule, TranslateModule],
   templateUrl: './expense-detail.component.html',
   styleUrls: ['./expense-detail.component.scss'],
 })

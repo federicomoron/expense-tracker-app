@@ -8,19 +8,19 @@ import { GroupDetailWithExpenses } from '@app/core/models/group-detail.model';
 import { AuthService } from '@app/core/services/auth.service';
 import { DialogService } from '@app/core/services/dialog.service';
 import { SnackbarService } from '@app/core/services/snackbar.service';
-import { getGroupImage } from '@app/shared/helpers/group-type-image-map';
-import { CurrencySymbolPipe } from '@app/shared/pipes/currency-symbol.pipe';
 import { NAVIGATION_ROUTES } from '@constants/routes';
 import { environment } from '@environments/environment';
 import { GroupFormComponent } from '@features/groups/group-form/group-form.component';
 import { GroupType } from '@models/group-type.enum';
 import { GroupService } from '@services/group.service';
-import { SharedUiModule } from '@shared/shared-ui.module';
+import { getGroupImage } from '@shared/helpers/group-type-image-map';
+import { CurrencySymbolPipe } from '@shared/pipes/currency-symbol.pipe';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
   selector: 'app-groups',
   standalone: true,
-  imports: [SharedUiModule, RouterModule, CommonModule, TranslateModule, CurrencySymbolPipe],
+  imports: [SharedMaterialModule, RouterModule, CommonModule, TranslateModule, CurrencySymbolPipe],
   templateUrl: './groups.component.html',
   styleUrls: ['./groups.component.scss'],
 })

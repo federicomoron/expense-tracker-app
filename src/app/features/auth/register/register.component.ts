@@ -4,16 +4,16 @@ import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { SnackbarService } from '@app/core/services/snackbar.service';
-import { ExpButtonComponent } from '@app/shared/components/exp-button/exp-button.component';
 import { NAVIGATION_ROUTES } from '@constants/routes';
 import { UserService } from '@services/user.service';
-import { SharedUiModule } from '@shared/shared-ui.module';
+import { ExpButtonComponent } from '@shared/components/exp-button/exp-button.component';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 import { nonEmpty, strongPassword, validEmail } from '@shared/utils/form-validators';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [SharedUiModule, ReactiveFormsModule, TranslateModule, ExpButtonComponent],
+  imports: [SharedMaterialModule, ReactiveFormsModule, TranslateModule, ExpButtonComponent],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })

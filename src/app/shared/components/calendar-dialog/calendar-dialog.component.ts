@@ -5,12 +5,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
 import { I18nService } from '@app/core/services/i18n.service';
-import { SharedUiModule } from '@app/shared/shared-ui.module';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
   selector: 'app-calendar-dialog',
   standalone: true,
-  imports: [CommonModule, TranslateModule, SharedUiModule],
+  imports: [CommonModule, TranslateModule, SharedMaterialModule],
   templateUrl: './calendar-dialog.component.html',
   styleUrls: ['./calendar-dialog.component.scss'],
 })

@@ -7,14 +7,14 @@ import { GroupType } from '@app/core/models/group-type.enum';
 import { DialogService } from '@app/core/services/dialog.service';
 import { LayoutService } from '@app/core/services/layout.service';
 import { SnackbarService } from '@app/core/services/snackbar.service';
-import { getGroupImage } from '@app/shared/helpers/group-type-image-map';
-import { CurrencySymbolPipe } from '@app/shared/pipes/currency-symbol.pipe';
 import { ExpensesComponent } from '@features/expenses/expenses/expenses.component';
 import { GroupActionsModalComponent } from '@features/groups/group-actions-modal/group-actions-modal.component';
 import { GroupDetailWithExpenses } from '@models/group-detail.model';
 import { AuthService } from '@services/auth.service';
 import { GroupService } from '@services/group.service';
-import { SharedUiModule } from '@shared/shared-ui.module';
+import { getGroupImage } from '@shared/helpers/group-type-image-map';
+import { CurrencySymbolPipe } from '@shared/pipes/currency-symbol.pipe';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
   selector: 'app-group-detail',
@@ -22,7 +22,7 @@ import { SharedUiModule } from '@shared/shared-ui.module';
   imports: [
     ExpensesComponent,
     CommonModule,
-    SharedUiModule,
+    SharedMaterialModule,
     TranslateModule,
     RouterModule,
     CurrencySymbolPipe,

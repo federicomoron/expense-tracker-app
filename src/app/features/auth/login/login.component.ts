@@ -4,16 +4,16 @@ import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { SnackbarService } from '@app/core/services/snackbar.service';
-import { ExpButtonSpinnerComponent } from '@app/shared/components/exp-button-spinner/exp-button-spinner.component';
 import { AuthService } from '@services/auth.service';
-import { SharedUiModule } from '@shared/shared-ui.module';
+import { ExpButtonSpinnerComponent } from '@shared/components/exp-button-spinner/exp-button-spinner.component';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 import { nonEmpty, validEmail } from '@shared/utils/form-validators';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
-    SharedUiModule,
+    SharedMaterialModule,
     RouterModule,
     ExpButtonSpinnerComponent,
     TranslateModule,
