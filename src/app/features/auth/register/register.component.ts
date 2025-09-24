@@ -19,7 +19,7 @@ import { nonEmpty, strongPassword, validEmail } from '@shared/utils/form-validat
 })
 export class RegisterComponent {
   public readonly showPassword = signal(false);
-  public readonly loading = signal(false);
+  public readonly isLoading = signal(false);
 
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
@@ -43,36 +43,43 @@ export class RegisterComponent {
 
   getError(controlName: string): string | null {
     const control = this.form.get(controlName);
-    if (!control || !control.touched) return null;
+    if (!control || !control.touched || !control.invalid) return null;
 
-    if (control.hasError('required'))
+    if (control.hasError('required') || control.hasError('nonEmpty')) {
       return this.translate.instant(`register.${controlName}Required`);
-    if (control.hasError('nonEmpty')) return this.translate.instant('register.nonEmpty');
-
-    if (controlName === 'email' && control.hasError('invalidEmail'))
-      return this.translate.instant('register.emailInvalid');
-
-    if (controlName === 'password') {
-      if (control.hasError('minlength'))
-        return this.translate.instant('register.passwordMinLength');
-      if (control.hasError('weakPassword')) return this.translate.instant('register.passwordWeak');
     }
 
-    return null;
+    if (controlName === 'email') {
+      if (control.hasError('invalidEmail') || control.hasError('email')) {
+        return this.translate.instant('register.emailInvalid');
+      }
+    }
+
+    if (controlName === 'password') {
+      if (control.hasError('minlength')) {
+        return this.translate.instant('register.passwordMinLength');
+      }
+      if (control.hasError('weakPassword')) {
+        return this.translate.instant('register.passwordWeak');
+      }
+    }
+
+    return this.translate.instant('validation.invalidField');
   }
 
   onSubmit(): void {
     if (this.form.invalid) {
       this.snackbar.show(this.translate.instant('register.formInvalid'));
+      this.form.markAllAsTouched();
       return;
     }
 
-    this.loading.set(true);
+    this.isLoading.set(true);
     const data = this.form.getRawValue();
 
     this.userService.register(data).subscribe({
       next: (res) => {
-        this.loading.set(false);
+        this.isLoading.set(false);
         if (!res.success || !res.data?.email) {
           this.snackbar.show(this.translate.instant('register.registerError'));
           return;
@@ -81,7 +88,7 @@ export class RegisterComponent {
         setTimeout(() => void this.router.navigate([NAVIGATION_ROUTES.LOGIN]), 2000);
       },
       error: (err) => {
-        this.loading.set(false);
+        this.isLoading.set(false);
         if (err.status === 409) {
           this.snackbar.show(this.translate.instant('register.emailExists'));
         } else {

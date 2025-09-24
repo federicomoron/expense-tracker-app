@@ -18,7 +18,8 @@
   "validation": {
     "nonEmpty": "Este campo es obligatorio.",
     "emailInvalid": "El correo electrónico no es válido.",
-    "passwordTooShort": "La contraseña debe tener al menos 6 caracteres."
+    "passwordTooShort": "La contraseña debe tener al menos 6 caracteres.",
+    "invalidField": "Campo inválido."
   },
   "register": {
     "nameLabel": "Nombre",

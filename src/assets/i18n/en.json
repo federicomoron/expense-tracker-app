@@ -18,7 +18,8 @@
   "validation": {
     "nonEmpty": "This field is required.",
     "emailInvalid": "Invalid email address.",
-    "passwordTooShort": "Password must be at least 6 characters long."
+    "passwordTooShort": "Password must be at least 6 characters long.",
+    "invalidField": "Invalid field."
   },
   "register": {
     "nameLabel": "Name",
