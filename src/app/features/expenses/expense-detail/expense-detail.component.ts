@@ -5,9 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { Expense, ExpenseExtended, ExpenseUser } from '@core/models/expenses.model';
-import { AuthService } from '@core/services/auth.service';
-import { DialogService } from '@core/services/dialog.service';
-import { ExpenseService } from '@core/services/expenses.service';
+import { AuthService } from '@services/auth.service';
+import { DialogService } from '@services/dialog.service';
+import { ExpenseService } from '@services/expenses.service';
 import { EXPENSE_CATEGORIES } from '@shared/data/expense-categories';
 import {
   detectQuickOptionFromParticipants,
@@ -24,50 +24,20 @@ import { ConfirmDialogComponent } from '@shared/ui/dialogs/confirm-dialog.compon
   styleUrls: ['./expense-detail.component.scss'],
 })
 export class ExpenseDetailComponent {
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private translate = inject(TranslateService);
-  private authService = inject(AuthService);
-  private snackbar = inject(MatSnackBar);
-  private expenseService = inject(ExpenseService);
-  private dialogService = inject(DialogService);
+  readonly expense = signal<Expense | null>(null);
 
-  expense = signal<Expense | null>(null);
-  currentUserId = this.authService.currentUser()?.id;
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly translate = inject(TranslateService);
+  private readonly authService = inject(AuthService);
+  private readonly snackbar = inject(MatSnackBar);
+  private readonly expenseService = inject(ExpenseService);
+  private readonly dialogService = inject(DialogService);
+
+  readonly currentUserId = this.authService.currentUser()?.id ?? undefined;
 
   constructor() {
-    const expenseFromState = history.state?.expense;
-    const routeGroupId = findGroupIdInRoute(this.route);
-
-    if (expenseFromState) {
-      this.expense.set({ ...expenseFromState, groupId: routeGroupId });
-      return;
-    }
-
-    const expenseIdParam = this.route.snapshot.paramMap.get('expenseId');
-    const expenseId = expenseIdParam ? Number(expenseIdParam) : NaN;
-
-    if (isNaN(expenseId)) {
-      void this.router.navigate(['/groups', routeGroupId]);
-      return;
-    }
-
-    const groupDetail = history.state?.group as { expenses?: Expense[] } | undefined;
-    let found: Expense | undefined;
-
-    if (groupDetail?.expenses) {
-      found = groupDetail.expenses.find((e) => e.id === expenseId);
-    }
-
-    if (!found && (window as any).currentGroupDetail?.expenses) {
-      found = (window as any).currentGroupDetail.expenses.find((e: Expense) => e.id === expenseId);
-    }
-
-    if (found) {
-      this.expense.set({ ...found, groupId: routeGroupId });
-    } else {
-      void this.router.navigate(['/groups', routeGroupId]);
-    }
+    this._initExpense();
   }
 
   onEdit(): void {
@@ -75,9 +45,11 @@ export class ExpenseDetailComponent {
     if (!expense) return;
 
     const routeGroupId = findGroupIdInRoute(this.route);
-    if (!expense.groupId) expense.groupId = routeGroupId;
 
-    if (!expense.groupId || !expense.id) {
+    // Prefer the groupId from the expense (in case we navigated from another group), fallback to route
+    const groupId = expense.groupId ?? routeGroupId;
+
+    if (!groupId || !expense.id) {
       this.snackbar.open(this.translate.instant('expenses.invalidExpense'), 'OK', {
         duration: 2500,
       });
@@ -106,11 +78,8 @@ export class ExpenseDetailComponent {
       const payer = participants.find((p) => Number(p.amount) > 0);
       if (payer) {
         paidBy = [{ userId: payer.userId, amount: Number(payer.amount) }];
-      } else {
-        const currentUserId = this.currentUserId ?? null;
-        if (currentUserId) {
-          paidBy = [{ userId: currentUserId, amount: Number(expense.total) }];
-        }
+      } else if (this.currentUserId) {
+        paidBy = [{ userId: this.currentUserId, amount: Number(expense.total) }];
       }
     }
 
@@ -159,13 +128,14 @@ export class ExpenseDetailComponent {
 
     const expenseForEdit: ExpenseExtended = {
       ...expense,
+      groupId,
       optionId,
       paidBy,
       splits,
       category,
     };
 
-    void this.router.navigate(['/groups', expense.groupId, 'expenses', expense.id, 'edit'], {
+    void this.router.navigate(['/groups', groupId, 'expenses', expense.id, 'edit'], {
       state: { expense: expenseForEdit },
     });
   }
@@ -203,5 +173,41 @@ export class ExpenseDetailComponent {
   closeDialog(): void {
     const expense = this.expense();
     void this.router.navigate(['/groups', expense?.groupId ?? '']);
+  }
+
+  private _initExpense(): void {
+    const expenseFromState = history.state?.expense as Expense | null;
+    const routeGroupId = findGroupIdInRoute(this.route);
+
+    if (expenseFromState) {
+      this.expense.set({ ...expenseFromState, groupId: routeGroupId });
+      return;
+    }
+
+    const expenseIdParam = this.route.snapshot.paramMap.get('expenseId');
+    const expenseId = expenseIdParam ? +expenseIdParam : null;
+
+    if (!expenseId) {
+      void this.router.navigate(['/groups', routeGroupId]);
+      return;
+    }
+
+    const groupDetail = history.state?.group as { expenses?: Expense[] } | undefined;
+    let found: Expense | undefined;
+
+    if (groupDetail?.expenses) {
+      found = groupDetail.expenses.find((e) => e.id === expenseId);
+    }
+
+    if (!found && (window as any).currentGroupDetail?.expenses) {
+      const currentGroup = (window as any).currentGroupDetail as { expenses?: Expense[] };
+      found = currentGroup.expenses?.find((e) => e.id === expenseId);
+    }
+
+    if (found) {
+      this.expense.set({ ...found, groupId: routeGroupId });
+    } else {
+      void this.router.navigate(['/groups', routeGroupId]);
+    }
   }
 }

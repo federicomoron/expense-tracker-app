@@ -10,16 +10,16 @@ export const authGuard: CanActivateFn = async () => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
-  return await firstValueFrom(
-    toObservable(auth.isSessionRestored).pipe(
-      filter((restored) => restored),
-      map(() => {
-        if (!auth.isLoggedIn()) {
-          void router.navigate([NAVIGATION_ROUTES.LOGIN]);
-          return false;
-        }
-        return true;
-      }),
-    ),
+  const isRestored$ = toObservable(auth.isSessionRestored).pipe(
+    filter((restored) => restored),
+    map(() => {
+      if (!auth.isLoggedIn()) {
+        void router.navigate([NAVIGATION_ROUTES.LOGIN]);
+        return false;
+      }
+      return true;
+    }),
   );
+
+  return await firstValueFrom(isRestored$);
 };

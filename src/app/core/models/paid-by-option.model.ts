@@ -6,6 +6,6 @@ export type PaidByOptionId =
   | 'default';
 
 export interface PaidByOption {
-  id: PaidByOptionId;
-  label: string;
+  readonly id: PaidByOptionId;
+  readonly label: string;
 }

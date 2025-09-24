@@ -13,8 +13,8 @@ import { SharedMaterialModule } from '@shared/shared-material.module';
   styleUrls: ['./split-type-dialog.component.scss'],
 })
 export class SplitTypeDialogComponent {
-  private dialogRef = inject(MatDialogRef<SplitTypeDialogComponent>);
-  private translate = inject(TranslateService);
+  private readonly dialogRef = inject(MatDialogRef<SplitTypeDialogComponent>);
+  private readonly translate = inject(TranslateService);
 
   options = [this.translate.instant('splitType.equalParts')];
 

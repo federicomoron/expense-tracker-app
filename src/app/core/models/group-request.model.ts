@@ -8,6 +8,6 @@ export interface CreateGroupPayload {
 }
 
 export interface CreateGroupResponse {
-  success: boolean;
-  data: Group;
+  readonly success: boolean;
+  readonly data: Group;
 }

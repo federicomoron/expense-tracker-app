@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
-  private dialog = inject(MatDialog);
+  private readonly dialog = inject(MatDialog);
 
   openFullScreen<T, D = any>(component: T, data?: D): MatDialogRef<any> {
     const dialogRef = this.dialog.open(component as any, {

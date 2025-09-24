@@ -1,19 +1,24 @@
 import { PaidByOptionId } from '@models/paid-by-option.model';
 
 export interface Expense {
-  id: number;
-  groupId: number;
-  description: string;
-  total: number | string;
-  currency: string;
-  createdAt: string;
-  updatedAt: string;
-  participants: {
-    userId: number;
-    amount: number;
-  }[];
-  category?: string;
-  iconUrl?: string;
+  readonly id: number;
+  readonly groupId: number;
+  readonly description: string;
+  readonly total: number | string;
+  readonly currency: string;
+  readonly createdAt: string;
+  readonly updatedAt: string;
+  readonly participants: ReadonlyArray<{
+    readonly userId: number;
+    readonly amount: number;
+  }>;
+  readonly category?: string;
+  readonly iconUrl?: string;
+}
+
+export interface ExpenseUser {
+  readonly userId: number;
+  readonly amount: number;
 }
 
 export interface ExpenseRequest {
@@ -27,18 +32,20 @@ export interface ExpenseRequest {
   optionId?: PaidByOptionId;
 }
 
-export interface ExpenseUser {
-  userId: number;
-  amount: number;
-}
-
 export interface ExpenseResponse {
-  success: boolean;
-  data: Expense;
+  readonly success: boolean;
+  readonly data: Expense;
 }
 
 export interface ExpenseExtended extends Expense {
-  paidBy?: ExpenseUser[];
-  splits?: ExpenseUser[];
-  optionId?: PaidByOptionId;
+  readonly paidBy?: ExpenseUser[];
+  readonly splits?: ExpenseUser[];
+  readonly optionId?: PaidByOptionId;
+}
+
+export interface ExpenseCategory {
+  readonly key: string;
+  readonly label: string;
+  readonly icon: string;
+  readonly keywords?: readonly string[];
 }

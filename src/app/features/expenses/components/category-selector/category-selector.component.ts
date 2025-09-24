@@ -3,7 +3,6 @@ import { Component, inject, signal } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { CurrencySelectorComponent } from '@features/expenses/components/currency-selector/currency-selector.component';
 import { EXPENSE_CATEGORIES } from '@shared/data/expense-categories';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 
@@ -15,17 +14,13 @@ import { SharedMaterialModule } from '@shared/shared-material.module';
   styleUrls: ['./category-selector.component.scss'],
 })
 export class CategorySelectorComponent {
-  private dialogRef = inject(MatDialogRef<CurrencySelectorComponent>);
-
   categories = signal(EXPENSE_CATEGORIES);
-
   selectedCategory = signal('');
 
+  private dialogRef = inject(MatDialogRef<CategorySelectorComponent>);
+
   chooseCategory(categoryKey: string): void {
-    const category = this.categories().find((c) => c.key === categoryKey);
-    if (category) {
-      this.dialogRef.close(category);
-    }
+    this.dialogRef.close(this.categories().find((c) => c.key === categoryKey) ?? undefined);
   }
 
   closeDialog(): void {

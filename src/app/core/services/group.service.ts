@@ -9,41 +9,23 @@ import { CreateGroupPayload, CreateGroupResponse } from '@models/group-request.m
 import { Group } from '@models/group.model';
 import { HttpService } from '@services/http.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class GroupService {
-  private readonly apiUrl = environment.apiUrl;
   private _groupsSignal = signal<Group[]>(this.loadFromStorage());
-  private http = inject(HttpService);
-
   private _activeGroupId = signal<number | null>(null);
 
+  readonly groups = computed(() => this._groupsSignal());
   readonly activeGroup = computed(() => {
     const groupId = this._activeGroupId();
     return this.groups().find((group) => group.id === groupId) ?? null;
   });
 
+  private http = inject(HttpService);
+
+  private readonly apiUrl = environment.apiUrl;
+
   setActiveGroup(groupId: number) {
     this._activeGroupId.set(groupId);
-  }
-
-  readonly groups = computed(() => {
-    return this._groupsSignal();
-  });
-
-  private loadFromStorage(): Group[] {
-    const stored = localStorage.getItem(STORAGE_KEYS.GROUPS);
-    try {
-      const parsed = stored ? JSON.parse(stored) : [];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
-  }
-
-  private saveToStorage() {
-    localStorage.setItem(STORAGE_KEYS.GROUPS, JSON.stringify(this._groupsSignal()));
   }
 
   fetchGroups() {
@@ -63,7 +45,6 @@ export class GroupService {
 
   addGroup(group: Group) {
     if (!group || !group.name || !group.id) return;
-
     this._groupsSignal.update((groups) => [...groups, group]);
     this.saveToStorage();
   }
@@ -140,5 +121,19 @@ export class GroupService {
       { success: boolean; data: any },
       { groupId: number; invitedUserId: number }
     >(`${this.apiUrl}${API_ENDPOINTS.SEND_INVITATION}`, { groupId, invitedUserId });
+  }
+
+  private loadFromStorage(): Group[] {
+    const stored = localStorage.getItem(STORAGE_KEYS.GROUPS);
+    try {
+      const parsed = stored ? JSON.parse(stored) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  private saveToStorage() {
+    localStorage.setItem(STORAGE_KEYS.GROUPS, JSON.stringify(this._groupsSignal()));
   }
 }

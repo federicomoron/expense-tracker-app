@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { DialogService } from '@core/services/dialog.service';
+import { DialogService } from '@services/dialog.service';
 import { GroupService } from '@services/group.service';
 import { SnackbarService } from '@services/snackbar.service';
 import { SharedMaterialModule } from '@shared/shared-material.module';
@@ -18,57 +18,24 @@ import { ConfirmDialogComponent } from '@shared/ui/dialogs/confirm-dialog.compon
   styleUrls: ['./group-actions-modal.component.scss'],
 })
 export class GroupActionsModalComponent implements OnInit {
-  public dialogRef = inject(MatDialogRef<GroupActionsModalComponent>);
-  public data = inject(MAT_DIALOG_DATA) as { groupId: number; groupName: string };
-
-  private groupService = inject(GroupService);
-  private snackbar = inject(SnackbarService);
-  private router = inject(Router);
-  private translate = inject(TranslateService);
-  private dialogService = inject(DialogService);
-
-  members = signal<
+  public readonly members = signal<
     { name: string; email: string; status: 'confirmed' | 'pending'; invitedUserId?: number }[]
   >([]);
 
-  ngOnInit() {
+  public readonly dialogRef = inject(MatDialogRef<GroupActionsModalComponent>);
+  public readonly data = inject(MAT_DIALOG_DATA) as { groupId: number; groupName: string };
+
+  private readonly groupService = inject(GroupService);
+  private readonly snackbar = inject(SnackbarService);
+  private readonly router = inject(Router);
+  private readonly translate = inject(TranslateService);
+  private readonly dialogService = inject(DialogService);
+
+  ngOnInit(): void {
     this.loadGroupMembers();
   }
 
-  loadGroupMembers() {
-    // Bringing confirmed members
-    this.groupService.getGroupDetail(this.data.groupId).subscribe({
-      next: (detail) => {
-        const confirmed = detail.members.map((member) => ({
-          name: member.name,
-          email: '',
-          status: 'confirmed' as const,
-          invitedUserId: member.userId,
-        }));
-
-        // Bringing pending invitations
-        this.groupService.getGroupInvitations(this.data.groupId).subscribe({
-          next: (invitations) => {
-            const pending = invitations
-              .filter((inv) => inv.status === 'pending')
-              .map((inv) => ({
-                name: inv.invited_by?.name ?? inv.invited_email,
-                email: inv.invited_email,
-                status: 'pending' as const,
-                invitedUserId: inv.invitedUserId,
-              }));
-
-            // Combining confirmed and pending members
-            this.members.set([...confirmed, ...pending]);
-          },
-          error: (err) => console.error('Error cargando invitaciones', err),
-        });
-      },
-      error: (err) => console.error('Error cargando miembros confirmados', err),
-    });
-  }
-
-  openAddMemberDialog() {
+  openAddMemberDialog(): void {
     const dialogRef = this.dialogService.openFixed(AddMemberDialogComponent, '400px', {
       groupId: this.data.groupId,
     });
@@ -100,10 +67,40 @@ export class GroupActionsModalComponent implements OnInit {
           void this.router.navigate(['/groups']);
         },
         error: (err) => {
-          console.error('Error eliminando el grupo', err);
+          console.error('Error deleting group', err);
           this.snackbar.show(this.translate.instant('groupActions.errorDeleting'));
         },
       });
+    });
+  }
+
+  private loadGroupMembers(): void {
+    this.groupService.getGroupDetail(this.data.groupId).subscribe({
+      next: (detail) => {
+        const confirmed = detail.members.map((member) => ({
+          name: member.name,
+          email: '',
+          status: 'confirmed' as const,
+          invitedUserId: member.userId,
+        }));
+
+        this.groupService.getGroupInvitations(this.data.groupId).subscribe({
+          next: (invitations) => {
+            const pending = invitations
+              .filter((inv) => inv.status === 'pending')
+              .map((inv) => ({
+                name: inv.invited_by?.name ?? inv.invited_email,
+                email: inv.invited_email,
+                status: 'pending' as const,
+                invitedUserId: inv.invitedUserId,
+              }));
+
+            this.members.set([...confirmed, ...pending]);
+          },
+          error: (err) => console.error('Error loading pending invitations', err),
+        });
+      },
+      error: (err) => console.error('Error loading confirmed members', err),
     });
   }
 }

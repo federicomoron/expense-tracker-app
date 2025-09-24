@@ -3,11 +3,12 @@ import { Component, EventEmitter, inject, Input, Output, signal } from '@angular
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { PaidByOption, PaidByOptionId } from '@core/models/paid-by-option.model';
-import { DialogService } from '@core/services/dialog.service';
 import { PaidByDialogComponent } from '@features/expenses/components/paid-by-dialog/paid-by-dialog.component';
 import { PaidByQuickDialogComponent } from '@features/expenses/components/paid-by-quick-dialog/paid-by-quick-dialog.component';
 import { SplitTypeDialogComponent } from '@features/expenses/components/split-type-dialog/split-type-dialog.component';
 import { AuthService } from '@services/auth.service';
+import { DialogService } from '@services/dialog.service';
+import { getDefaultPaidByLabel, getPaidByLabelFromId } from '@shared/helpers/expense.utils';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
@@ -18,29 +19,30 @@ import { SharedMaterialModule } from '@shared/shared-material.module';
   styleUrls: ['./split-selector.component.scss'],
 })
 export class SplitSelectorComponent {
-  private authService = inject(AuthService);
-  private dialogService = inject(DialogService);
-  private translate = inject(TranslateService);
+  private readonly authService = inject(AuthService);
+  private readonly dialogService = inject(DialogService);
+  private readonly translate = inject(TranslateService);
 
   private _groupMembers: { userId: number; name: string }[] = [];
 
   @Output() payerChanged = new EventEmitter<{ userId: number; name: string } | PaidByOption>();
 
   @Input()
-  set groupMembers(members: { userId: number; name: string }[]) {
-    this._groupMembers = members;
+  set groupMembers(members: readonly { userId: number; name: string }[]) {
+    this._groupMembers = [...members];
 
-    // Update selected option if it depends on "otherMember"
-    const currentOption = this.selectedOption();
-    if (
-      currentOption &&
-      (currentOption.id === 'other_paid_equal' || currentOption.id === 'other_is_owed')
-    ) {
+    // Update selected option label if it depends on other member
+    const option = this.selectedOption();
+    if (option && (option.id === 'other_paid_equal' || option.id === 'other_is_owed')) {
       this.selectedOption.set({
-        id: currentOption.id,
-        label: this.getPaidByLabelFromId(currentOption.id),
+        id: option.id,
+        label: this.getPaidByLabelFromId(option.id),
       });
     }
+  }
+
+  get groupMembers(): { userId: number; name: string }[] {
+    return this._groupMembers;
   }
 
   options = signal<PaidByOption[]>([
@@ -63,6 +65,10 @@ export class SplitSelectorComponent {
     { id: 'default' as PaidByOptionId, label: this.translate.instant('expenseForm.defaultLabel') },
   ]);
 
+  selectedPayer = signal<{ userId: number; name: string } | null>(null);
+  selectedSplitType = signal<string | null>(null);
+  selectedOption = signal<PaidByOption | null>(null);
+
   @Input()
   set selectedOptionId(optionId: PaidByOptionId | null | undefined) {
     if (!optionId) {
@@ -70,21 +76,16 @@ export class SplitSelectorComponent {
       return;
     }
 
-    // Always recalc label dynamically based on members
-    const label = this.getPaidByLabelFromId(optionId);
-    this.selectedOption.set({ id: optionId, label });
+    // Set option with dynamic label
+    this.selectedOption.set({
+      id: optionId,
+      label: this.getPaidByLabelFromId(optionId),
+    });
   }
 
-  get groupMembers(): { userId: number; name: string }[] {
-    return this._groupMembers;
-  }
-
-  selectedPayer = signal<{ userId: number; name: string } | null>(null);
-  selectedSplitType = signal<string | null>(null);
-  selectedOption = signal<PaidByOption | null>(null);
-
+  /** Open the PaidBy dialog depending on number of group members */
   openPaidByDialog() {
-    if (!this.groupMembers || this.groupMembers.length === 0) return;
+    if (!this.groupMembers.length) return;
 
     const dialogRef =
       this.groupMembers.length === 2
@@ -92,15 +93,15 @@ export class SplitSelectorComponent {
             members: this.groupMembers,
             selectedOption: this.selectedOption(),
           })
-        : this.dialogService.openFullScreen(PaidByDialogComponent, {
-            members: this.groupMembers,
-          });
+        : this.dialogService.openFullScreen(PaidByDialogComponent, { members: this.groupMembers });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result?.id) {
+      if (!result) return;
+
+      if ('id' in result) {
         this.selectedOption.set(result);
         this.payerChanged.emit(result);
-      } else if (result) {
+      } else {
         this.selectedPayer.set(result);
         this.payerChanged.emit(result);
       }
@@ -114,68 +115,40 @@ export class SplitSelectorComponent {
     });
   }
 
+  /** Set payer by userId (fallbacks if not found) */
   setPayer(userId: number) {
-    // search member by userId, but if not found, still set userId with empty name
     const member = this.groupMembers.find((m) => m.userId === userId);
-    if (member) {
-      this.selectedPayer.set(member);
-    } else {
-      // fallback: set userId even if not in the list
-      this.selectedPayer.set({ userId, name: '' });
-    }
+    this.selectedPayer.set(member ?? { userId, name: '' });
   }
 
   getSelectedPayerSignal() {
     return this.selectedPayer;
   }
 
+  /** Returns the label for the currently selected PaidBy option */
   getPaidByLabel(): string {
-    // special case: group of 2 people
-    if (this.groupMembers.length === 2) {
-      const option = this.selectedOption();
-      return option?.label || this.translate.instant('expenseForm.defaultLabel');
-    }
-
-    // special case: group of 1 person
-    if (this.groupMembers.length === 1) {
-      return this.translate.instant('splitSelector.you');
-    }
-
-    // special case: 3 or more members
-    const payer = this.selectedPayer();
-    const currentUserId = this.authService.currentUser()?.id;
-    if (payer) {
-      return payer.userId === currentUserId
-        ? this.translate.instant('splitSelector.you')
-        : payer.name;
-    }
-    return '';
+    return getDefaultPaidByLabel(
+      this.groupMembers,
+      this.selectedOption(),
+      this.selectedPayer(),
+      this.authService.currentUser()?.id,
+      this.translate,
+    );
   }
 
+  /** Returns the label for the currently selected split type */
   getSplitTypeLabel(): string {
-    // Always show "Equal parts" as default/fallback
     return this.selectedSplitType() || this.translate.instant('splitType.equalParts');
   }
 
+  /** Map optionId to dynamic label */
   private getPaidByLabelFromId(optionId: PaidByOptionId, payerName?: string): string {
-    const currentUserId = this.authService.currentUser()?.id;
-    const otherMember = this.groupMembers.find((m) => m.userId !== currentUserId);
-
-    switch (optionId) {
-      case 'you_paid_equal':
-        return this.translate.instant('paidByQuickDialog.youPaidEqual');
-      case 'you_are_owed':
-        return this.translate.instant('paidByQuickDialog.youAreOwed');
-      case 'other_paid_equal':
-        return this.translate.instant('paidByQuickDialog.otherPaidEqual', {
-          name: payerName ?? otherMember?.name ?? '',
-        });
-      case 'other_is_owed':
-        return this.translate.instant('paidByQuickDialog.otherIsOwed', {
-          name: payerName ?? otherMember?.name ?? '',
-        });
-      default:
-        return this.translate.instant('expenseForm.defaultLabel');
-    }
+    return getPaidByLabelFromId(
+      optionId,
+      this.groupMembers,
+      this.authService.currentUser()?.id,
+      this.translate,
+      payerName,
+    );
   }
 }

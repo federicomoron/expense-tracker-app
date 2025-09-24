@@ -50,8 +50,8 @@
       }
     </mat-form-field>
 
-    <app-exp-button type="submit" color="primary" [disabled]="loading" [fullWidth]="true">
-      @if (loading) {
+    <app-exp-button type="submit" color="primary" [disabled]="loading()" [fullWidth]="true">
+      @if (loading()) {
         <mat-progress-spinner
           mode="indeterminate"
           diameter="20"

@@ -1,10 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { NAVIGATION_ROUTES } from '@constants/routes';
-import { SnackbarService } from '@core/services/snackbar.service';
+import { SnackbarService } from '@services/snackbar.service';
 import { UserService } from '@services/user.service';
 import { ExpButtonComponent } from '@shared/components/exp-button/exp-button.component';
 import { SharedMaterialModule } from '@shared/shared-material.module';
@@ -18,21 +18,48 @@ import { nonEmpty, strongPassword, validEmail } from '@shared/utils/form-validat
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
-  showPassword = signal(false);
+  public readonly showPassword = signal(false);
+  public readonly loading = signal(false);
 
-  private fb = inject(FormBuilder);
-  private router = inject(Router);
-  private snackbar = inject(SnackbarService);
-  private userService = inject(UserService);
-  private translate = inject(TranslateService);
+  private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
+  private readonly snackbar = inject(SnackbarService);
+  private readonly userService = inject(UserService);
+  private readonly translate = inject(TranslateService);
 
-  loading = false;
-
-  form: FormGroup = this.fb.group({
+  public form = this.fb.nonNullable.group({
     name: ['', [Validators.required, nonEmpty]],
     email: ['', [Validators.required, nonEmpty, validEmail]],
     password: ['', [Validators.required, nonEmpty, Validators.minLength(6), strongPassword]],
   });
+
+  togglePasswordVisibility(): void {
+    this.showPassword.update((v) => !v);
+  }
+
+  goBack(): void {
+    void this.router.navigate([NAVIGATION_ROUTES.LOGIN]);
+  }
+
+  getError(controlName: string): string | null {
+    const control = this.form.get(controlName);
+    if (!control || !control.touched) return null;
+
+    if (control.hasError('required'))
+      return this.translate.instant(`register.${controlName}Required`);
+    if (control.hasError('nonEmpty')) return this.translate.instant('register.nonEmpty');
+
+    if (controlName === 'email' && control.hasError('invalidEmail'))
+      return this.translate.instant('register.emailInvalid');
+
+    if (controlName === 'password') {
+      if (control.hasError('minlength'))
+        return this.translate.instant('register.passwordMinLength');
+      if (control.hasError('weakPassword')) return this.translate.instant('register.passwordWeak');
+    }
+
+    return null;
+  }
 
   onSubmit(): void {
     if (this.form.invalid) {
@@ -40,24 +67,21 @@ export class RegisterComponent {
       return;
     }
 
-    this.loading = true;
-    const data = this.form.value;
+    this.loading.set(true);
+    const data = this.form.getRawValue();
 
     this.userService.register(data).subscribe({
       next: (res) => {
-        this.loading = false;
-
+        this.loading.set(false);
         if (!res.success || !res.data?.email) {
           this.snackbar.show(this.translate.instant('register.registerError'));
           return;
         }
-
         this.snackbar.show(this.translate.instant('register.registerSuccess'));
-        setTimeout(() => void this.router.navigateByUrl('/login'), 2000);
+        setTimeout(() => void this.router.navigate([NAVIGATION_ROUTES.LOGIN]), 2000);
       },
       error: (err) => {
-        this.loading = false;
-
+        this.loading.set(false);
         if (err.status === 409) {
           this.snackbar.show(this.translate.instant('register.emailExists'));
         } else {
@@ -65,41 +89,5 @@ export class RegisterComponent {
         }
       },
     });
-  }
-
-  goBack() {
-    void this.router.navigate([NAVIGATION_ROUTES.LOGIN]);
-  }
-
-  togglePasswordVisibility() {
-    this.showPassword.update((value) => !value);
-  }
-
-  getError(controlName: string): string | null {
-    const control = this.form.get(controlName);
-    if (!control || !control.touched) return null;
-
-    if (control.hasError('required')) {
-      return this.translate.instant(`register.${controlName}Required`);
-    }
-
-    if (control.hasError('nonEmpty')) {
-      return this.translate.instant(`register.nonEmpty`);
-    }
-
-    if (controlName === 'email' && control.hasError('invalidEmail')) {
-      return this.translate.instant('register.emailInvalid');
-    }
-
-    if (controlName === 'password') {
-      if (control.hasError('minlength')) {
-        return this.translate.instant('register.passwordMinLength');
-      }
-      if (control.hasError('weakPassword')) {
-        return this.translate.instant('register.passwordWeak');
-      }
-    }
-
-    return null;
   }
 }

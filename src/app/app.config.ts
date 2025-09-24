@@ -5,7 +5,6 @@ import {
   APP_INITIALIZER,
   ApplicationConfig,
   importProvidersFrom,
-  inject,
   isDevMode,
   LOCALE_ID,
   provideZoneChangeDetection,
@@ -24,16 +23,15 @@ import { AuthService } from '@services/auth.service';
 import { i18nInitializer } from '@services/i18n-init';
 import { I18nService } from '@services/i18n.service';
 
-export function HttpLoaderFactory(http: HttpClient) {
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, '/assets/i18n/', '.json');
 }
 
-export function initAuth(authService: AuthService): () => Promise<void> {
-  return () =>
-    new Promise<void>((resolve) => {
-      authService.restoreSession();
-      resolve();
-    });
+export function initAuthFactory(authService: AuthService): () => Promise<void> {
+  return () => {
+    authService.restoreSession();
+    return Promise.resolve();
+  };
 }
 
 registerLocaleData(localeEs);
@@ -66,11 +64,9 @@ export const appConfig: ApplicationConfig = {
     },
     {
       provide: APP_INITIALIZER,
+      useFactory: initAuthFactory,
+      deps: [AuthService],
       multi: true,
-      useFactory: () => {
-        const auth = inject(AuthService);
-        return () => auth.restoreSession();
-      },
     },
     {
       provide: LOCALE_ID,

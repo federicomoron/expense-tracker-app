@@ -1,35 +1,32 @@
 import { Expense } from '@models/expenses.model';
 
 export interface GroupMember {
-  userId: number;
-  name: string;
+  readonly userId: number;
+  readonly name: string;
 }
 
 export interface GroupMemberBalance extends GroupMember {
-  currency: string;
-  amount: number;
+  readonly currency: string;
+  readonly amount: number;
 }
 
 export interface GroupDetail {
-  id: number;
-  name: string;
-  type: string;
-  members: GroupMember[];
-  balanceSummary: {
-    currency: string;
-    amount: number;
-  }[];
-  memberBalances: GroupMemberBalance[];
-  createdAt: string;
-  updatedAt: string;
+  readonly id: number;
+  readonly name: string;
+  readonly type: string;
+  readonly members: ReadonlyArray<GroupMember>;
+  readonly balanceSummary: ReadonlyArray<{ currency: string; amount: number }>;
+  readonly memberBalances: ReadonlyArray<GroupMemberBalance>;
+  readonly createdAt: string;
+  readonly updatedAt: string;
 }
 
 export interface GroupDetailWithExpenses extends GroupDetail {
-  expenses?: Expense[];
-  imageUrl?: string;
+  readonly expenses?: Expense[];
+  readonly imageUrl?: string;
 }
 
 export interface GroupDetailResponse {
-  success: boolean;
-  data: GroupDetailWithExpenses;
+  readonly success: boolean;
+  readonly data: GroupDetailWithExpenses;
 }

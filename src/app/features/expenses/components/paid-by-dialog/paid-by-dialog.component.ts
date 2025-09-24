@@ -14,8 +14,8 @@ import { SharedMaterialModule } from '@shared/shared-material.module';
   styleUrls: ['./paid-by-dialog.component.scss'],
 })
 export class PaidByDialogComponent {
-  private dialogRef = inject(MatDialogRef<PaidByDialogComponent>);
-  private data = inject(MAT_DIALOG_DATA) as { members: GroupMember[] };
+  private readonly dialogRef = inject(MatDialogRef<PaidByDialogComponent>);
+  private readonly data = inject(MAT_DIALOG_DATA) as { members: GroupMember[] };
 
   members = signal(this.data.members);
   selected = signal<GroupMember | null>(null);

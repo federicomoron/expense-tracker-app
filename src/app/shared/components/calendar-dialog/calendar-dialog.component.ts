@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
 
-import { I18nService } from '@core/services/i18n.service';
+import { I18nService } from '@services/i18n.service';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
@@ -14,38 +13,32 @@ import { SharedMaterialModule } from '@shared/shared-material.module';
   templateUrl: './calendar-dialog.component.html',
   styleUrls: ['./calendar-dialog.component.scss'],
 })
-export class CalendarDialogComponent implements OnDestroy {
-  selectedDate: Date = new Date();
+export class CalendarDialogComponent {
+  private readonly dialogRef = inject(MatDialogRef<CalendarDialogComponent>);
+  private readonly i18n = inject(I18nService);
 
-  showCalendar = true;
+  public selectedDate: Date = new Date();
+  public showCalendar = true;
 
-  private langChangeSub: Subscription;
-
-  constructor(
-    private dialogRef: MatDialogRef<CalendarDialogComponent>,
-    private i18n: I18nService,
-  ) {
-    this.langChangeSub = this.i18n.langChange$.subscribe(() => {
+  constructor() {
+    effect(() => {
+      this.i18n.langChange();
       this.showCalendar = false;
       setTimeout(() => (this.showCalendar = true), 0);
     });
   }
 
-  ngOnDestroy() {
-    this.langChangeSub.unsubscribe();
-  }
-
-  close() {
+  close(): void {
     this.dialogRef.close();
   }
 
-  confirm() {
+  confirm(): void {
     this.dialogRef.close(this.selectedDate);
   }
 
-  isDateValid = (d: Date | null): boolean => {
+  isDateValid(d: Date | null): boolean {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return d !== null && d <= today;
-  };
+  }
 }

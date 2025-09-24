@@ -13,8 +13,8 @@ import { SharedMaterialModule } from '@shared/shared-material.module';
   styleUrls: ['./confirm-dialog.component.scss'],
 })
 export class ConfirmDialogComponent {
-  private dialogRef = inject(MatDialogRef<ConfirmDialogComponent>);
-  protected data = inject(MAT_DIALOG_DATA) as { title: string; message: string };
+  public readonly dialogRef = inject(MatDialogRef<ConfirmDialogComponent>);
+  public readonly data = inject(MAT_DIALOG_DATA) as { title: string; message: string };
 
   confirm(): void {
     this.dialogRef.close(true);

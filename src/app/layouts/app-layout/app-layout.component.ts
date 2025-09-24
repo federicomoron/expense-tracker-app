@@ -2,9 +2,9 @@ import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ApiStatusService } from '@core/services/api-status.service';
-import { LayoutService } from '@core/services/layout.service';
-import { SnackbarService } from '@core/services/snackbar.service';
+import { ApiStatusService } from '@services/api-status.service';
+import { LayoutService } from '@services/layout.service';
+import { SnackbarService } from '@services/snackbar.service';
 import { FooterComponent } from '@shared/components/footer/footer.component';
 
 @Component({
@@ -15,14 +15,19 @@ import { FooterComponent } from '@shared/components/footer/footer.component';
   styleUrls: ['./app-layout.component.scss'],
 })
 export class AppLayoutComponent {
-  private apiStatus = inject(ApiStatusService);
-  private snackbar = inject(SnackbarService);
-  private translate = inject(TranslateService);
-  layout = inject(LayoutService);
+  private readonly apiStatus = inject(ApiStatusService);
+  private readonly snackbar = inject(SnackbarService);
+  private readonly translate = inject(TranslateService);
 
-  readonly shouldRemovePaddingTop = this.layout.removeTopPadding;
+  public readonly layout = inject(LayoutService);
+
+  public readonly shouldRemovePaddingTop = this.layout.removeTopPadding;
 
   constructor() {
+    this.init();
+  }
+
+  private init(): void {
     if (!this.apiStatus.isReachable()) {
       this.snackbar.show(this.translate.instant('api.notReachable'));
     }
