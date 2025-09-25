@@ -18,9 +18,7 @@ import { ConfirmDialogComponent } from '@shared/ui/dialogs/confirm-dialog.compon
   styleUrls: ['./group-actions-modal.component.scss'],
 })
 export class GroupActionsModalComponent implements OnInit {
-  public readonly members = signal<
-    { name: string; email: string; status: 'confirmed' | 'pending'; invitedUserId?: number }[]
-  >([]);
+  public readonly members = signal<{ name: string; email: string; invitedUserId?: number }[]>([]);
   public readonly isLoading = signal(true);
 
   public readonly dialogRef = inject(MatDialogRef<GroupActionsModalComponent>);
@@ -83,30 +81,11 @@ export class GroupActionsModalComponent implements OnInit {
         const confirmed = detail.members.map((member) => ({
           name: member.name,
           email: '',
-          status: 'confirmed' as const,
           invitedUserId: member.userId,
         }));
 
-        this.groupService.getGroupInvitations(this.data.groupId).subscribe({
-          next: (invitations) => {
-            const pending = invitations
-              .filter((inv) => inv.status === 'pending')
-              .map((inv) => ({
-                name: inv.invited_by?.name ?? inv.invited_email,
-                email: inv.invited_email,
-                status: 'pending' as const,
-                invitedUserId: inv.invitedUserId,
-              }));
-
-            this.members.set([...confirmed, ...pending]);
-            this.isLoading.set(false);
-          },
-          error: (err) => {
-            this.members.set([...confirmed]);
-            console.error('Error loading pending invitations', err);
-            this.isLoading.set(false);
-          },
-        });
+        this.members.set([...confirmed]);
+        this.isLoading.set(false);
       },
       error: (err) => {
         console.error('Error loading confirmed members', err);
@@ -115,4 +94,36 @@ export class GroupActionsModalComponent implements OnInit {
       },
     });
   }
+
+  trackByMember(index: number, member: any) {
+    return member.invitedUserId ?? member.email;
+  }
+
+  // ---------- Placeholder for "Leave Group" ----------
+  /*
+  leaveGroup(): void {
+    const confirmDialog = this.dialogService.openFixed(ConfirmDialogComponent, '400px', {
+      title: this.translate.instant('groupActions.leaveGroup'),
+      message: this.translate.instant('groupActions.leaveGroupMessage'),
+      confirmText: this.translate.instant('common.confirm'),
+      cancelText: this.translate.instant('common.cancel'),
+    });
+
+    confirmDialog.afterClosed().subscribe((confirmed: boolean) => {
+      if (!confirmed) return;
+
+      this.groupService.leaveGroup(this.data.groupId).subscribe({
+        next: () => {
+          this.snackbar.show(this.translate.instant('groupActions.leftGroup'));
+          this.dialogRef.close();
+          void this.router.navigate(['/groups']);
+        },
+        error: (err) => {
+          console.error('Error leaving group', err);
+          this.snackbar.show(this.translate.instant('groupActions.errorLeaving'));
+        },
+      });
+    });
+  }
+  */
 }

@@ -90,7 +90,8 @@
   "groupActions": {
     "title": "Group Settings",
     "addMember": "Add Members to the group",
-    "members": "Group Members",
+    "membersTitle": "Group members",
+    "advancedSettingsTitle": "Advanced settings",
     "delete": "Delete Group",
     "userNotFound": "User not found",
     "invitationSent": "Invitation sent successfully",
@@ -102,7 +103,7 @@
     "emailLabel": "Email"
   },
   "confirmDeleteGroup": {
-    "title": "Confirm Delete",
+    "title": "Confirm delete",
     "message": "Are you sure you want to delete this group?"
   },
   "common": {

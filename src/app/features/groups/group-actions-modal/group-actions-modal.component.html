@@ -7,41 +7,54 @@
     <h2>{{ 'groupActions.title' | translate }}</h2>
   </div>
 
-  <!-- New Members Section -->
-  @if (isLoading()) {
-    <div class="loading-container">
-      <mat-spinner diameter="36" mode="indeterminate"></mat-spinner>
-    </div>
-  } @else {
-    <div class="group-members">
-      <button type="button" mat-stroked-button color="primary" (click)="openAddMemberDialog()">
-        <mat-icon>person_add</mat-icon>
-        {{ 'groupActions.addMember' | translate }}
-      </button>
+  <!-- Group members -->
+  <section class="group-members-section">
+    <h3>{{ 'groupActions.membersTitle' | translate }}</h3>
 
-      <h3>{{ 'groupActions.members' | translate }}</h3>
-      <mat-list>
-        @for (member of members(); track member.invitedUserId ?? member.email) {
-          <mat-list-item>
-            <div class="member-info">
-              <span class="member-name">{{ member.name }}</span>
-              <span class="member-email">{{ member.email }}</span>
+    @if (isLoading()) {
+      <div class="loading-container">
+        <mat-spinner diameter="36" mode="indeterminate"></mat-spinner>
+      </div>
+    } @else {
+      <div class="group-members-content">
+        <button type="button" mat-stroked-button color="primary" (click)="openAddMemberDialog()">
+          <mat-icon>person_add</mat-icon>
+          {{ 'groupActions.addMember' | translate }}
+        </button>
 
-              @if (member.status === 'pending') {
-                <span class="pending-label">Pendiente</span>
-              }
-            </div>
-          </mat-list-item>
-        }
-      </mat-list>
-    </div>
+        <mat-list>
+          @for (member of members(); track member.invitedUserId ?? member.email) {
+            <mat-list-item>
+              <div class="member-info">
+                <span class="member-name">{{ member.name }}</span>
+                <span class="member-email">{{ member.email }}</span>
+              </div>
+            </mat-list-item>
+          }
+        </mat-list>
+      </div>
+    }
+  </section>
 
-    <!-- Modal content -->
-    <div class="group-actions-list">
-      <button type="button" class="delete-group-button" (click)="confirmDeleteGroup()">
-        <mat-icon>delete</mat-icon>
-        <span>{{ 'groupActions.delete' | translate }}</span>
-      </button>
-    </div>
-  }
+  <!-- Advanced settings -->
+  <section class="advanced-settings">
+    <h3>{{ 'groupActions.advancedSettingsTitle' | translate }}</h3>
+
+    <!-- Leave group (optional, backend pending) -->
+    <!--
+    <button type="button" mat-stroked-button color="warn" [disabled]="hasDebts()" (click)="leaveGroup()">
+      <mat-icon>exit_to_app</mat-icon>
+      {{ 'groupActions.leaveGroup' | translate }}
+    </button>
+    @if (hasDebts()) {
+      <p class="info-text">{{ 'groupActions.cannotLeaveGroup' | translate }}</p>
+    }
+    -->
+
+    <!-- Delete group -->
+    <button type="button" mat-stroked-button color="warn" (click)="confirmDeleteGroup()">
+      <mat-icon>delete</mat-icon>
+      {{ 'groupActions.delete' | translate }}
+    </button>
+  </section>
 </div>

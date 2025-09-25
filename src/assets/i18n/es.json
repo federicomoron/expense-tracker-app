@@ -90,7 +90,8 @@
   "groupActions": {
     "title": "Configuración del grupo",
     "addMember": "Añadir personas al grupo",
-    "members": "Miembros del Grupo",
+    "membersTitle": "Miembros del grupo",
+    "advancedSettingsTitle": "Configuración avanzada",
     "delete": "Eliminar grupo",
     "userNotFound": "Usuario no encontrado",
     "invitationSent": "Invitación enviada correctamente",
@@ -102,7 +103,7 @@
     "emailLabel": "Correo electrónico"
   },
   "confirmDeleteGroup": {
-    "title": "Confirmar Eliminación",
+    "title": "Confirmar eliminación",
     "message": "¿Estás seguro que deseas eliminar este grupo?"
   },
   "common": {
