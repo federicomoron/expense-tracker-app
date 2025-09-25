@@ -21,6 +21,7 @@ export class GroupActionsModalComponent implements OnInit {
   public readonly members = signal<
     { name: string; email: string; status: 'confirmed' | 'pending'; invitedUserId?: number }[]
   >([]);
+  public readonly isLoading = signal(true);
 
   public readonly dialogRef = inject(MatDialogRef<GroupActionsModalComponent>);
   public readonly data = inject(MAT_DIALOG_DATA) as { groupId: number; groupName: string };
@@ -36,7 +37,7 @@ export class GroupActionsModalComponent implements OnInit {
   }
 
   openAddMemberDialog(): void {
-    const dialogRef = this.dialogService.openFixed(AddMemberDialogComponent, '400px', {
+    const dialogRef = this.dialogService.openFullScreen(AddMemberDialogComponent, {
       groupId: this.data.groupId,
     });
 
@@ -75,6 +76,8 @@ export class GroupActionsModalComponent implements OnInit {
   }
 
   private loadGroupMembers(): void {
+    this.isLoading.set(true);
+
     this.groupService.getGroupDetail(this.data.groupId).subscribe({
       next: (detail) => {
         const confirmed = detail.members.map((member) => ({
@@ -96,11 +99,20 @@ export class GroupActionsModalComponent implements OnInit {
               }));
 
             this.members.set([...confirmed, ...pending]);
+            this.isLoading.set(false);
           },
-          error: (err) => console.error('Error loading pending invitations', err),
+          error: (err) => {
+            this.members.set([...confirmed]);
+            console.error('Error loading pending invitations', err);
+            this.isLoading.set(false);
+          },
         });
       },
-      error: (err) => console.error('Error loading confirmed members', err),
+      error: (err) => {
+        console.error('Error loading confirmed members', err);
+        this.members.set([]);
+        this.isLoading.set(false);
+      },
     });
   }
 }

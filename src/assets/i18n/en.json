@@ -97,7 +97,9 @@
     "errorSendingInvitation": "Error sending invitation",
     "errorSearchingUser": "Error searching for user",
     "groupDeleted": "Group deleted successfully",
-    "errorDeleting": "Error deleting group"
+    "errorDeleting": "Error deleting group",
+    "alreadyMember": "User is already a member of the group",
+    "emailLabel": "Email"
   },
   "confirmDeleteGroup": {
     "title": "Confirm Delete",
@@ -224,5 +226,9 @@
     "otherPaidEquale": "{{name}}",
     "otherIsOwed": "{{name}} is owed the total amount",
     "moreOptions": "More options"
+  },
+  "errors": {
+    "validation": "Validation error, please check the data.",
+    "unexpected": "An unexpected error occurred."
   }
 }

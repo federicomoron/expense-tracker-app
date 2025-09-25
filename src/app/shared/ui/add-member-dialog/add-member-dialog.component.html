@@ -1,13 +1,30 @@
-<h2 mat-dialog-title>{{ 'groupActions.addMember' | translate }}</h2>
-<mat-dialog-content>
-  <mat-form-field appearance="outline" style="width: 100%">
-    <mat-label>Email</mat-label>
-    <input matInput [(ngModel)]="email" type="email" />
-  </mat-form-field>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>{{ 'common.cancel' | translate }}</button>
-  <button mat-button color="primary" (click)="addMember()">
-    {{ 'common.confirm' | translate }}
-  </button>
-</mat-dialog-actions>
+<div class="dialog-container">
+  <!-- Header -->
+  <div class="header">
+    <button type="button" mat-icon-button (click)="close()" aria-label="back">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <h2>{{ 'groupActions.addMember' | translate }}</h2>
+
+    <span class="spacer"></span>
+
+    <button mat-icon-button [disabled]="isSubmitting()" (click)="addMember()">
+      @if (isSubmitting()) {
+        <mat-progress-spinner
+          diameter="20"
+          mode="indeterminate"
+          class="custom-spinner"
+        ></mat-progress-spinner>
+      } @else {
+        <mat-icon>check</mat-icon>
+      }
+    </button>
+  </div>
+
+  <!-- Input -->
+  <div class="content">
+    <label class="flat-input-label">{{ 'groupActions.emailLabel' | translate }}</label>
+    <input class="flat-input" [value]="email()" (input)="updateEmail($event)" type="email" />
+  </div>
+</div>

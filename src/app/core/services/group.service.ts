@@ -103,7 +103,7 @@ export class GroupService {
   }
 
   addMember(groupId: number, email: string) {
-    const payload = { group_id: groupId, email };
+    const payload = { groupId, invitedUserEmail: email };
     return this.http.post<{ success: boolean; message: string }, typeof payload>(
       `${this.apiUrl}${API_ENDPOINTS.SEND_INVITATION}`,
       payload,
@@ -114,13 +114,6 @@ export class GroupService {
     return this.http
       .get<{ success: boolean; data: any[] }>(`${this.apiUrl}${API_ENDPOINTS.GET_INVITATIONS}`)
       .pipe(map((res) => res.data.filter((inv) => inv.group_id === groupId)));
-  }
-
-  sendInvitation(groupId: number, invitedUserId: number) {
-    return this.http.post<
-      { success: boolean; data: any },
-      { groupId: number; invitedUserId: number }
-    >(`${this.apiUrl}${API_ENDPOINTS.SEND_INVITATION}`, { groupId, invitedUserId });
   }
 
   private loadFromStorage(): Group[] {
