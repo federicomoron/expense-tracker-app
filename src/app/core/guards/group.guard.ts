@@ -15,7 +15,6 @@ export const groupGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   const userEmail = authService.currentUser()?.email;
 
   let idParam = route.paramMap.get('id') || route.paramMap.get('groupId');
-
   if (!idParam && route.parent) {
     idParam = route.parent.paramMap.get('id') || route.parent.paramMap.get('groupId');
   }
@@ -27,7 +26,7 @@ export const groupGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
     return of(false);
   }
 
-  return groupService.fetchGroups().pipe(
+  const groups$ = groupService.fetchGroups().pipe(
     map(() => {
       const groups = groupService.groups();
       const belongsToGroup = groups.some((g) => g.id === groupId);
@@ -43,4 +42,6 @@ export const groupGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
       return of(false);
     }),
   );
+
+  return groups$;
 };

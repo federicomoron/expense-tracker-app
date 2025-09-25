@@ -1,4 +1,4 @@
-export const CURRENCY_SYMBOLS: Record<string, string> = {
+export const CURRENCY_SYMBOLS: Readonly<Record<string, string>> = {
   ARS: '$',
   BRL: 'R$',
   CLP: '$',
@@ -7,4 +7,4 @@ export const CURRENCY_SYMBOLS: Record<string, string> = {
   JPY: '¥',
   MXN: '$',
   USD: 'US$',
-};
+} as const;

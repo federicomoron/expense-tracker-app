@@ -13,20 +13,19 @@ import { HttpService } from '@services/http.service';
 export class AuthService {
   private readonly _isLoggedIn = signal(false);
   private readonly _currentUser = signal<User | null>(null);
-  private readonly apiUrl = environment.apiUrl;
-  private http = inject(HttpService);
-
   private readonly _isSessionRestored = signal(false);
-  isSessionRestored = this._isSessionRestored.asReadonly();
 
-  isLoggedIn = this._isLoggedIn.asReadonly();
-  currentUser = this._currentUser.asReadonly();
+  private http = inject(HttpService);
+  private router = inject(Router);
 
-  constructor(private router: Router) {}
+  readonly isLoggedIn = this._isLoggedIn.asReadonly();
+  readonly currentUser = this._currentUser.asReadonly();
+  readonly isSessionRestored = this._isSessionRestored.asReadonly();
+
+  private readonly apiUrl = environment.apiUrl;
 
   login(email: string, password: string) {
     const loginRequest = { email, password };
-
     return this.http
       .post<
         LoginResponse,
@@ -36,18 +35,14 @@ export class AuthService {
         mergeMap((res) => {
           const user = res.data?.user;
           const token = res.data?.token;
-
           if (!res.success || !user || !token) {
             return throwError(() => new Error('Invalid response from server'));
           }
-
           this._isLoggedIn.set(true);
           this._currentUser.set(user);
-
           localStorage.setItem(STORAGE_KEYS.IS_LOGGED_IN, 'true');
           localStorage.setItem(STORAGE_KEYS.CURRENT_USER, JSON.stringify(user));
           localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
-
           return of(res);
         }),
       );
@@ -57,8 +52,24 @@ export class AuthService {
     this._isLoggedIn.set(false);
     this._currentUser.set(null);
     this.clearSession();
-
     if (redirect) void this.router.navigate([NAVIGATION_ROUTES.LOGIN]);
+  }
+
+  restoreSession(): void {
+    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+    const userJson = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
+    if (token && userJson && this.isTokenValid(token)) {
+      try {
+        const user = JSON.parse(userJson);
+        this._isLoggedIn.set(true);
+        this._currentUser.set(user);
+      } catch {
+        this.clearSession();
+      }
+    } else {
+      this.clearSession();
+    }
+    this._isSessionRestored.set(true);
   }
 
   private isTokenValid(token: string): boolean {
@@ -75,23 +86,5 @@ export class AuthService {
     localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
     localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
     localStorage.removeItem(STORAGE_KEYS.IS_LOGGED_IN);
-  }
-
-  restoreSession(): void {
-    const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
-    const userJson = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
-
-    if (token && userJson && this.isTokenValid(token)) {
-      try {
-        const user = JSON.parse(userJson);
-        this._isLoggedIn.set(true);
-        this._currentUser.set(user);
-      } catch {
-        this.clearSession();
-      }
-    } else {
-      this.clearSession();
-    }
-    this._isSessionRestored.set(true);
   }
 }

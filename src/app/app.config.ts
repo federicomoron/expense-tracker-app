@@ -5,7 +5,6 @@ import {
   APP_INITIALIZER,
   ApplicationConfig,
   importProvidersFrom,
-  inject,
   isDevMode,
   LOCALE_ID,
   provideZoneChangeDetection,
@@ -19,22 +18,20 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { authTokenInterceptor } from '@core/interceptors/auth-token.interceptor';
 import { unauthorizedInterceptor } from '@core/interceptors/unauthorized.interceptor';
+import { routes } from '@routes/app.routes';
+import { AuthService } from '@services/auth.service';
+import { i18nInitializer } from '@services/i18n-init';
+import { I18nService } from '@services/i18n.service';
 
-import { routes } from './app.routes';
-import { AuthService } from './core/services/auth.service';
-import { i18nInitializer } from './core/services/i18n-init';
-import { I18nService } from './core/services/i18n.service';
-
-export function HttpLoaderFactory(http: HttpClient) {
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, '/assets/i18n/', '.json');
 }
 
-export function initAuth(authService: AuthService): () => Promise<void> {
-  return () =>
-    new Promise<void>((resolve) => {
-      authService.restoreSession();
-      resolve();
-    });
+export function initAuthFactory(authService: AuthService): () => Promise<void> {
+  return () => {
+    authService.restoreSession();
+    return Promise.resolve();
+  };
 }
 
 registerLocaleData(localeEs);
@@ -67,11 +64,9 @@ export const appConfig: ApplicationConfig = {
     },
     {
       provide: APP_INITIALIZER,
+      useFactory: initAuthFactory,
+      deps: [AuthService],
       multi: true,
-      useFactory: () => {
-        const auth = inject(AuthService);
-        return () => auth.restoreSession();
-      },
     },
     {
       provide: LOCALE_ID,

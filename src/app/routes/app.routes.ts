@@ -2,9 +2,8 @@ import { Routes } from '@angular/router';
 
 import { ROUTES } from '@constants/routes';
 import { authGuard } from '@core/guards/auth.guard';
-
-import { AppLayoutComponent } from './layouts/app-layout/app-layout.component';
-import { FullscreenLayoutComponent } from './layouts/fulllscreen-layout/fullscreen-layout.component';
+import { AppLayoutComponent } from '@layouts/app-layout/app-layout.component';
+import { FullscreenLayoutComponent } from '@layouts/fulllscreen-layout/fullscreen-layout.component';
 
 export const routes: Routes = [
   {

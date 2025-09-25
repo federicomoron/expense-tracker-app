@@ -1,20 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class I18nService {
-  private langChange = new Subject<string>();
-  langChange$ = this.langChange.asObservable();
+  readonly langChange = signal<string>(this.getSavedLang() || 'en');
 
   constructor(private translate: TranslateService) {
-    this.translate.addLangs(['en', 'es']);
-    this.translate.setDefaultLang('en');
-
-    const savedLang = localStorage.getItem('lang');
-    if (savedLang) {
-      this.setLanguage(savedLang);
-    }
+    this.init();
   }
 
   get currentLang(): string {
@@ -24,7 +16,7 @@ export class I18nService {
   setLanguage(lang: string) {
     this.translate.use(lang);
     localStorage.setItem('lang', lang);
-    this.langChange.next(lang);
+    this.langChange.set(lang);
   }
 
   getCurrentLocale(): string {
@@ -35,5 +27,19 @@ export class I18nService {
       default:
         return 'en-US';
     }
+  }
+
+  private init(): void {
+    this.translate.addLangs(['en', 'es']);
+    this.translate.setDefaultLang('en');
+
+    const savedLang = this.getSavedLang();
+    if (savedLang) {
+      this.setLanguage(savedLang);
+    }
+  }
+
+  private getSavedLang(): string | null {
+    return localStorage.getItem('lang');
   }
 }

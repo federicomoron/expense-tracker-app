@@ -3,16 +3,13 @@ import { Observable } from 'rxjs';
 
 import { API_ENDPOINTS } from '@constants/api-endpoints';
 import { environment } from '@environments/environment';
+import { RegisterPayload, RegisterResponse } from '@models/user.model';
 import { HttpService } from '@services/http.service';
 
-import { RegisterPayload, RegisterResponse } from '../models/user.model';
-
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class UserService {
   private http = inject(HttpService);
-  private API_URL = environment.apiUrl;
+  private readonly API_URL = environment.apiUrl;
 
   register(data: RegisterPayload): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse, RegisterPayload>(

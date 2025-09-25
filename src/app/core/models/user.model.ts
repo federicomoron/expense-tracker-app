@@ -4,8 +4,8 @@ export interface User {
 }
 
 export interface RegisterResponse {
-  success: boolean;
-  data: User;
+  readonly success: boolean;
+  readonly data: User;
 }
 
 export interface RegisterPayload {

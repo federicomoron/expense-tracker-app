@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { applyTheme, ThemeOption } from '@app/core/services/theme.service';
+import { applyTheme, ThemeOption } from '@services/theme.service';
 
 @Component({
   standalone: true,
@@ -11,10 +11,10 @@ import { applyTheme, ThemeOption } from '@app/core/services/theme.service';
   imports: [TranslateModule],
 })
 export class ThemeToggleComponent {
-  options: ThemeOption[] = ['light', 'dark'];
-  theme = signal<ThemeOption>(this.getInitialTheme());
+  public readonly options: ThemeOption[] = ['light', 'dark'];
+  public readonly theme = signal<ThemeOption>(this.getInitialTheme());
 
-  setTheme(option: ThemeOption) {
+  setTheme(option: ThemeOption): void {
     this.theme.set(option);
     localStorage.setItem('theme', option);
     applyTheme(option);

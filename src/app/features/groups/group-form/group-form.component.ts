@@ -6,12 +6,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NAVIGATION_ROUTES } from '@constants/routes';
 import { GROUP_TYPE_OPTIONS, GroupType } from '@models/group-type.enum';
 import { GroupService } from '@services/group.service';
-import { SharedUiModule } from '@shared/shared-ui.module';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
   selector: 'app-group-form',
   standalone: true,
-  imports: [SharedUiModule, TranslateModule],
+  imports: [SharedMaterialModule, TranslateModule],
   templateUrl: './group-form.component.html',
   styleUrls: ['./group-form.component.scss'],
 })
@@ -21,58 +21,44 @@ export class GroupFormComponent {
   name = signal('');
   submitted = signal(false);
   type = signal<GroupType>(GroupType.TRIP);
-  isNameInvalid = computed(() => this.submitted() && this.name().trim().length === 0);
-  groupTypeOptions = GROUP_TYPE_OPTIONS;
-
-  selectedImage: File | null = null;
   imagePreview = signal<string | null>(null);
-  isSubmitting = false;
+
+  isNameInvalid = computed(() => this.submitted() && this.name().trim().length === 0);
 
   private groupService = inject(GroupService);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
   private translate = inject(TranslateService);
 
-  // TODO:Cuando el backend agrege para poder cargar img reemplazamos el Onsubit por el comentado
+  groupTypeOptions = GROUP_TYPE_OPTIONS;
+  selectedImage: File | null = null;
+  isSubmitting = false;
 
-  // onSubmit(event: Event) {
-  //   event.preventDefault();
-  //   if (this.isNameInvalid()) return;
+  onSubmit(event: Event) {
+    event.preventDefault();
+    this.submitted.set(true);
 
-  //   const create = (imageUrl: string | null) => {
-  //     this.groupService
-  //       .createGroup({
-  //         name: this.name(),
-  //         type: this.type(),
-  //         imageUrl: imageUrl ?? undefined,
-  //       })
-  //       .subscribe({
-  //         next: () => {
-  //           void this.router.navigate([NAVIGATION_ROUTES.GROUPS]);
-  //         },
-  //         error: () => {
-  //           this.snackBar.open(
-  //             this.translate.instant('groupForm.errorCreating'),
-  //             this.translate.instant('common.close'),
-  //             { duration: 3000 },
-  //           );
-  //         },
-  //       });
-  //   };
+    if (!this.isFormValid()) return;
 
-  //   if (this.selectedImage) {
-  //     this.groupService.uploadImage(this.selectedImage).subscribe({
-  //       next: (url) => create(url),
-  //       error: () => {
-  //         this.snackBar.open('Error al subir imagen', this.translate.instant('common.close'), {
-  //           duration: 3000,
-  //         });
-  //       },
-  //     });
-  //   } else {
-  //     create(null);
-  //   }
-  // }
+    this.isSubmitting = true;
+
+    this.groupService
+      .createGroup({
+        name: this.name(),
+        type: this.type(),
+        imageUrl: undefined,
+      })
+      .subscribe({
+        next: () => void this.router.navigate([NAVIGATION_ROUTES.GROUPS]),
+        error: () => {
+          this.snackBar.open(
+            this.translate.instant('groupForm.errorCreating'),
+            this.translate.instant('common.close'),
+            { duration: 3000 },
+          );
+        },
+      });
+  }
 
   onCancel() {
     void this.router.navigate([NAVIGATION_ROUTES.GROUPS]);
@@ -99,32 +85,6 @@ export class GroupFormComponent {
       reader.onload = () => this.imagePreview.set(reader.result as string);
       reader.readAsDataURL(this.selectedImage);
     }
-  }
-
-  onSubmit(event: Event) {
-    event.preventDefault();
-    this.submitted.set(true);
-
-    if (!this.isFormValid()) return;
-
-    this.isSubmitting = true;
-
-    this.groupService
-      .createGroup({
-        name: this.name(),
-        type: this.type(),
-        imageUrl: undefined,
-      })
-      .subscribe({
-        next: () => void this.router.navigate([NAVIGATION_ROUTES.GROUPS]),
-        error: () => {
-          this.snackBar.open(
-            this.translate.instant('groupForm.errorCreating'),
-            this.translate.instant('common.close'),
-            { duration: 3000 },
-          );
-        },
-      });
   }
 
   private isFormValid() {

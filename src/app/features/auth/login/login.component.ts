@@ -1,19 +1,19 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { SnackbarService } from '@app/core/services/snackbar.service';
-import { ExpButtonSpinnerComponent } from '@app/shared/components/exp-button-spinner/exp-button-spinner.component';
 import { AuthService } from '@services/auth.service';
-import { SharedUiModule } from '@shared/shared-ui.module';
+import { SnackbarService } from '@services/snackbar.service';
+import { ExpButtonSpinnerComponent } from '@shared/components/exp-button-spinner/exp-button-spinner.component';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 import { nonEmpty, validEmail } from '@shared/utils/form-validators';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
-    SharedUiModule,
+    SharedMaterialModule,
     RouterModule,
     ExpButtonSpinnerComponent,
     TranslateModule,
@@ -23,22 +23,19 @@ import { nonEmpty, validEmail } from '@shared/utils/form-validators';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-  form: FormGroup;
-  showPassword = signal(false);
-  isLoading = signal(false);
+  public readonly showPassword = signal(false);
+  public readonly isLoading = signal(false);
 
-  private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
-  private router = inject(Router);
-  private snackbar = inject(SnackbarService);
-  private translate = inject(TranslateService);
+  private readonly fb = inject(FormBuilder);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly snackbar = inject(SnackbarService);
+  private readonly translate = inject(TranslateService);
 
-  constructor() {
-    this.form = this.fb.group({
-      email: ['', [Validators.required, nonEmpty, validEmail]],
-      password: ['', [Validators.required, nonEmpty]],
-    });
-  }
+  public form = this.fb.nonNullable.group({
+    email: ['', [Validators.required, nonEmpty, validEmail]],
+    password: ['', [Validators.required, nonEmpty]],
+  });
 
   get inputPasswordType(): string {
     return this.showPassword() ? 'text' : 'password';
@@ -50,6 +47,16 @@ export class LoginComponent {
 
   get emailLabel(): string {
     return this.translate.instant('login.emailLabel');
+  }
+
+  get passwordLabel(): string {
+    return this.translate.instant('login.passwordLabel');
+  }
+
+  get togglePasswordVisibilityLabel(): string {
+    return this.showPassword()
+      ? this.translate.instant('login.hidePassword')
+      : this.translate.instant('login.showPassword');
   }
 
   get button(): string {
@@ -64,14 +71,8 @@ export class LoginComponent {
     return this.translate.instant('login.registerHere');
   }
 
-  get passwordLabel(): string {
-    return this.translate.instant('login.passwordLabel');
-  }
-
-  get togglePasswordVisibilityLabel(): string {
-    return this.showPassword()
-      ? this.translate.instant('login.hidePassword')
-      : this.translate.instant('login.showPassword');
+  togglePasswordVisibility(): void {
+    this.showPassword.update((v) => !v);
   }
 
   getError(controlName: string): string | null {
@@ -79,26 +80,23 @@ export class LoginComponent {
     if (!control || !control.touched || !control.invalid) return null;
 
     const controlError = control.errors;
-
     if (controlError?.['required'] || controlError?.['nonEmpty']) {
       return this.translate.instant('validation.nonEmpty');
     }
     if (controlError?.['email'] || controlError?.['emailInvalid']) {
       return this.translate.instant('validation.emailInvalid');
     }
-
     return this.translate.instant('validation.invalidField');
   }
 
-  onSubmit() {
+  onSubmit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
     this.isLoading.set(true);
-
-    const { email, password } = this.form.value;
+    const { email, password } = this.form.getRawValue();
 
     this.authService.login(email, password).subscribe({
       next: (res) => {
@@ -111,7 +109,6 @@ export class LoginComponent {
       },
       error: (err) => {
         this.isLoading.set(false);
-
         if (err.status === 0) {
           this.snackbar.show(this.translate.instant('login.apiUnreachable'));
         } else if (err.status === 401 || err.status === 400) {
@@ -123,11 +120,7 @@ export class LoginComponent {
     });
   }
 
-  togglePasswordVisibility() {
-    this.showPassword.update((value) => !value);
-  }
-
-  onGoogleLogin() {
+  onGoogleLogin(): void {
     this.authService.login('google_user@example.com', 'fakepassword').subscribe((res) => {
       if (res && res.success) {
         void this.router.navigate(['/groups']);

@@ -1,74 +1,43 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { Expense, ExpenseExtended, ExpenseUser } from '@app/core/models/expenses.model';
-import { AuthService } from '@app/core/services/auth.service';
-import { ExpenseService } from '@app/core/services/expenses.service';
-import { EXPENSE_CATEGORIES } from '@app/shared/data/expense-categories';
+import { Expense, ExpenseExtended, ExpenseUser } from '@core/models/expenses.model';
+import { AuthService } from '@services/auth.service';
+import { DialogService } from '@services/dialog.service';
+import { ExpenseService } from '@services/expenses.service';
+import { EXPENSE_CATEGORIES } from '@shared/data/expense-categories';
 import {
   detectQuickOptionFromParticipants,
   findGroupIdInRoute,
-} from '@app/shared/helpers/expense.utils';
-import { SharedUiModule } from '@app/shared/shared-ui.module';
-import { ConfirmDialogComponent } from '@app/shared/ui/theme-toggle/dialogs/confirm-dialog.component';
+} from '@shared/helpers/expense.utils';
+import { SharedMaterialModule } from '@shared/shared-material.module';
+import { ConfirmDialogComponent } from '@shared/ui/dialogs/confirm-dialog.component';
 
 @Component({
   selector: 'app-expense-detail',
   standalone: true,
-  imports: [CommonModule, MatIconModule, SharedUiModule, TranslateModule],
+  imports: [CommonModule, SharedMaterialModule, TranslateModule],
   templateUrl: './expense-detail.component.html',
   styleUrls: ['./expense-detail.component.scss'],
 })
 export class ExpenseDetailComponent {
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private translate = inject(TranslateService);
-  private dialog = inject(MatDialog);
-  private authService = inject(AuthService);
-  private snackbar = inject(MatSnackBar);
-  private expenseService = inject(ExpenseService);
+  readonly expense = signal<Expense | null>(null);
 
-  expense = signal<Expense | null>(null);
-  currentUserId = this.authService.currentUser()?.id;
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly translate = inject(TranslateService);
+  private readonly authService = inject(AuthService);
+  private readonly snackbar = inject(MatSnackBar);
+  private readonly expenseService = inject(ExpenseService);
+  private readonly dialogService = inject(DialogService);
+
+  readonly currentUserId = this.authService.currentUser()?.id ?? undefined;
 
   constructor() {
-    const expenseFromState = history.state?.expense;
-    const routeGroupId = findGroupIdInRoute(this.route);
-
-    if (expenseFromState) {
-      this.expense.set({ ...expenseFromState, groupId: routeGroupId });
-      return;
-    }
-
-    const expenseIdParam = this.route.snapshot.paramMap.get('expenseId');
-    const expenseId = expenseIdParam ? Number(expenseIdParam) : NaN;
-
-    if (isNaN(expenseId)) {
-      void this.router.navigate(['/groups', routeGroupId]);
-      return;
-    }
-
-    const groupDetail = history.state?.group as { expenses?: Expense[] } | undefined;
-    let found: Expense | undefined;
-
-    if (groupDetail?.expenses) {
-      found = groupDetail.expenses.find((e) => e.id === expenseId);
-    }
-
-    if (!found && (window as any).currentGroupDetail?.expenses) {
-      found = (window as any).currentGroupDetail.expenses.find((e: Expense) => e.id === expenseId);
-    }
-
-    if (found) {
-      this.expense.set({ ...found, groupId: routeGroupId });
-    } else {
-      void this.router.navigate(['/groups', routeGroupId]);
-    }
+    this._initExpense();
   }
 
   onEdit(): void {
@@ -76,9 +45,11 @@ export class ExpenseDetailComponent {
     if (!expense) return;
 
     const routeGroupId = findGroupIdInRoute(this.route);
-    if (!expense.groupId) expense.groupId = routeGroupId;
 
-    if (!expense.groupId || !expense.id) {
+    // Prefer the groupId from the expense (in case we navigated from another group), fallback to route
+    const groupId = expense.groupId ?? routeGroupId;
+
+    if (!groupId || !expense.id) {
       this.snackbar.open(this.translate.instant('expenses.invalidExpense'), 'OK', {
         duration: 2500,
       });
@@ -107,11 +78,8 @@ export class ExpenseDetailComponent {
       const payer = participants.find((p) => Number(p.amount) > 0);
       if (payer) {
         paidBy = [{ userId: payer.userId, amount: Number(payer.amount) }];
-      } else {
-        const currentUserId = this.currentUserId ?? null;
-        if (currentUserId) {
-          paidBy = [{ userId: currentUserId, amount: Number(expense.total) }];
-        }
+      } else if (this.currentUserId) {
+        paidBy = [{ userId: this.currentUserId, amount: Number(expense.total) }];
       }
     }
 
@@ -160,13 +128,14 @@ export class ExpenseDetailComponent {
 
     const expenseForEdit: ExpenseExtended = {
       ...expense,
+      groupId,
       optionId,
       paidBy,
       splits,
       category,
     };
 
-    void this.router.navigate(['/groups', expense.groupId, 'expenses', expense.id, 'edit'], {
+    void this.router.navigate(['/groups', groupId, 'expenses', expense.id, 'edit'], {
       state: { expense: expenseForEdit },
     });
   }
@@ -175,13 +144,11 @@ export class ExpenseDetailComponent {
     const expense = this.expense();
     if (!expense) return;
 
-    const confirmDialog = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: this.translate.instant('confirmDelete.title'),
-        message: this.translate.instant('confirmDelete.message'),
-        confirmText: this.translate.instant('common.confirm'),
-        cancelText: this.translate.instant('common.cancel'),
-      },
+    const confirmDialog = this.dialogService.openFixed(ConfirmDialogComponent, '400px', {
+      title: this.translate.instant('confirmDelete.title'),
+      message: this.translate.instant('confirmDelete.message'),
+      confirmText: this.translate.instant('common.confirm'),
+      cancelText: this.translate.instant('common.cancel'),
     });
 
     confirmDialog.afterClosed().subscribe((confirmed: boolean) => {
@@ -206,5 +173,41 @@ export class ExpenseDetailComponent {
   closeDialog(): void {
     const expense = this.expense();
     void this.router.navigate(['/groups', expense?.groupId ?? '']);
+  }
+
+  private _initExpense(): void {
+    const expenseFromState = history.state?.expense as Expense | null;
+    const routeGroupId = findGroupIdInRoute(this.route);
+
+    if (expenseFromState) {
+      this.expense.set({ ...expenseFromState, groupId: routeGroupId });
+      return;
+    }
+
+    const expenseIdParam = this.route.snapshot.paramMap.get('expenseId');
+    const expenseId = expenseIdParam ? +expenseIdParam : null;
+
+    if (!expenseId) {
+      void this.router.navigate(['/groups', routeGroupId]);
+      return;
+    }
+
+    const groupDetail = history.state?.group as { expenses?: Expense[] } | undefined;
+    let found: Expense | undefined;
+
+    if (groupDetail?.expenses) {
+      found = groupDetail.expenses.find((e) => e.id === expenseId);
+    }
+
+    if (!found && (window as any).currentGroupDetail?.expenses) {
+      const currentGroup = (window as any).currentGroupDetail as { expenses?: Expense[] };
+      found = currentGroup.expenses?.find((e) => e.id === expenseId);
+    }
+
+    if (found) {
+      this.expense.set({ ...found, groupId: routeGroupId });
+    } else {
+      void this.router.navigate(['/groups', routeGroupId]);
+    }
   }
 }
