@@ -1,45 +1,76 @@
 name: Angular CI Pipeline
 
+# Run the pipeline on any push or PR to any branch
 on:
-  push: # Corre en cualquier push a cualquier rama
-  pull_request: # Corre en cualquier PR hacia cualquier rama
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
 
 jobs:
-  lint:
-    name: 🧹 Lint & Format
+  lint-and-types:
+    name: 🧹 Lint, Format & Type Check
     runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.cache.outputs.cache-hit }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'yarn'
+
       - name: Cache node_modules
+        id: cache
         uses: actions/cache@v3
         with:
           path: node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - run: yarn install --frozen-lockfile
-      - run: yarn check
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: ESLint
+        run: yarn lint
+
+      - name: Prettier check
+        run: yarn format:check
+
+      - name: TypeScript check
+        run: yarn check:types
 
   build:
     name: 🔧 Build Angular App
     runs-on: ubuntu-latest
-    needs: lint
+    needs: lint-and-types
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'yarn'
-      - name: Cache node_modules
+
+      - name: Restore cache
         uses: actions/cache@v3
         with:
           path: node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - run: yarn install --frozen-lockfile
-      - run: yarn build --configuration production
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build production
+        run: yarn build
+
+      - name: Audit dependencies
+        run: npm audit --audit-level=moderate
