@@ -5,46 +5,27 @@ import { API_ENDPOINTS } from '@constants/api-endpoints';
 import { STORAGE_KEYS } from '@constants/storage-keys';
 import { environment } from '@environments/environment';
 import { GroupDetailResponse, GroupDetailWithExpenses } from '@models/group-detail.model';
+import { CreateGroupPayload, CreateGroupResponse } from '@models/group-request.model';
 import { Group } from '@models/group.model';
 import { HttpService } from '@services/http.service';
 
-import { CreateGroupPayload, CreateGroupResponse } from '../models/group-request.model';
-
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class GroupService {
-  private readonly apiUrl = environment.apiUrl;
   private _groupsSignal = signal<Group[]>(this.loadFromStorage());
-  private http = inject(HttpService);
-
   private _activeGroupId = signal<number | null>(null);
 
+  readonly groups = computed(() => this._groupsSignal());
   readonly activeGroup = computed(() => {
     const groupId = this._activeGroupId();
     return this.groups().find((group) => group.id === groupId) ?? null;
   });
 
+  private http = inject(HttpService);
+
+  private readonly apiUrl = environment.apiUrl;
+
   setActiveGroup(groupId: number) {
     this._activeGroupId.set(groupId);
-  }
-
-  readonly groups = computed(() => {
-    return this._groupsSignal();
-  });
-
-  private loadFromStorage(): Group[] {
-    const stored = localStorage.getItem(STORAGE_KEYS.GROUPS);
-    try {
-      const parsed = stored ? JSON.parse(stored) : [];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
-  }
-
-  private saveToStorage() {
-    localStorage.setItem(STORAGE_KEYS.GROUPS, JSON.stringify(this._groupsSignal()));
   }
 
   fetchGroups() {
@@ -64,7 +45,6 @@ export class GroupService {
 
   addGroup(group: Group) {
     if (!group || !group.name || !group.id) return;
-
     this._groupsSignal.update((groups) => [...groups, group]);
     this.saveToStorage();
   }
@@ -104,5 +84,49 @@ export class GroupService {
         FormData
       >(`${this.apiUrl}${API_ENDPOINTS.UPLOAD_GROUP_IMAGE}`, formData)
       .pipe(map((res) => res.data.url));
+  }
+
+  deleteGroup(groupId: number): Observable<{ success: boolean; data: any }> {
+    return this.http
+      .delete<{
+        success: boolean;
+        data: any;
+      }>(`${this.apiUrl}${API_ENDPOINTS.DELETE_GROUP(groupId)}`)
+      .pipe(
+        tap((res) => {
+          if (res.success) {
+            this._groupsSignal.update((groups) => groups.filter((g) => g.id !== groupId));
+            this.saveToStorage();
+          }
+        }),
+      );
+  }
+
+  addMember(groupId: number, email: string) {
+    const payload = { groupId, invitedUserEmail: email };
+    return this.http.post<{ success: boolean; message: string }, typeof payload>(
+      `${this.apiUrl}${API_ENDPOINTS.SEND_INVITATION}`,
+      payload,
+    );
+  }
+
+  getGroupInvitations(groupId: number) {
+    return this.http
+      .get<{ success: boolean; data: any[] }>(`${this.apiUrl}${API_ENDPOINTS.GET_INVITATIONS}`)
+      .pipe(map((res) => res.data.filter((inv) => inv.group_id === groupId)));
+  }
+
+  private loadFromStorage(): Group[] {
+    const stored = localStorage.getItem(STORAGE_KEYS.GROUPS);
+    try {
+      const parsed = stored ? JSON.parse(stored) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+
+  private saveToStorage() {
+    localStorage.setItem(STORAGE_KEYS.GROUPS, JSON.stringify(this._groupsSignal()));
   }
 }

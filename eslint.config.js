@@ -30,13 +30,17 @@ module.exports = [
       },
     },
     rules: {
+      // Prettier
       'prettier/prettier': 'error',
+      // TypeScript
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-floating-promises': 'error',
+      // Angular
       '@angular-eslint/directive-selector': [
         'error',
         { type: 'attribute', prefix: 'app', style: 'camelCase' },
       ],
+      // Imports
       'import/no-unresolved': 'error',
       'import/order': [
         'warn',
@@ -46,6 +50,7 @@ module.exports = [
           alphabetize: { order: 'asc', caseInsensitive: true },
         },
       ],
+      // General JS
       eqeqeq: ['error', 'always'],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'prefer-const': 'error',

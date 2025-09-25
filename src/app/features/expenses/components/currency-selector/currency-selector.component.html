@@ -15,7 +15,7 @@
     @for (currency of currencies; track currency) {
       <mat-list-item
         (click)="chooseCurrency(currency)"
-        [class.selected]="selectedCurrency === currency"
+        [class.selected]="selectedCurrency() === currency"
       >
         <span class="currency-code">{{ currency }}</span>
         <span class="currency-desc">{{

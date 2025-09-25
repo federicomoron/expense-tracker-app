@@ -3,30 +3,43 @@ import { Component, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { PaidByOption } from '@app/core/models/paid-by-option.model';
-import { AuthService } from '@app/core/services/auth.service';
-import { SharedUiModule } from '@shared/shared-ui.module';
+import { PaidByOption } from '@core/models/paid-by-option.model';
+import { AuthService } from '@services/auth.service';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
   standalone: true,
   selector: 'app-paid-by-quick-dialog',
-  imports: [CommonModule, SharedUiModule, TranslateModule],
+  imports: [CommonModule, SharedMaterialModule, TranslateModule],
   templateUrl: './paid-by-quick-dialog.component.html',
   styleUrls: ['./paid-by-quick-dialog.component.scss'],
 })
 export class PaidByQuickDialogComponent {
-  private dialogRef = inject(MatDialogRef<PaidByQuickDialogComponent>);
-  private translate = inject(TranslateService);
-  private authService = inject(AuthService);
-  private data = inject(MAT_DIALOG_DATA) as {
+  _selectedOption = signal<PaidByOption | null>(null);
+  options = signal<PaidByOption[]>([]);
+
+  private readonly dialogRef = inject(MatDialogRef<PaidByQuickDialogComponent>);
+  private readonly translate = inject(TranslateService);
+  private readonly authService = inject(AuthService);
+  private readonly data = inject(MAT_DIALOG_DATA) as {
     members: { userId: number; name: string }[];
     selectedOption?: PaidByOption | null;
   };
 
-  _selectedOption = signal<PaidByOption | null>(null);
-  options = signal<PaidByOption[]>([]);
-
   constructor() {
+    this.initializeOptions();
+  }
+
+  selectOption(option: PaidByOption): void {
+    this._selectedOption.set(option);
+    this.dialogRef.close(option);
+  }
+
+  closeDialog(): void {
+    this.dialogRef.close();
+  }
+
+  private initializeOptions(): void {
     const currentUserId = this.authService.currentUser()?.id;
     const otherMember = this.data.members.find((m) => m.userId !== currentUserId);
 
@@ -41,9 +54,7 @@ export class PaidByQuickDialogComponent {
       },
       {
         id: 'other_is_owed',
-        label: this.translate.instant('paidByQuickDialog.otherIsOwed', {
-          name: otherMember?.name,
-        }),
+        label: this.translate.instant('paidByQuickDialog.otherIsOwed', { name: otherMember?.name }),
       },
     ];
 
@@ -52,15 +63,6 @@ export class PaidByQuickDialogComponent {
     const selectedId = this.data.selectedOption?.id;
     const selected = defaultOptions.find((o) => o.id === selectedId);
     this._selectedOption.set(selected ?? defaultOptions[0]);
-  }
-
-  selectOption(option: PaidByOption): void {
-    this._selectedOption.set(option);
-    this.dialogRef.close(option);
-  }
-
-  closeDialog(): void {
-    this.dialogRef.close();
   }
 
   // openMoreOptions(): void {

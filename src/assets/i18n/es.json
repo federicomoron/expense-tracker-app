@@ -18,7 +18,8 @@
   "validation": {
     "nonEmpty": "Este campo es obligatorio.",
     "emailInvalid": "El correo electrónico no es válido.",
-    "passwordTooShort": "La contraseña debe tener al menos 6 caracteres."
+    "passwordTooShort": "La contraseña debe tener al menos 6 caracteres.",
+    "invalidField": "Campo inválido."
   },
   "register": {
     "nameLabel": "Nombre",
@@ -85,6 +86,25 @@
     "nameLabel": "Nombre del grupo",
     "typeLabel": "Tipo",
     "errorCreating": "Error al crear el grupo"
+  },
+  "groupActions": {
+    "title": "Configuración del grupo",
+    "addMember": "Añadir personas al grupo",
+    "membersTitle": "Miembros del grupo",
+    "advancedSettingsTitle": "Configuración avanzada",
+    "delete": "Eliminar grupo",
+    "userNotFound": "Usuario no encontrado",
+    "invitationSent": "Invitación enviada correctamente",
+    "errorSendingInvitation": "Error enviando invitación",
+    "errorSearchingUser": "Error buscando usuario",
+    "groupDeleted": "Grupo eliminado correctamente",
+    "errorDeleting": "Error eliminando el grupo",
+    "alreadyMember": "El usuario ya es miembro del grupo",
+    "emailLabel": "Correo electrónico"
+  },
+  "confirmDeleteGroup": {
+    "title": "Confirmar eliminación",
+    "message": "¿Estás seguro que deseas eliminar este grupo?"
   },
   "common": {
     "close": "Cerrar",
@@ -207,5 +227,9 @@
     "otherPaidEquale": "{{name}}",
     "otherIsOwed": "A {{name}} se le debe la cantidad total",
     "moreOptions": "Más opciones"
+  },
+  "errors": {
+    "validation": "Error de validación, por favor revisa los datos.",
+    "unexpected": "Ocurrió un error inesperado."
   }
 }

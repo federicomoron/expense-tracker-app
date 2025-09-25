@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { loginGuard } from '@app/core/guards/login.guard';
+import { loginGuard } from '@core/guards/login.guard';
 
 export default [
   {

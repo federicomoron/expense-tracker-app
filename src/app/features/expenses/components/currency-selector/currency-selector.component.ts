@@ -1,36 +1,37 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { SharedUiModule } from '@shared/shared-ui.module';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
   standalone: true,
   selector: 'app-currency-selector',
-  imports: [CommonModule, SharedUiModule, TranslateModule],
+  imports: [CommonModule, SharedMaterialModule, TranslateModule],
   templateUrl: './currency-selector.component.html',
   styleUrls: ['./currency-selector.component.scss'],
 })
 export class CurrencySelectorComponent {
-  private dialogRef = inject(MatDialogRef<CurrencySelectorComponent>);
-  currencies: ('USD' | 'ARS')[] = ['USD', 'ARS'];
+  selectedCurrency = signal<'USD' | 'ARS' | null>(null);
 
-  selectedCurrency: 'USD' | 'ARS' | null = null;
+  private readonly dialogRef = inject(MatDialogRef<CurrencySelectorComponent>);
 
-  @Output() selected = new EventEmitter<string>();
+  currencies = ['USD', 'ARS'] as const;
 
-  chooseCurrency(currency: 'USD' | 'ARS') {
-    this.selectedCurrency = currency;
+  @Output() selected = new EventEmitter<'USD' | 'ARS'>();
+
+  chooseCurrency(currency: 'USD' | 'ARS'): void {
+    this.selectedCurrency.set(currency);
     this.selected.emit(currency);
   }
 
   currencyDescription(currency: 'USD' | 'ARS'): string {
-    const descriptions = {
-      USD: 'United States Dollar',
-      ARS: 'Argentine Peso',
-    };
-    return descriptions[currency] || 'Unknown Currency';
+    return currency === 'USD'
+      ? 'United States Dollar'
+      : currency === 'ARS'
+        ? 'Argentine Peso'
+        : 'Unknown Currency';
   }
 
   closeDialog(): void {

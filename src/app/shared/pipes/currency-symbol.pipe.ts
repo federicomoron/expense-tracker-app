@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { CURRENCY_SYMBOLS } from '../helpers/currency-symbols';
+import { CURRENCY_SYMBOLS } from '@shared/helpers/currency-symbols';
 
 @Pipe({
   name: 'currencySymbol',
@@ -8,8 +8,11 @@ import { CURRENCY_SYMBOLS } from '../helpers/currency-symbols';
 })
 export class CurrencySymbolPipe implements PipeTransform {
   transform(currencyCode: string): string {
-    const code = currencyCode.toUpperCase();
+    if (!currencyCode) return '';
 
-    return (CURRENCY_SYMBOLS[code] || code) + ' ';
+    const upperCode = currencyCode.toUpperCase() as keyof typeof CURRENCY_SYMBOLS;
+    const symbol = CURRENCY_SYMBOLS[upperCode] ?? upperCode;
+
+    return `${symbol} `;
   }
 }

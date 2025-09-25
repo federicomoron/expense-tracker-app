@@ -1,11 +1,6 @@
-export interface ExpenseCategory {
-  key: string;
-  label: string;
-  icon: string;
-  keywords?: string[];
-}
+import { ExpenseCategory } from '@models/expenses.model';
 
-export const EXPENSE_CATEGORIES: ExpenseCategory[] = [
+export const EXPENSE_CATEGORIES: readonly ExpenseCategory[] = [
   {
     key: 'Food',
     label: 'Food',

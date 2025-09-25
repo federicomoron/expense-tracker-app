@@ -1,13 +1,13 @@
 export interface User {
-  id: number;
-  email: string;
-  name?: string;
+  readonly id: number;
+  readonly email: string;
+  readonly name?: string;
 }
 
 export interface LoginResponse {
-  success: boolean;
-  data: {
-    user: User;
-    token: string;
+  readonly success: boolean;
+  readonly data: {
+    readonly user: User;
+    readonly token: string;
   };
 }

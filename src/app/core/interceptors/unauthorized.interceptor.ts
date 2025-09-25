@@ -14,7 +14,6 @@ export const unauthorizedInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((error: any) => {
       if (error instanceof HttpErrorResponse) {
-        // only log in development
         if (!environment.production) {
           console.warn('HTTP error intercepted:', error.status);
         }
@@ -26,6 +25,7 @@ export const unauthorizedInterceptor: HttpInterceptorFn = (req, next) => {
 
         return throwError(() => error);
       }
+
       return throwError(() => error);
     }),
   );

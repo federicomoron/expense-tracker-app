@@ -115,3 +115,24 @@
     font-weight: 600;
   }
 }
+
+.group-banner-container {
+  position: relative;
+
+  .group-banner {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    height: 120px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .group-actions-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+  }
+}

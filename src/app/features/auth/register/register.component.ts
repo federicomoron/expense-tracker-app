@@ -1,94 +1,58 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { SnackbarService } from '@app/core/services/snackbar.service';
-import { ExpButtonComponent } from '@app/shared/components/exp-button/exp-button.component';
 import { NAVIGATION_ROUTES } from '@constants/routes';
+import { SnackbarService } from '@services/snackbar.service';
 import { UserService } from '@services/user.service';
-import { SharedUiModule } from '@shared/shared-ui.module';
+import { ExpButtonComponent } from '@shared/components/exp-button/exp-button.component';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 import { nonEmpty, strongPassword, validEmail } from '@shared/utils/form-validators';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [SharedUiModule, ReactiveFormsModule, TranslateModule, ExpButtonComponent],
+  imports: [SharedMaterialModule, ReactiveFormsModule, TranslateModule, ExpButtonComponent],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
-  showPassword = signal(false);
+  public readonly showPassword = signal(false);
+  public readonly isLoading = signal(false);
 
-  private fb = inject(FormBuilder);
-  private router = inject(Router);
-  private snackbar = inject(SnackbarService);
-  private userService = inject(UserService);
-  private translate = inject(TranslateService);
+  private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
+  private readonly snackbar = inject(SnackbarService);
+  private readonly userService = inject(UserService);
+  private readonly translate = inject(TranslateService);
 
-  loading = false;
-
-  form: FormGroup = this.fb.group({
+  public form = this.fb.nonNullable.group({
     name: ['', [Validators.required, nonEmpty]],
     email: ['', [Validators.required, nonEmpty, validEmail]],
     password: ['', [Validators.required, nonEmpty, Validators.minLength(6), strongPassword]],
   });
 
-  onSubmit(): void {
-    if (this.form.invalid) {
-      this.snackbar.show(this.translate.instant('register.formInvalid'));
-      return;
-    }
-
-    this.loading = true;
-    const data = this.form.value;
-
-    this.userService.register(data).subscribe({
-      next: (res) => {
-        this.loading = false;
-
-        if (!res.success || !res.data?.email) {
-          this.snackbar.show(this.translate.instant('register.registerError'));
-          return;
-        }
-
-        this.snackbar.show(this.translate.instant('register.registerSuccess'));
-        setTimeout(() => void this.router.navigateByUrl('/login'), 2000);
-      },
-      error: (err) => {
-        this.loading = false;
-
-        if (err.status === 409) {
-          this.snackbar.show(this.translate.instant('register.emailExists'));
-        } else {
-          this.snackbar.show(this.translate.instant('register.genericError'));
-        }
-      },
-    });
+  togglePasswordVisibility(): void {
+    this.showPassword.update((v) => !v);
   }
 
-  goBack() {
+  goBack(): void {
     void this.router.navigate([NAVIGATION_ROUTES.LOGIN]);
-  }
-
-  togglePasswordVisibility() {
-    this.showPassword.update((value) => !value);
   }
 
   getError(controlName: string): string | null {
     const control = this.form.get(controlName);
-    if (!control || !control.touched) return null;
+    if (!control || !control.touched || !control.invalid) return null;
 
-    if (control.hasError('required')) {
+    if (control.hasError('required') || control.hasError('nonEmpty')) {
       return this.translate.instant(`register.${controlName}Required`);
     }
 
-    if (control.hasError('nonEmpty')) {
-      return this.translate.instant(`register.nonEmpty`);
-    }
-
-    if (controlName === 'email' && control.hasError('invalidEmail')) {
-      return this.translate.instant('register.emailInvalid');
+    if (controlName === 'email') {
+      if (control.hasError('invalidEmail') || control.hasError('email')) {
+        return this.translate.instant('register.emailInvalid');
+      }
     }
 
     if (controlName === 'password') {
@@ -100,6 +64,37 @@ export class RegisterComponent {
       }
     }
 
-    return null;
+    return this.translate.instant('validation.invalidField');
+  }
+
+  onSubmit(): void {
+    if (this.form.invalid) {
+      this.snackbar.show(this.translate.instant('register.formInvalid'));
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    this.isLoading.set(true);
+    const data = this.form.getRawValue();
+
+    this.userService.register(data).subscribe({
+      next: (res) => {
+        this.isLoading.set(false);
+        if (!res.success || !res.data?.email) {
+          this.snackbar.show(this.translate.instant('register.registerError'));
+          return;
+        }
+        this.snackbar.show(this.translate.instant('register.registerSuccess'));
+        setTimeout(() => void this.router.navigate([NAVIGATION_ROUTES.LOGIN]), 2000);
+      },
+      error: (err) => {
+        this.isLoading.set(false);
+        if (err.status === 409) {
+          this.snackbar.show(this.translate.instant('register.emailExists'));
+        } else {
+          this.snackbar.show(this.translate.instant('register.genericError'));
+        }
+      },
+    });
   }
 }

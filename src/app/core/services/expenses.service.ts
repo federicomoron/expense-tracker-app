@@ -9,8 +9,9 @@ import { HttpService } from '@services/http.service';
 
 @Injectable({ providedIn: 'root' })
 export class ExpenseService {
+  private readonly http = inject(HttpService);
+
   private readonly apiUrl = environment.apiUrl;
-  private http = inject(HttpService);
 
   createExpense(expense: ExpenseRequest): Observable<ExpenseResponse> {
     return this.http.post<ExpenseResponse, ExpenseRequest>(

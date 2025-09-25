@@ -1,4 +1,4 @@
-import { I18nService } from './i18n.service';
+import { I18nService } from '@services/i18n.service';
 
 export function i18nInitializer(i18nService: I18nService): () => void {
   return () => {
