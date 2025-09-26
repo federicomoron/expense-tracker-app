@@ -4,7 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { AuthService } from '@services/auth.service';
-import { SnackbarService } from '@services/snackbar.service';
+import { UiMessageService } from '@services/ui-message.service';
 import { ExpButtonSpinnerComponent } from '@shared/components/exp-button-spinner/exp-button-spinner.component';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 import { nonEmpty, validEmail } from '@shared/utils/form-validators';
@@ -29,7 +29,7 @@ export class LoginComponent {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly snackbar = inject(SnackbarService);
+  private readonly uiMessage = inject(UiMessageService);
   private readonly translate = inject(TranslateService);
 
   public form = this.fb.nonNullable.group({
@@ -104,17 +104,17 @@ export class LoginComponent {
         if (res?.success) {
           void this.router.navigate(['/groups']);
         } else {
-          this.snackbar.show(this.translate.instant('login.invalidCredentials'));
+          this.uiMessage.showError(this.translate.instant('login.invalidCredentials'));
         }
       },
       error: (err) => {
         this.isLoading.set(false);
         if (err.status === 0) {
-          this.snackbar.show(this.translate.instant('login.apiUnreachable'));
+          this.uiMessage.showError(this.translate.instant('login.apiUnreachable'));
         } else if (err.status === 401 || err.status === 400) {
-          this.snackbar.show(this.translate.instant('login.invalidCredentials'));
+          this.uiMessage.showError(this.translate.instant('login.invalidCredentials'));
         } else {
-          this.snackbar.show(this.translate.instant('login.unexpectedError'));
+          this.uiMessage.showError(this.translate.instant('login.unexpectedError'));
         }
       },
     });

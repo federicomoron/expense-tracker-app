@@ -8,7 +8,7 @@ import { ApiErrorService } from '@services/api-error.service';
 import { AuthService } from '@services/auth.service';
 import { DialogService } from '@services/dialog.service';
 import { ExpenseService } from '@services/expenses.service';
-import { SnackbarService } from '@services/snackbar.service';
+import { UiMessageService } from '@services/ui-message.service';
 import { EXPENSE_CATEGORIES } from '@shared/data/expense-categories';
 import {
   detectQuickOptionFromParticipants,
@@ -32,7 +32,7 @@ export class ExpenseDetailComponent {
   private readonly translate = inject(TranslateService);
   private readonly authService = inject(AuthService);
   private readonly apiErrorService = inject(ApiErrorService);
-  private readonly snackbar = inject(SnackbarService);
+  private readonly uiMessage = inject(UiMessageService);
   private readonly expenseService = inject(ExpenseService);
   private readonly dialogService = inject(DialogService);
 
@@ -156,7 +156,7 @@ export class ExpenseDetailComponent {
 
       this.expenseService.deleteExpense(expense.id!).subscribe({
         next: () => {
-          this.snackbar.show(this.translate.instant('expenses.deletedSuccess'));
+          this.uiMessage.showSuccess(this.translate.instant('expenses.deletedSuccess'));
           void this.router.navigate(['/groups', expense.groupId]);
         },
         error: () => {
