@@ -160,7 +160,8 @@ export class ExpenseDetailComponent {
           void this.router.navigate(['/groups', expense.groupId]);
         },
         error: () => {
-          this.apiErrorService.handleError('expenses.deleteError', true);
+          const message = this.apiErrorService.handleError('expenses.deleteError');
+          this.uiMessage.showError(message);
         },
       });
     });

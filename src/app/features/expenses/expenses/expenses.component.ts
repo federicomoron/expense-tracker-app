@@ -10,6 +10,7 @@ import { ApiErrorService } from '@services/api-error.service';
 import { AuthService } from '@services/auth.service';
 import { DialogService } from '@services/dialog.service';
 import { ExpenseService } from '@services/expenses.service';
+import { UiMessageService } from '@services/ui-message.service';
 import { EXPENSE_CATEGORIES } from '@shared/data/expense-categories';
 import { CURRENCY_SYMBOLS } from '@shared/helpers/currency-symbols';
 import {
@@ -36,6 +37,7 @@ export class ExpensesComponent {
   private readonly expenseService = inject(ExpenseService);
   private readonly router = inject(Router);
   private readonly dialogService = inject(DialogService);
+  private readonly uiMessage = inject(UiMessageService);
 
   @Input() expenses: Expense[] = [];
   @Input() loading = false;
@@ -95,13 +97,15 @@ export class ExpensesComponent {
   deleteExpense(expense: Expense) {
     this.expenseService.deleteExpense(expense.id!).subscribe({
       next: () => {
-        this.apiErrorService.handleError('expenses.deletedSuccess', true);
+        const message = this.apiErrorService.handleError('expenses.deletedSuccess');
+        this.uiMessage.showSuccess(message);
         this.expenses = this.expenses.filter((e) => e.id !== expense.id);
         this.expenseDeleted.emit(expense.id!);
         this.calculateTotal();
       },
       error: (err) => {
-        this.apiErrorService.handleError(err);
+        const message = this.apiErrorService.handleError(err);
+        this.uiMessage.showError(message);
       },
     });
   }

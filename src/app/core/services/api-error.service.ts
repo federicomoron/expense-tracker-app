@@ -11,7 +11,6 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 
 import { BackendError, ValidationErrorDetail } from '@models/api-error.model';
-import { SnackbarService } from '@services/snackbar.service';
 
 export const SKIP_ERROR_HANDLER = new HttpContextToken<boolean>(() => false);
 
@@ -26,13 +25,12 @@ export class ApiErrorService {
   public lastErrorReadonly: Signal<string | null> = this.lastError;
 
   /**
-   * Handles errors received from the backend and returns a translated version.
-   * It can also automatically display the snack bar.
+   * Handles errors from the backend and returns a translated message.
+   * Does not interact with the UI. Components decide how to display it.
    */
-  handleError(error: any, showSnackbar = true): string {
+  handleError(error: any): string {
     return runInInjectionContext(this.injector, () => {
       const translate = inject(TranslateService);
-      const snackBar = inject(SnackbarService);
 
       let message = 'error.unknown';
 
@@ -46,11 +44,6 @@ export class ApiErrorService {
       }
 
       this.lastError.set(message);
-
-      if (showSnackbar) {
-        snackBar.show(message);
-      }
-
       return message;
     });
   }

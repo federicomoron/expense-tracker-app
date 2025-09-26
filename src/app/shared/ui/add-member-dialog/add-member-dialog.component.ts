@@ -4,6 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { ApiErrorService } from '@services/api-error.service';
 import { GroupService } from '@services/group.service';
+import { UiMessageService } from '@services/ui-message.service';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
@@ -22,6 +23,7 @@ export class AddMemberDialogComponent {
 
   private readonly groupService = inject(GroupService);
   private readonly apiErrorService = inject(ApiErrorService);
+  private readonly uiMessage = inject(UiMessageService);
 
   addMember(): void {
     if (!this.email() || this.isSubmitting()) return;
@@ -34,13 +36,15 @@ export class AddMemberDialogComponent {
         if (res.success) {
           this.dialogRef.close({ added: true });
         } else {
-          this.apiErrorService.handleError(res, true);
+          const message = this.apiErrorService.handleError(res);
+          this.uiMessage.showError(message);
         }
       },
       error: (err) => {
         console.error('Error sending invitation', err);
         this.isSubmitting.set(false);
-        this.apiErrorService.handleError(err);
+        const message = this.apiErrorService.handleError(err);
+        this.uiMessage.showError(message);
       },
     });
   }
