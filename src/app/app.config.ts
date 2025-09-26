@@ -16,8 +16,8 @@ import { provideServiceWorker } from '@angular/service-worker';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
+import { apiErrorInterceptor } from '@core/interceptors/api-error.interceptor';
 import { authTokenInterceptor } from '@core/interceptors/auth-token.interceptor';
-import { unauthorizedInterceptor } from '@core/interceptors/unauthorized.interceptor';
 import { routes } from '@routes/app.routes';
 import { AuthService } from '@services/auth.service';
 import { i18nInitializer } from '@services/i18n-init';
@@ -40,7 +40,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([authTokenInterceptor, unauthorizedInterceptor])),
+    provideHttpClient(withInterceptors([authTokenInterceptor, apiErrorInterceptor])),
     importProvidersFrom(
       BrowserAnimationsModule,
       TranslateModule.forRoot({

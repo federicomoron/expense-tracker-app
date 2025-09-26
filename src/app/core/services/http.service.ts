@@ -1,8 +1,7 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 
-import { environment } from '@environments/environment';
 import { ApiStatusService } from '@services/api-status.service';
 
 @Injectable({ providedIn: 'root' })
@@ -11,38 +10,18 @@ export class HttpService {
   private apiStatus = inject(ApiStatusService);
 
   get<T>(url: string, options = {}): Observable<T> {
-    return this.http.get<T>(url, options).pipe(catchError((err) => this.handleError(err, 'GET')));
+    return this.http.get<T>(url, options);
   }
 
   post<T, U>(url: string, body: U, options = {}): Observable<T> {
-    return this.http
-      .post<T>(url, body, options)
-      .pipe(catchError((err) => this.handleError(err, 'POST')));
+    return this.http.post<T>(url, body, options);
   }
 
   put<T, U>(url: string, body: U, options = {}): Observable<T> {
-    return this.http
-      .put<T>(url, body, options)
-      .pipe(catchError((err) => this.handleError(err, 'PUT')));
+    return this.http.put<T>(url, body, options);
   }
 
   delete<T>(url: string, options = {}): Observable<T> {
-    return this.http
-      .delete<T>(url, options)
-      .pipe(catchError((err) => this.handleError(err, 'DELETE')));
-  }
-
-  private handleError(error: HttpErrorResponse, method: string) {
-    if (error.status === 0) {
-      this.apiStatus.setReachable(false);
-    } else {
-      this.apiStatus.setReachable(true);
-    }
-
-    if (!environment.production) {
-      console.warn(`[HTTP ${method} warning]`, error.status, error.message);
-    }
-
-    return throwError(() => error);
+    return this.http.delete<T>(url, options);
   }
 }
