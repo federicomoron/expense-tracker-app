@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { GroupMember } from '@config/core/models/group-detail.model';
 import { ExpenseFormComponent } from '@features/expenses/expense-form/expense-form.component';
 import { Expense, ExpenseExtended, ExpenseUser } from '@models/expenses.model';
+import { ApiErrorService } from '@services/api-error.service';
 import { AuthService } from '@services/auth.service';
 import { DialogService } from '@services/dialog.service';
 import { ExpenseService } from '@services/expenses.service';
@@ -32,7 +32,7 @@ export class ExpensesComponent {
 
   private readonly authService = inject(AuthService);
   private readonly translate = inject(TranslateService);
-  private readonly snackbar = inject(MatSnackBar);
+  private readonly apiErrorService = inject(ApiErrorService);
   private readonly expenseService = inject(ExpenseService);
   private readonly router = inject(Router);
   private readonly dialogService = inject(DialogService);
@@ -95,18 +95,13 @@ export class ExpensesComponent {
   deleteExpense(expense: Expense) {
     this.expenseService.deleteExpense(expense.id!).subscribe({
       next: () => {
-        this.snackbar.open(this.translate.instant('expenses.deletedSuccess'), 'OK', {
-          duration: 2000,
-        });
-
+        this.apiErrorService.handleError('expenses.deletedSuccess', true);
         this.expenses = this.expenses.filter((e) => e.id !== expense.id);
         this.expenseDeleted.emit(expense.id!);
         this.calculateTotal();
       },
-      error: () => {
-        this.snackbar.open(this.translate.instant('expenses.deleteError'), 'OK', {
-          duration: 3000,
-        });
+      error: (err) => {
+        this.apiErrorService.handleError(err);
       },
     });
   }

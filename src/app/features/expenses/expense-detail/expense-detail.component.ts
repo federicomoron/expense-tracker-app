@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { Expense, ExpenseExtended, ExpenseUser } from '@core/models/expenses.model';
+import { ApiErrorService } from '@services/api-error.service';
 import { AuthService } from '@services/auth.service';
 import { DialogService } from '@services/dialog.service';
 import { ExpenseService } from '@services/expenses.service';
+import { SnackbarService } from '@services/snackbar.service';
 import { EXPENSE_CATEGORIES } from '@shared/data/expense-categories';
 import {
   detectQuickOptionFromParticipants,
@@ -30,7 +31,8 @@ export class ExpenseDetailComponent {
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
   private readonly authService = inject(AuthService);
-  private readonly snackbar = inject(MatSnackBar);
+  private readonly apiErrorService = inject(ApiErrorService);
+  private readonly snackbar = inject(SnackbarService);
   private readonly expenseService = inject(ExpenseService);
   private readonly dialogService = inject(DialogService);
 
@@ -50,9 +52,7 @@ export class ExpenseDetailComponent {
     const groupId = expense.groupId ?? routeGroupId;
 
     if (!groupId || !expense.id) {
-      this.snackbar.open(this.translate.instant('expenses.invalidExpense'), 'OK', {
-        duration: 2500,
-      });
+      this.apiErrorService.handleError('expenses.invalidExpense');
       return;
     }
 
@@ -156,15 +156,11 @@ export class ExpenseDetailComponent {
 
       this.expenseService.deleteExpense(expense.id!).subscribe({
         next: () => {
-          this.snackbar.open(this.translate.instant('expenses.deletedSuccess'), 'OK', {
-            duration: 2000,
-          });
+          this.snackbar.show(this.translate.instant('expenses.deletedSuccess'));
           void this.router.navigate(['/groups', expense.groupId]);
         },
         error: () => {
-          this.snackbar.open(this.translate.instant('expenses.deleteError'), 'OK', {
-            duration: 3000,
-          });
+          this.apiErrorService.handleError('expenses.deleteError', true);
         },
       });
     });

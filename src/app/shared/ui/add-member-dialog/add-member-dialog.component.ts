@@ -1,9 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
+import { ApiErrorService } from '@services/api-error.service';
 import { GroupService } from '@services/group.service';
-import { SnackbarService } from '@services/snackbar.service';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
@@ -21,8 +21,7 @@ export class AddMemberDialogComponent {
   public readonly data = inject(MAT_DIALOG_DATA) as { groupId: number };
 
   private readonly groupService = inject(GroupService);
-  private readonly snackbar = inject(SnackbarService);
-  private readonly translate = inject(TranslateService);
+  private readonly apiErrorService = inject(ApiErrorService);
 
   addMember(): void {
     if (!this.email() || this.isSubmitting()) return;
@@ -35,32 +34,13 @@ export class AddMemberDialogComponent {
         if (res.success) {
           this.dialogRef.close({ added: true });
         } else {
-          this.snackbar.show(
-            res.message ?? this.translate.instant('groupActions.errorSendingInvitation'),
-          );
+          this.apiErrorService.handleError(res, true);
         }
       },
       error: (err) => {
         console.error('Error sending invitation', err);
         this.isSubmitting.set(false);
-
-        const backendMessage = err?.error?.error?.message;
-        let message: string;
-
-        switch (backendMessage) {
-          case 'No user found with the provided email':
-            message = this.translate.instant('groupActions.userNotFound');
-            break;
-          case 'User is already a member of the group':
-            message = this.translate.instant('groupActions.alreadyMember');
-            break;
-          default:
-            message =
-              backendMessage ?? this.translate.instant('groupActions.errorSendingInvitation');
-            break;
-        }
-
-        this.snackbar.show(message);
+        this.apiErrorService.handleError(err);
       },
     });
   }
