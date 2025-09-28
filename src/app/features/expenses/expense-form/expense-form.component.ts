@@ -12,11 +12,11 @@ import { PaidByQuickDialogComponent } from '@features/expenses/components/paid-b
 import { SplitSelectorComponent } from '@features/expenses/components/split-selector/split-selector.component';
 import { ExpenseExtended, ExpenseRequest, ExpenseUser } from '@models/expenses.model';
 import { GroupDetail } from '@models/group-detail.model';
+import { ApiErrorService } from '@services/api-error.service';
 import { AuthService } from '@services/auth.service';
 import { DialogService } from '@services/dialog.service';
 import { ExpenseService } from '@services/expenses.service';
 import { GroupService } from '@services/group.service';
-import { SnackbarService } from '@services/snackbar.service';
 import { FooterComponent } from '@shared/components/footer/footer.component';
 import { EXPENSE_CATEGORIES } from '@shared/data/expense-categories';
 import {
@@ -48,7 +48,7 @@ export class ExpenseFormComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly groupService = inject(GroupService);
-  private readonly snackbar = inject(SnackbarService);
+  private readonly apiErrorService = inject(ApiErrorService);
   private readonly translate = inject(TranslateService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly dialogService = inject(DialogService);
@@ -205,8 +205,8 @@ export class ExpenseFormComponent implements OnInit {
           );
         });
       },
-      error: () => {
-        this.snackbar.show(this.translate.instant('expenseForm.loadGroupError'));
+      error: (err) => {
+        this.apiErrorService.handleError(err);
       },
     });
   }
@@ -326,10 +326,7 @@ export class ExpenseFormComponent implements OnInit {
     obs$.subscribe({
       next: () => void this.router.navigate(['/groups', this.groupId]),
       error: (error) => {
-        console.error(
-          error?.error?.error?.details?.errors ?? this.translate.instant('expenseForm.createError'),
-          error,
-        );
+        this.apiErrorService.handleError(error);
         this.isSubmitting = false;
       },
     });

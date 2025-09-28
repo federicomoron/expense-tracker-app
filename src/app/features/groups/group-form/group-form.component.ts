@@ -1,10 +1,10 @@
 import { Component, computed, ElementRef, inject, signal, ViewChild } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { NAVIGATION_ROUTES } from '@constants/routes';
 import { GROUP_TYPE_OPTIONS, GroupType } from '@models/group-type.enum';
+import { ApiErrorService } from '@services/api-error.service';
 import { GroupService } from '@services/group.service';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 
@@ -27,7 +27,7 @@ export class GroupFormComponent {
 
   private groupService = inject(GroupService);
   private router = inject(Router);
-  private snackBar = inject(MatSnackBar);
+  private apiErrorService = inject(ApiErrorService);
   private translate = inject(TranslateService);
 
   groupTypeOptions = GROUP_TYPE_OPTIONS;
@@ -50,12 +50,8 @@ export class GroupFormComponent {
       })
       .subscribe({
         next: () => void this.router.navigate([NAVIGATION_ROUTES.GROUPS]),
-        error: () => {
-          this.snackBar.open(
-            this.translate.instant('groupForm.errorCreating'),
-            this.translate.instant('common.close'),
-            { duration: 3000 },
-          );
+        error: (err) => {
+          this.apiErrorService.handleError(err);
         },
       });
   }

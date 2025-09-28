@@ -231,5 +231,19 @@
   "errors": {
     "validation": "Validation error, please check the data.",
     "unexpected": "An unexpected error occurred."
+  },
+  "error": {
+    "unknown": "An unknown error occurred",
+    "user_not_found": "User not found",
+    "already_member": "User is already a member of the group",
+    "unauthorized": "You are not authorized",
+    "forbidden": "Access forbidden",
+    "validation_error": "Validation Error",
+    "validation_detail": "Field '{{field}}': {{message}}",
+    "internal_server_error": "Internal server error",
+    "unprocessable_entity": "Unprocessable entity",
+    "conflict": "Conflict occurred",
+    "not_found": "Resource not found",
+    "bad_request": "Bad request"
   }
 }

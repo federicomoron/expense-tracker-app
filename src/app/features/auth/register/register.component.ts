@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { NAVIGATION_ROUTES } from '@constants/routes';
-import { SnackbarService } from '@services/snackbar.service';
+import { UiMessageService } from '@services/ui-message.service';
 import { UserService } from '@services/user.service';
 import { ExpButtonComponent } from '@shared/components/exp-button/exp-button.component';
 import { SharedMaterialModule } from '@shared/shared-material.module';
@@ -23,7 +23,7 @@ export class RegisterComponent {
 
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
-  private readonly snackbar = inject(SnackbarService);
+  private readonly uiMessage = inject(UiMessageService);
   private readonly userService = inject(UserService);
   private readonly translate = inject(TranslateService);
 
@@ -69,7 +69,7 @@ export class RegisterComponent {
 
   onSubmit(): void {
     if (this.form.invalid) {
-      this.snackbar.show(this.translate.instant('register.formInvalid'));
+      this.uiMessage.showWarning(this.translate.instant('register.formInvalid'));
       this.form.markAllAsTouched();
       return;
     }
@@ -81,18 +81,18 @@ export class RegisterComponent {
       next: (res) => {
         this.isLoading.set(false);
         if (!res.success || !res.data?.email) {
-          this.snackbar.show(this.translate.instant('register.registerError'));
+          this.uiMessage.showError(this.translate.instant('register.registerError'));
           return;
         }
-        this.snackbar.show(this.translate.instant('register.registerSuccess'));
+        this.uiMessage.showSuccess(this.translate.instant('register.registerSuccess'));
         setTimeout(() => void this.router.navigate([NAVIGATION_ROUTES.LOGIN]), 2000);
       },
       error: (err) => {
         this.isLoading.set(false);
         if (err.status === 409) {
-          this.snackbar.show(this.translate.instant('register.emailExists'));
+          this.uiMessage.showError(this.translate.instant('register.emailExists'));
         } else {
-          this.snackbar.show(this.translate.instant('register.genericError'));
+          this.uiMessage.showError(this.translate.instant('register.genericError'));
         }
       },
     });

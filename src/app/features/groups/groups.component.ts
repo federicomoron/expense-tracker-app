@@ -1,18 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
 
 import { NAVIGATION_ROUTES } from '@constants/routes';
-import { environment } from '@environments/environment';
 import { GroupFormComponent } from '@features/groups/group-form/group-form.component';
 import { GroupDetailWithExpenses } from '@models/group-detail.model';
 import { GroupType } from '@models/group-type.enum';
+import { ApiErrorService } from '@services/api-error.service';
 import { AuthService } from '@services/auth.service';
 import { DialogService } from '@services/dialog.service';
 import { GroupService } from '@services/group.service';
-import { SnackbarService } from '@services/snackbar.service';
 import { getGroupImage } from '@shared/helpers/group-type-image-map';
 import { CurrencySymbolPipe } from '@shared/pipes/currency-symbol.pipe';
 import { SharedMaterialModule } from '@shared/shared-material.module';
@@ -25,12 +24,11 @@ import { SharedMaterialModule } from '@shared/shared-material.module';
   styleUrls: ['./groups.component.scss'],
 })
 export class GroupsComponent implements OnInit {
+  private readonly apiErrorService = inject(ApiErrorService);
   private readonly authService = inject(AuthService);
   private readonly groupService = inject(GroupService);
-  private readonly snackbar = inject(SnackbarService);
   private readonly router = inject(Router);
   private readonly dialogService = inject(DialogService);
-  private readonly translate = inject(TranslateService);
 
   readonly showForm = signal(false);
   readonly showSettledGroups = signal(localStorage.getItem('showSettledGroups') === 'true');
@@ -71,7 +69,7 @@ export class GroupsComponent implements OnInit {
       next: () => this.loadGroupDetails(),
       error: (err) => {
         console.error('Error fetching groups', err);
-        this.snackbar.show(this.translate.instant('groups.errorFetching'));
+        this.apiErrorService.handleError(err);
       },
     });
   }
@@ -119,11 +117,7 @@ export class GroupsComponent implements OnInit {
         if (res.success) this.showForm.set(false);
       },
       error: (err) => {
-        const message = err.error?.error?.message || this.translate.instant('groups.errorCreating');
-        if (!environment.production) {
-          console.error('Backend message:', message);
-        }
-        this.snackbar.show(message);
+        this.apiErrorService.handleError(err);
       },
     });
   }

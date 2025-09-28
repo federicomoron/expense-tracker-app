@@ -231,5 +231,19 @@
   "errors": {
     "validation": "Error de validación, por favor revisa los datos.",
     "unexpected": "Ocurrió un error inesperado."
+  },
+  "error": {
+    "unknown": "Ocurrió un error desconocido",
+    "user_not_found": "Usuario no encontrado",
+    "already_member": "El usuario ya es miembro del grupo",
+    "unauthorized": "No estás autorizado",
+    "forbidden": "Acceso prohibido",
+    "validation_error": "Error de validación",
+    "validation_detail": "Campo '{{field}}': {{message}}",
+    "internal_server_error": "Error interno del servidor",
+    "unprocessable_entity": "Entidad no procesable",
+    "conflict": "Ocurrió un conflicto",
+    "not_found": "Recurso no encontrado",
+    "bad_request": "Solicitud incorrecta"
   }
 }
