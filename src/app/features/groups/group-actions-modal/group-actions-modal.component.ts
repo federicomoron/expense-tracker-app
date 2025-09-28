@@ -5,7 +5,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { DialogService } from '@services/dialog.service';
 import { GroupService } from '@services/group.service';
-import { SnackbarService } from '@services/snackbar.service';
+import { UiMessageService } from '@services/ui-message.service';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 import { AddMemberDialogComponent } from '@shared/ui/add-member-dialog/add-member-dialog.component';
 import { ConfirmDialogComponent } from '@shared/ui/dialogs/confirm-dialog.component';
@@ -25,7 +25,7 @@ export class GroupActionsModalComponent implements OnInit {
   public readonly data = inject(MAT_DIALOG_DATA) as { groupId: number; groupName: string };
 
   private readonly groupService = inject(GroupService);
-  private readonly snackbar = inject(SnackbarService);
+  private readonly uiMessage = inject(UiMessageService);
   private readonly router = inject(Router);
   private readonly translate = inject(TranslateService);
   private readonly dialogService = inject(DialogService);
@@ -61,13 +61,13 @@ export class GroupActionsModalComponent implements OnInit {
 
       this.groupService.deleteGroup(this.data.groupId).subscribe({
         next: () => {
-          this.snackbar.show(this.translate.instant('groupActions.groupDeleted'));
+          this.uiMessage.showSuccess(this.translate.instant('groupActions.groupDeleted'));
           this.dialogRef.close();
           void this.router.navigate(['/groups']);
         },
         error: (err) => {
           console.error('Error deleting group', err);
-          this.snackbar.show(this.translate.instant('groupActions.errorDeleting'));
+          this.uiMessage.showError(this.translate.instant('groupActions.errorDeleting'));
         },
       });
     });
@@ -114,13 +114,13 @@ export class GroupActionsModalComponent implements OnInit {
 
       this.groupService.leaveGroup(this.data.groupId).subscribe({
         next: () => {
-          this.snackbar.show(this.translate.instant('groupActions.leftGroup'));
+          this.uiMessage.showInfo(this.translate.instant('groupActions.leftGroup'));
           this.dialogRef.close();
           void this.router.navigate(['/groups']);
         },
         error: (err) => {
           console.error('Error leaving group', err);
-          this.snackbar.show(this.translate.instant('groupActions.errorLeaving'));
+          this.uiMessage.showError(this.translate.instant('groupActions.errorLeaving'));
         },
       });
     });

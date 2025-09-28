@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { catchError, of } from 'rxjs';
 
 import { ExpensesComponent } from '@features/expenses/expenses/expenses.component';
 import { GroupActionsModalComponent } from '@features/groups/group-actions-modal/group-actions-modal.component';
 import { GroupDetailWithExpenses } from '@models/group-detail.model';
 import { GroupType } from '@models/group-type.enum';
+import { ApiErrorService } from '@services/api-error.service';
 import { AuthService } from '@services/auth.service';
 import { DialogService } from '@services/dialog.service';
 import { GroupService } from '@services/group.service';
 import { LayoutService } from '@services/layout.service';
-import { SnackbarService } from '@services/snackbar.service';
 import { getGroupImage } from '@shared/helpers/group-type-image-map';
 import { CurrencySymbolPipe } from '@shared/pipes/currency-symbol.pipe';
 import { SharedMaterialModule } from '@shared/shared-material.module';
@@ -32,11 +32,10 @@ import { SharedMaterialModule } from '@shared/shared-material.module';
   styleUrls: ['./group-detail.component.scss'],
 })
 export class GroupDetailComponent implements OnInit {
+  private readonly apiErrorService = inject(ApiErrorService);
   private readonly layout = inject(LayoutService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private readonly snackbar = inject(SnackbarService);
-  private readonly translate = inject(TranslateService);
   private readonly groupService = inject(GroupService);
   private readonly authService = inject(AuthService);
   private readonly dialogService = inject(DialogService);
@@ -76,7 +75,7 @@ export class GroupDetailComponent implements OnInit {
       error: (err) => {
         console.error('Error loading group detail', err);
         this.loading.set(false);
-        this.snackbar.show(this.translate.instant('groupDetail.errorLoading'));
+        this.apiErrorService.handleError(err);
       },
     });
   }
@@ -94,8 +93,8 @@ export class GroupDetailComponent implements OnInit {
     this.groupService
       .getGroupDetail(id)
       .pipe(
-        catchError(() => {
-          this.snackbar.show(this.translate.instant('groupDetail.errorUpdating'));
+        catchError((err) => {
+          this.apiErrorService.handleError(err);
           return of(null);
         }),
       )
