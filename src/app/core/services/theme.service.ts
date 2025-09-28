@@ -1,13 +1,14 @@
-export type ThemeOption = 'light' | 'dark' | 'system';
+export type ThemeOption = 'light' | 'dark';
 
 export function applyTheme(theme?: ThemeOption) {
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const storedTheme = theme ?? (localStorage.getItem('theme') as ThemeOption) ?? 'system';
+  const storedTheme = theme ?? (localStorage.getItem('theme') as ThemeOption) ?? 'light';
   const classList = document.documentElement.classList;
 
   classList.remove('dark-theme');
 
-  if (storedTheme === 'dark' || (storedTheme === 'system' && prefersDark)) {
+  if (storedTheme === 'dark') {
     classList.add('dark-theme');
   }
+
+  localStorage.setItem('theme', storedTheme);
 }
