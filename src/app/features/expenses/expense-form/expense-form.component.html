@@ -1,22 +1,12 @@
 <div class="expense-screen">
-  <mat-toolbar color="primary" class="expense-form-toolbar">
-    <button type="button" mat-icon-button (click)="goBack()">
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <span class="toolbar-title">{{ 'expenseForm.title' | translate }}</span>
-    <span class="spacer"></span>
-    <button mat-icon-button [disabled]="isSubmitting" (click)="submitExpense()">
-      @if (isSubmitting) {
-        <mat-progress-spinner
-          diameter="24"
-          mode="indeterminate"
-          class="custom-spinner-white"
-        ></mat-progress-spinner>
-      } @else {
-        <mat-icon>check</mat-icon>
-      }
-    </button>
-  </mat-toolbar>
+  <!-- Header -->
+  <app-header
+    [title]="'expenseForm.title' | translate"
+    [showBack]="true"
+    [actions]="headerActions"
+    color="primary"
+    (back)="goBack()"
+  ></app-header>
 
   @if (group) {
     <form [formGroup]="expenseForm" class="expense-form" (ngSubmit)="submitExpense()">
@@ -82,6 +72,8 @@
       (dateChange)="setExpenseDate($event)"
     ></app-footer>
   } @else {
-    <div class="loading-spinner"><div class="custom-spinner"></div></div>
+    <div class="loading-spinner">
+      <app-spinner size="large"></app-spinner>
+    </div>
   }
 </div>

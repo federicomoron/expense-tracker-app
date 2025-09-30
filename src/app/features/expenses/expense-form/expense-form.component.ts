@@ -12,12 +12,15 @@ import { PaidByQuickDialogComponent } from '@features/expenses/components/paid-b
 import { SplitSelectorComponent } from '@features/expenses/components/split-selector/split-selector.component';
 import { ExpenseExtended, ExpenseRequest, ExpenseUser } from '@models/expenses.model';
 import { GroupDetail } from '@models/group-detail.model';
+import { HeaderAction } from '@models/header-action.model';
 import { ApiErrorService } from '@services/api-error.service';
 import { AuthService } from '@services/auth.service';
 import { DialogService } from '@services/dialog.service';
 import { ExpenseService } from '@services/expenses.service';
 import { GroupService } from '@services/group.service';
 import { FooterComponent } from '@shared/components/footer/footer.component';
+import { HeaderComponent } from '@shared/components/header/header.component';
+import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 import { EXPENSE_CATEGORIES } from '@shared/data/expense-categories';
 import {
   buildSplits,
@@ -37,6 +40,8 @@ import { nonEmpty } from '@shared/utils/form-validators';
     SplitSelectorComponent,
     FooterComponent,
     TranslateModule,
+    HeaderComponent,
+    SpinnerComponent,
   ],
   templateUrl: './expense-form.component.html',
   styleUrls: ['./expense-form.component.scss'],
@@ -77,6 +82,18 @@ export class ExpenseFormComponent implements OnInit {
     createdAt: [new Date(), Validators.required],
     category: [''],
   });
+
+  get headerActions(): HeaderAction[] {
+    return [
+      {
+        label: 'expenseForm.save',
+        icon: 'check',
+        onClick: () => this.submitExpense(),
+        showSpinner: this.isSubmitting,
+        spinnerColor: 'white',
+      },
+    ];
+  }
 
   ngOnInit() {
     this.expenseId = this.route.snapshot.paramMap.get('expenseId')
