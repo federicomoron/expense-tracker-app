@@ -9,10 +9,16 @@
   flex: 1;
   overflow-y: auto;
   background-color: var(--app-bg);
-  padding: 1rem;
+  padding: 0;
   transition: background-color 0.3s ease;
 
+  .layout-content {
+    padding: 1rem;
+  }
+
   &.no-padding-top {
-    padding-top: 0;
+    .layout-content {
+      padding-top: 0;
+    }
   }
 }
