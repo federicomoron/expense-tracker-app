@@ -2,11 +2,14 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { SharedMaterialModule } from '@config/shared/shared-material.module';
+import { HeaderAction } from '@models/header-action.model';
+
+import { SpinnerComponent } from '../spinner/spinner.component';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [SharedMaterialModule, TranslateModule],
+  imports: [SharedMaterialModule, TranslateModule, SpinnerComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
@@ -15,5 +18,5 @@ export class HeaderComponent {
   @Input() showBack = false;
   @Output() back = new EventEmitter<void>();
 
-  @Input() actions?: { icon: string; color?: string; label: string; onClick: () => void }[];
+  @Input() actions?: HeaderAction[];
 }

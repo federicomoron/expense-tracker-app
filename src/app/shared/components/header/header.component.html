@@ -16,7 +16,11 @@
           [attr.aria-label]="action.label"
           (click)="action.onClick()"
         >
-          <mat-icon>{{ action.icon }}</mat-icon>
+          @if (action.showSpinner) {
+            <app-spinner size="small" [color]="action.spinnerColor || 'white'"></app-spinner>
+          } @else {
+            <mat-icon>{{ action.icon }}</mat-icon>
+          }
         </button>
       }
     </div>
