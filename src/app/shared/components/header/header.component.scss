@@ -38,6 +38,6 @@
   margin: 0;
   border: none;
   border-bottom: 1px solid var(--app-border);
-  width: 100%;
-  align-self: stretch;
+  width: 100vw;
+  margin-left: calc(-1 * var(--app-spacing-md));
 }
