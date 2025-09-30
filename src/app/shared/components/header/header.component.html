@@ -1,0 +1,26 @@
+<div class="header">
+  @if (showBack) {
+    <button type="button" mat-icon-button (click)="back.emit()" aria-label="back">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  }
+
+  <h2 class="header-title">{{ title | translate }}</h2>
+
+  @if (actions?.length) {
+    <div class="header-actions">
+      @for (action of actions; track action.label) {
+        <button
+          mat-icon-button
+          [color]="action.color"
+          [attr.aria-label]="action.label"
+          (click)="action.onClick()"
+        >
+          <mat-icon>{{ action.icon }}</mat-icon>
+        </button>
+      }
+    </div>
+  }
+</div>
+
+<hr class="header-divider" />
