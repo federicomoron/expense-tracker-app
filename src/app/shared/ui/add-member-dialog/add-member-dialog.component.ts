@@ -2,15 +2,17 @@ import { Component, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { HeaderAction } from '@core/models/header-action.model';
 import { ApiErrorService } from '@services/api-error.service';
 import { GroupService } from '@services/group.service';
 import { UiMessageService } from '@services/ui-message.service';
+import { HeaderComponent } from '@shared/components/header/header.component';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
   selector: 'app-add-member-dialog',
   standalone: true,
-  imports: [SharedMaterialModule, TranslateModule],
+  imports: [SharedMaterialModule, TranslateModule, HeaderComponent],
   templateUrl: './add-member-dialog.component.html',
   styleUrls: ['./add-member-dialog.component.scss'],
 })
@@ -24,6 +26,18 @@ export class AddMemberDialogComponent {
   private readonly groupService = inject(GroupService);
   private readonly apiErrorService = inject(ApiErrorService);
   private readonly uiMessage = inject(UiMessageService);
+
+  get headerActions(): HeaderAction[] {
+    return [
+      {
+        label: 'groupActions.add',
+        icon: 'check',
+        onClick: () => this.addMember(),
+        showSpinner: this.isSubmitting(),
+        spinnerColor: 'white',
+      },
+    ];
+  }
 
   addMember(): void {
     if (!this.email() || this.isSubmitting()) return;
