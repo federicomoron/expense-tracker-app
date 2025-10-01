@@ -3,12 +3,13 @@ import { Component, EventEmitter, Output, inject, signal } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { HeaderComponent } from '@shared/components/header/header.component';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
   standalone: true,
   selector: 'app-currency-selector',
-  imports: [CommonModule, SharedMaterialModule, TranslateModule],
+  imports: [CommonModule, SharedMaterialModule, TranslateModule, HeaderComponent],
   templateUrl: './currency-selector.component.html',
   styleUrls: ['./currency-selector.component.scss'],
 })

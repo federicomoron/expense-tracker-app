@@ -1,15 +1,9 @@
 <div class="dialog-container">
-  <div class="header">
-    <button
-      type="button"
-      mat-icon-button
-      aria-label="currencySelector.close"
-      (click)="closeDialog()"
-    >
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <h2>{{ 'currencySelector.title' | translate }}</h2>
-  </div>
+  <app-header
+    [title]="'currencySelector.title' | translate"
+    [showBack]="true"
+    (back)="closeDialog()"
+  ></app-header>
 
   <mat-nav-list>
     @for (currency of currencies; track currency) {
@@ -18,9 +12,9 @@
         [class.selected]="selectedCurrency() === currency"
       >
         <span class="currency-code">{{ currency }}</span>
-        <span class="currency-desc">{{
-          'currencySelector.currencies.' + currency | translate
-        }}</span>
+        <span class="currency-desc">
+          {{ 'currencySelector.currencies.' + currency | translate }}
+        </span>
       </mat-list-item>
     }
   </mat-nav-list>
