@@ -1,68 +1,59 @@
-<div class="group-screen">
-  <mat-toolbar color="primary" class="group-form-toolbar">
-    <button mat-icon-button type="button" (click)="onCancel()" aria-label="Back">
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <span class="toolbar-title">{{ 'groupForm.title' | translate }}</span>
-    <span class="spacer"></span>
-    <button mat-icon-button [disabled]="isNameInvalid() || isSubmitting" (click)="onSubmit($event)">
-      @if (isSubmitting) {
-        <mat-progress-spinner diameter="24" mode="indeterminate" class="custom-spinner-white">
-        </mat-progress-spinner>
-      } @else {
-        <mat-icon>check</mat-icon>
+<!-- Header -->
+<app-header
+  [title]="'groupForm.title' | translate"
+  [showBack]="true"
+  [actions]="headerActions"
+  (back)="onCancel()"
+></app-header>
+
+<form (submit)="onSubmit($event)" class="group-form" autocomplete="off">
+  <input #fileInput type="file" accept="image/*" (change)="onImageSelected($event)" hidden />
+
+  <div class="field-row">
+    <div class="flat-input-container">
+      <label class="flat-input-label">{{ 'groupForm.nameLabel' | translate }}</label>
+
+      <!-- TODO: Selector de imagen deshabilitado (placeholder) -->
+      <!--
+        <div class="image-selector" (click)="triggerFileInput()" role="button">
+          @if (imagePreview(); as preview) {
+            <img [src]="preview" alt="Group Image" class="image-preview" />
+          } @else {
+            <div class="image-placeholder-container">
+              <mat-icon class="image-placeholder-icon">photo_camera</mat-icon>
+              <mat-icon class="image-add-icon">add</mat-icon>
+            </div>
+          }
+        </div>
+        -->
+
+      <input
+        type="text"
+        [value]="name()"
+        (input)="onNameInput($event)"
+        class="flat-input"
+        autocomplete="off"
+      />
+      @if (isNameInvalid()) {
+        <div class="error-message">{{ 'validation.nonEmpty' | translate }}</div>
       }
-    </button>
-  </mat-toolbar>
-
-  <form (submit)="onSubmit($event)" class="group-form" autocomplete="off">
-    <input #fileInput type="file" accept="image/*" (change)="onImageSelected($event)" hidden />
-
-    <div class="field-row">
-      <div class="flat-input-container">
-        <label class="flat-input-label">{{ 'groupForm.nameLabel' | translate }}</label>
-
-        <!-- TODO: Habilitar selector de imagen cuando se implemente la carga de imágenes en el backend-->
-
-        <!-- <div class="image-selector" (click)="triggerFileInput()" role="button">
-        @if (imagePreview(); as preview) {
-          <img [src]="preview" alt="Group Image" class="image-preview" />
-        } @else {
-          <div class="image-placeholder-container">
-            <mat-icon class="image-placeholder-icon">photo_camera</mat-icon>
-            <mat-icon class="image-add-icon">add</mat-icon>
-          </div>
-        }
-      </div> -->
-
-        <input
-          type="text"
-          [value]="name()"
-          (input)="onNameInput($event)"
-          class="flat-input"
-          autocomplete="off"
-        />
-        @if (isNameInvalid()) {
-          <div class="error-message">{{ 'validation.nonEmpty' | translate }}</div>
-        }
-      </div>
     </div>
+  </div>
 
-    <div class="field-column">
-      <label class="section-label">{{ 'groupForm.typeLabel' | translate }}</label>
-      <div class="type-options">
-        @for (option of groupTypeOptions; track option.value) {
-          <button
-            type="button"
-            class="type-button"
-            [class.selected]="type() === option.value"
-            (click)="onTypeChange({ value: option.value })"
-          >
-            <mat-icon class="type-icon">{{ option.icon }}</mat-icon>
-            <span class="type-label">{{ option.label | translate }}</span>
-          </button>
-        }
-      </div>
+  <div class="field-column">
+    <label class="section-label">{{ 'groupForm.typeLabel' | translate }}</label>
+    <div class="type-options">
+      @for (option of groupTypeOptions; track option.value) {
+        <button
+          type="button"
+          class="type-button"
+          [class.selected]="type() === option.value"
+          (click)="onTypeChange({ value: option.value })"
+        >
+          <mat-icon class="type-icon">{{ option.icon }}</mat-icon>
+          <span class="type-label">{{ option.label | translate }}</span>
+        </button>
+      }
     </div>
-  </form>
-</div>
+  </div>
+</form>
