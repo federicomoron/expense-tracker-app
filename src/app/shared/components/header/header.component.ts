@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { SharedMaterialModule } from '@config/shared/shared-material.module';
 import { HeaderAction } from '@models/header-action.model';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 
 import { SpinnerComponent } from '../spinner/spinner.component';
 
