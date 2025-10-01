@@ -7,70 +7,15 @@
       {{ 'groups.create_first_group' | translate }}
     </button>
   </div>
-} @else if (!hasAnyDetail()) {
-  <div class="groups-loading">
-    <mat-spinner></mat-spinner>
-  </div>
 } @else {
-  <div class="groups-container">
-    @for (group of activeGroups(); track group.id) {
-      @let detail = getGroupDetails(group.id)();
-
-      @if (detail) {
-        <div class="group-item" (click)="goToGroup(group.id)">
-          <img class="group-avatar" [src]="getGroupImage(group.type, group.imageUrl)" alt="Group" />
-
-          <div class="group-info">
-            <div class="group-title">{{ group.name }}</div>
-
-            @if (detail.balanceSummary.length === 0 && detail.memberBalances.length === 0) {
-              <div class="group-subtitle muted">
-                {{ 'groups.no_pending_balances' | translate }}
-              </div>
-            } @else {
-              <div class="group-balances">
-                @for (balance of detail.balanceSummary; track $index) {
-                  <div class="balance-line">
-                    @if (balance.amount > 0) {
-                      {{ 'groups.they_owe_you' | translate }}
-                    } @else {
-                      {{ 'groups.you_owe' | translate }}
-                    }
-                    <strong>
-                      {{ balance.currency | currencySymbol }}
-                      {{
-                        (balance.amount > 0 ? balance.amount : -balance.amount) | number: '1.2-2'
-                      }}
-                    </strong>
-                  </div>
-                }
-              </div>
-
-              <div class="group-members">
-                @for (member of detail.memberBalances; track $index) {
-                  @if (member.amount > 0) {
-                    <div class="member-line muted">
-                      @if (member.userId === currentUserId) {
-                        {{ 'groups.you_owe' | translate }}
-                        {{ member.currency | currencySymbol }}{{ member.amount | number: '1.2-2' }}
-                      } @else {
-                        {{ member.name }} {{ 'groups.owes_you' | translate }}
-                        {{ member.currency | currencySymbol }}{{ member.amount | number: '1.2-2' }}
-                      }
-                    </div>
-                  }
-                }
-              </div>
-            }
-          </div>
-        </div>
-      }
-    }
-
-    @if (showSettledGroups()) {
-      @for (group of settledGroups(); track group.id) {
+  @if (!hasAnyDetail()) {
+    <div class="groups-loading">
+      <app-spinner [diameter]="72"></app-spinner>
+    </div>
+  } @else {
+    <div class="groups-container">
+      @for (group of activeGroups(); track group.id) {
         @let detail = getGroupDetails(group.id)();
-
         @if (detail) {
           <div class="group-item" (click)="goToGroup(group.id)">
             <img
@@ -81,55 +26,117 @@
 
             <div class="group-info">
               <div class="group-title">{{ group.name }}</div>
-              <div class="group-subtitle muted">
-                {{ 'groups.no_pending_balances' | translate }}
-              </div>
+
+              @if (detail.balanceSummary.length === 0 && detail.memberBalances.length === 0) {
+                <div class="group-subtitle muted">
+                  {{ 'groups.no_pending_balances' | translate }}
+                </div>
+              } @else {
+                <div class="group-balances">
+                  @for (balance of detail.balanceSummary; track $index) {
+                    <div class="balance-line">
+                      @if (balance.amount > 0) {
+                        {{ 'groups.they_owe_you' | translate }}
+                      } @else {
+                        {{ 'groups.you_owe' | translate }}
+                      }
+                      <strong>
+                        {{ balance.currency | currencySymbol }}
+                        {{
+                          (balance.amount > 0 ? balance.amount : -balance.amount) | number: '1.2-2'
+                        }}
+                      </strong>
+                    </div>
+                  }
+                </div>
+
+                <div class="group-members">
+                  @for (member of detail.memberBalances; track $index) {
+                    @if (member.amount > 0) {
+                      <div class="member-line muted">
+                        @if (member.userId === currentUserId) {
+                          {{ 'groups.you_owe' | translate }}
+                          {{ member.currency | currencySymbol
+                          }}{{ member.amount | number: '1.2-2' }}
+                        } @else {
+                          {{ member.name }} {{ 'groups.owes_you' | translate }}
+                          {{ member.currency | currencySymbol
+                          }}{{ member.amount | number: '1.2-2' }}
+                        }
+                      </div>
+                    }
+                  }
+                </div>
+              }
             </div>
-          </div>
-        } @else {
-          <div class="loading-spinner">
-            <div class="custom-spinner"></div>
           </div>
         }
       }
-    }
 
-    @if (settledGroups().length > 0) {
-      <div class="settled-toggle">
-        @if (!showSettledGroups()) {
-          <p class="placeholder">
-            {{ 'groups.settled_hidden' | translate }}
-          </p>
-        }
-
-        <button
-          mat-stroked-button
-          color="primary"
-          (click)="toggleShowSettledGroups()"
-          type="button"
-        >
-          @if (showSettledGroups()) {
-            {{ 'groups.hide_settled_groups' | translate }}
+      @if (showSettledGroups()) {
+        @for (group of settledGroups(); track group.id) {
+          @let detail = getGroupDetails(group.id)();
+          @if (detail) {
+            <div class="group-item" (click)="goToGroup(group.id)">
+              <img
+                class="group-avatar"
+                [src]="getGroupImage(group.type, group.imageUrl)"
+                alt="Group"
+              />
+              <div class="group-info">
+                <div class="group-title">{{ group.name }}</div>
+                <div class="group-subtitle muted">
+                  {{ 'groups.no_pending_balances' | translate }}
+                </div>
+              </div>
+            </div>
           } @else {
-            @if (settledGroups().length === 1) {
-              {{ 'groups.show_settled_groups_one' | translate }}
-            } @else {
-              {{ 'groups.show_settled_groups_many' | translate: { count: settledGroups().length } }}
-            }
+            <div class="loading-spinner">
+              <app-spinner [diameter]="24"></app-spinner>
+            </div>
           }
-        </button>
-      </div>
-    }
-  </div>
+        }
+      }
 
-  <button
-    mat-fab
-    color="primary"
-    class="fab-button"
-    [attr.aria-label]="'groups.new_group' | translate"
-    [routerLink]="['/groups/new']"
-    type="button"
-  >
-    <mat-icon>add</mat-icon>
-  </button>
+      @if (settledGroups().length > 0) {
+        <div class="settled-toggle">
+          @if (!showSettledGroups()) {
+            <p class="placeholder">
+              {{ 'groups.settled_hidden' | translate }}
+            </p>
+          }
+
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="toggleShowSettledGroups()"
+            type="button"
+          >
+            @if (showSettledGroups()) {
+              {{ 'groups.hide_settled_groups' | translate }}
+            } @else {
+              @if (settledGroups().length === 1) {
+                {{ 'groups.show_settled_groups_one' | translate }}
+              } @else {
+                {{
+                  'groups.show_settled_groups_many' | translate: { count: settledGroups().length }
+                }}
+              }
+            }
+          </button>
+        </div>
+      }
+    </div>
+
+    <button
+      mat-fab
+      color="primary"
+      class="fab-button"
+      [attr.aria-label]="'groups.new_group' | translate"
+      [routerLink]="['/groups/new']"
+      type="button"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  }
 }
