@@ -5,6 +5,9 @@
   flex-direction: column;
   padding: 16px 12px;
   overflow: hidden;
+  > .content {
+    margin-top: 1.5rem;
+  }
 }
 
 .header {
@@ -115,13 +118,17 @@ mat-list-item {
 
 .flat-input {
   border: none;
-  border-bottom: 1px solid var(--app-border);
-  padding: 8px 4px;
-  font-size: 16px;
+  border-bottom: 0.125rem solid var(--app-primary);
   background: transparent;
-  outline: none;
-  width: 100%;
+  font-size: 1rem;
+  padding: 0.25rem 0;
   color: var(--app-text);
+  outline: none;
+  width: 15rem;
+  max-width: 100%;
+  display: block;
+  margin: 0;
+  margin-bottom: 0.5rem;
 }
 
 .group-members-section {
