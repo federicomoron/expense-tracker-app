@@ -6,6 +6,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { DialogService } from '@services/dialog.service';
 import { GroupService } from '@services/group.service';
 import { UiMessageService } from '@services/ui-message.service';
+import { HeaderComponent } from '@shared/components/header/header.component';
+import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 import { AddMemberDialogComponent } from '@shared/ui/add-member-dialog/add-member-dialog.component';
 import { ConfirmDialogComponent } from '@shared/ui/dialogs/confirm-dialog.component';
@@ -13,7 +15,7 @@ import { ConfirmDialogComponent } from '@shared/ui/dialogs/confirm-dialog.compon
 @Component({
   selector: 'app-group-actions-modal',
   standalone: true,
-  imports: [SharedMaterialModule, TranslateModule],
+  imports: [SharedMaterialModule, TranslateModule, HeaderComponent, SpinnerComponent],
   templateUrl: './group-actions-modal.component.html',
   styleUrls: ['./group-actions-modal.component.scss'],
 })
