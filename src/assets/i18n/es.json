@@ -63,7 +63,7 @@
     "no_pending_balances": "Sin saldos pendientes",
     "you_owe": "Debés",
     "owes_you": "te debe",
-    "new_group": "Nuevo Grupo",
+    "new_group": "Nuevo grupo",
     "errorFetching": "Error al obtener grupos. Por favor, intentá nuevamente.",
     "errorCreating": "Hubo un error al crear el grupo",
     "settled_hidden": "Se ocultan los grupos con cuentas saldadas",
@@ -79,10 +79,16 @@
     "youOwe": "Debes",
     "owesYou": "te debe",
     "addExpense": "Agregar nuevo gasto",
-    "errorLoading": "No se pudieron cargar los detalles del grupo. Intentá más tarde."
+    "errorLoading": "No se pudieron cargar los detalles del grupo. Intentá más tarde.",
+    "totals": "Totales",
+    "totalGroup": "Gasto total",
+    "yourPart": "Tu parte",
+    "noExpenses": "No hay gastos aún",
+    "loading": "Cargando...",
+    "noGroup": "Grupo no encontrado"
   },
   "groupForm": {
-    "title": "Nuevo Grupo",
+    "title": "Nuevo grupo",
     "nameLabel": "Nombre del grupo",
     "typeLabel": "Tipo",
     "errorCreating": "Error al crear el grupo"

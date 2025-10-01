@@ -1,32 +1,27 @@
-<div class="dialog-container">
-  <div class="header">
-    <button type="button" mat-icon-button aria-label="close" (click)="closeDialog()">
-      <mat-icon>arrow_back</mat-icon>
-    </button>
+<app-header
+  [title]="'expenseDetail.title' | translate"
+  [showBack]="true"
+  [actions]="headerActions"
+  (back)="closeDialog()"
+></app-header>
 
-    <h2>{{ 'expenseDetail.title' | translate }}</h2>
-    <div class="actions">
-      <button type="button" mat-icon-button color="primary" aria-label="edit" (click)="onEdit()">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button type="button" mat-icon-button color="warn" aria-label="delete" (click)="onDelete()">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </div>
+@if (expense()) {
+  <div class="expense-content">
+    <p>
+      <strong>{{ 'expenseDetail.description' | translate }}:</strong>
+      {{ expense()?.description }}
+    </p>
+    <p>
+      <strong>{{ 'expenseDetail.total' | translate }}:</strong>
+      {{ expense()?.total | currency: expense()?.currency }}
+    </p>
+    <p>
+      <strong>{{ 'expenseDetail.date' | translate }}:</strong>
+      {{ expense()?.createdAt | date }}
+    </p>
   </div>
-
-  @if (expense()) {
-    <div class="expense-content">
-      <p>
-        <strong>{{ 'expenseDetail.description' | translate }}:</strong> {{ expense()?.description }}
-      </p>
-      <p>
-        <strong>{{ 'expenseDetail.total' | translate }}:</strong>
-        {{ expense()?.total | currency: expense()?.currency }}
-      </p>
-      <p>
-        <strong>{{ 'expenseDetail.date' | translate }}:</strong> {{ expense()?.createdAt | date }}
-      </p>
-    </div>
-  }
-</div>
+} @else {
+  <div class="loading-spinner">
+    <app-spinner size="large"></app-spinner>
+  </div>
+}

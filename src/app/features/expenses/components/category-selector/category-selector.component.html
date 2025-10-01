@@ -1,16 +1,9 @@
 <div class="dialog-container">
-  <div class="header">
-    <button
-      mat-icon-button
-      type="button"
-      [attr.aria-label]="'categorySelector.close' | translate"
-      (click)="closeDialog()"
-    >
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-
-    <h2>{{ 'categorySelector.title' | translate }}</h2>
-  </div>
+  <app-header
+    [title]="'categorySelector.title' | translate"
+    [showBack]="true"
+    (back)="closeDialog()"
+  ></app-header>
 
   <mat-nav-list>
     @for (category of categories(); track category.key) {
@@ -18,7 +11,9 @@
         (click)="chooseCategory(category.key)"
         [class.selected]="selectedCategory() === category.key"
       >
-        <span class="option-name">{{ 'expenseCategories.' + category.key | translate }}</span>
+        <span class="option-name">
+          {{ 'expenseCategories.' + category.key | translate }}
+        </span>
       </mat-list-item>
     }
   </mat-nav-list>

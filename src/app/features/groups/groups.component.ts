@@ -12,6 +12,7 @@ import { ApiErrorService } from '@services/api-error.service';
 import { AuthService } from '@services/auth.service';
 import { DialogService } from '@services/dialog.service';
 import { GroupService } from '@services/group.service';
+import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 import { getGroupImage } from '@shared/helpers/group-type-image-map';
 import { CurrencySymbolPipe } from '@shared/pipes/currency-symbol.pipe';
 import { SharedMaterialModule } from '@shared/shared-material.module';
@@ -19,7 +20,14 @@ import { SharedMaterialModule } from '@shared/shared-material.module';
 @Component({
   selector: 'app-groups',
   standalone: true,
-  imports: [SharedMaterialModule, RouterModule, CommonModule, TranslateModule, CurrencySymbolPipe],
+  imports: [
+    SharedMaterialModule,
+    RouterModule,
+    CommonModule,
+    TranslateModule,
+    CurrencySymbolPipe,
+    SpinnerComponent,
+  ],
   templateUrl: './groups.component.html',
   styleUrls: ['./groups.component.scss'],
 })

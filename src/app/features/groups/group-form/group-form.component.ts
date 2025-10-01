@@ -4,14 +4,16 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { NAVIGATION_ROUTES } from '@constants/routes';
 import { GROUP_TYPE_OPTIONS, GroupType } from '@models/group-type.enum';
+import { HeaderAction } from '@models/header-action.model';
 import { ApiErrorService } from '@services/api-error.service';
 import { GroupService } from '@services/group.service';
+import { HeaderComponent } from '@shared/components/header/header.component';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
   selector: 'app-group-form',
   standalone: true,
-  imports: [SharedMaterialModule, TranslateModule],
+  imports: [SharedMaterialModule, TranslateModule, HeaderComponent],
   templateUrl: './group-form.component.html',
   styleUrls: ['./group-form.component.scss'],
 })
@@ -34,8 +36,20 @@ export class GroupFormComponent {
   selectedImage: File | null = null;
   isSubmitting = false;
 
-  onSubmit(event: Event) {
-    event.preventDefault();
+  get headerActions(): HeaderAction[] {
+    return [
+      {
+        label: 'groupForm.save',
+        icon: 'check',
+        onClick: () => this.onSubmit(),
+        showSpinner: this.isSubmitting,
+        spinnerColor: 'white',
+      },
+    ];
+  }
+
+  onSubmit(event?: Event) {
+    event?.preventDefault();
     this.submitted.set(true);
 
     if (!this.isFormValid()) return;

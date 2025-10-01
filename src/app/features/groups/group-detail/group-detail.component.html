@@ -1,73 +1,85 @@
 <div class="group-detail-container">
-  <div class="group-banner-container">
-    @if (!loading() && group()) {
+  @if (loading()) {
+    <div class="group-detail-loading">
+      <app-spinner [diameter]="72"></app-spinner>
+    </div>
+  } @else if (group()) {
+    <!-- Banner -->
+    <div class="group-banner-container">
       <img
         class="group-banner"
         [src]="getGroupImage(group()?.type, group()?.imageUrl)"
         alt="Group banner"
       />
-    }
 
-    <button class="group-actions-button" mat-icon-button (click)="openGroupActionsModal()">
-      <mat-icon>settings</mat-icon>
-    </button>
-  </div>
-  <h2 class="group-title">{{ group()?.name }}</h2>
+      <button class="group-actions-button" mat-icon-button (click)="openGroupActionsModal()">
+        <mat-icon>settings</mat-icon>
+      </button>
+    </div>
 
-  <div class="floating-balance-summary">
-    @for (b of filteredSummary(); track b.currency) {
-      <div class="summary-chip" [ngClass]="{ positive: b.amount > 0, negative: b.amount < 0 }">
-        @if (b.amount > 0) {
-          {{ 'groupDetail.theyOweYou' | translate }}
-        } @else {
-          {{ 'groupDetail.youOwe' | translate }}
-        }
-        <strong>
-          {{ b.currency | currencySymbol }}
-          {{ (b.amount > 0 ? b.amount : -b.amount) | number: '1.2-2' }}
-        </strong>
-      </div>
-    }
-  </div>
+    <h2 class="group-title">{{ group()?.name }}</h2>
 
-  <section class="member-balances">
-    <ul class="members-list no-card">
-      @for (mb of filteredMemberBalances(); track mb.userId) {
-        <li class="member-item">
-          <span class="chip" [ngClass]="{ positive: mb.amount > 0, negative: mb.amount < 0 }">
-            @if (mb.amount > 0) {
-              {{ mb.name }} {{ 'groupDetail.owesYou' | translate }}
-            } @else {
-              {{ 'groupDetail.youOwe' | translate }} {{ mb.name }}
-            }
-          </span>
-          <span class="member-amount">
-            <strong
-              >{{ mb.currency | currencySymbol }}
-              {{ (mb.amount > 0 ? mb.amount : -mb.amount) | number: '1.2-2' }}</strong
-            >
-          </span>
-        </li>
+    <div class="floating-balance-summary">
+      @for (b of filteredSummary(); track b.currency) {
+        <div class="summary-chip" [ngClass]="{ positive: b.amount > 0, negative: b.amount < 0 }">
+          @if (b.amount > 0) {
+            {{ 'groupDetail.theyOweYou' | translate }}
+          } @else {
+            {{ 'groupDetail.youOwe' | translate }}
+          }
+          <strong>
+            {{ b.currency | currencySymbol }}
+            {{ (b.amount > 0 ? b.amount : -b.amount) | number: '1.2-2' }}
+          </strong>
+        </div>
       }
-    </ul>
-  </section>
+    </div>
 
-  <app-expenses
-    [expenses]="group()?.expenses ?? []"
-    [groupMembers]="group()?.members ?? []"
-    (expenseDeleted)="removeExpenseLocally()"
-    [groupId]="group()?.id"
-    [loading]="loading()"
-  ></app-expenses>
+    <section class="member-balances">
+      <ul class="members-list no-card">
+        @for (mb of filteredMemberBalances(); track mb.userId) {
+          <li class="member-item">
+            <span class="chip" [ngClass]="{ positive: mb.amount > 0, negative: mb.amount < 0 }">
+              @if (mb.amount > 0) {
+                {{ mb.name }} {{ 'groupDetail.owesYou' | translate }}
+              } @else {
+                {{ 'groupDetail.youOwe' | translate }} {{ mb.name }}
+              }
+            </span>
+            <span class="member-amount">
+              <strong>
+                {{ mb.currency | currencySymbol }}
+                {{ (mb.amount > 0 ? mb.amount : -mb.amount) | number: '1.2-2' }}
+              </strong>
+            </span>
+          </li>
+        }
+      </ul>
+    </section>
 
-  <button
-    type="button"
-    mat-fab
-    color="primary"
-    class="new-expense-button"
-    aria-label="groupDetail.addExpense"
-    (click)="goToNewExpense()"
-  >
-    <mat-icon>add</mat-icon>
-  </button>
+    <!-- Button panel -->
+    <app-group-action-buttons [groupId]="groupId()"></app-group-action-buttons>
+
+    <!-- Expense list -->
+    <app-expenses
+      [expenses]="group()?.expenses ?? []"
+      [groupMembers]="group()?.members ?? []"
+      (expenseDeleted)="removeExpenseLocally()"
+      [groupId]="group()?.id"
+      [loading]="loading()"
+    ></app-expenses>
+
+    <button
+      type="button"
+      mat-fab
+      color="primary"
+      class="new-expense-button"
+      aria-label="groupDetail.addExpense"
+      (click)="goToNewExpense()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  } @else {
+    <div class="empty">{{ 'groupDetail.noGroup' | translate }}</div>
+  }
 </div>

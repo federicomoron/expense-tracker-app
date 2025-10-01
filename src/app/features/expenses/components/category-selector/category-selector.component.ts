@@ -3,13 +3,14 @@ import { Component, inject, signal } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { HeaderComponent } from '@shared/components/header/header.component';
 import { EXPENSE_CATEGORIES } from '@shared/data/expense-categories';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
   standalone: true,
   selector: 'app-category-selector',
-  imports: [SharedMaterialModule, CommonModule, TranslateModule],
+  imports: [SharedMaterialModule, CommonModule, TranslateModule, HeaderComponent],
   templateUrl: './category-selector.component.html',
   styleUrls: ['./category-selector.component.scss'],
 })

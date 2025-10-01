@@ -1,11 +1,10 @@
 <div class="dialog-container">
   <!-- Header -->
-  <div class="header">
-    <button type="button" mat-icon-button aria-label="back" (click)="close()">
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <h2>{{ 'groupActions.title' | translate }}</h2>
-  </div>
+  <app-header
+    [title]="'groupActions.title' | translate"
+    [showBack]="true"
+    (back)="close()"
+  ></app-header>
 
   <!-- Group members -->
   <section class="group-members-section">
@@ -13,7 +12,7 @@
 
     @if (isLoading()) {
       <div class="loading-container">
-        <mat-spinner diameter="36" mode="indeterminate"></mat-spinner>
+        <app-spinner [diameter]="36"></app-spinner>
       </div>
     } @else {
       <div class="group-members-content">
