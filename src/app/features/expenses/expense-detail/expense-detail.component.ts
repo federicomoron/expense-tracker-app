@@ -4,11 +4,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { Expense, ExpenseExtended, ExpenseUser } from '@core/models/expenses.model';
+import { HeaderAction } from '@models/header-action.model';
 import { ApiErrorService } from '@services/api-error.service';
 import { AuthService } from '@services/auth.service';
 import { DialogService } from '@services/dialog.service';
 import { ExpenseService } from '@services/expenses.service';
 import { UiMessageService } from '@services/ui-message.service';
+import { HeaderComponent } from '@shared/components/header/header.component';
+import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 import { EXPENSE_CATEGORIES } from '@shared/data/expense-categories';
 import {
   detectQuickOptionFromParticipants,
@@ -20,7 +23,7 @@ import { ConfirmDialogComponent } from '@shared/ui/dialogs/confirm-dialog.compon
 @Component({
   selector: 'app-expense-detail',
   standalone: true,
-  imports: [CommonModule, SharedMaterialModule, TranslateModule],
+  imports: [CommonModule, SharedMaterialModule, TranslateModule, HeaderComponent, SpinnerComponent],
   templateUrl: './expense-detail.component.html',
   styleUrls: ['./expense-detail.component.scss'],
 })
@@ -40,6 +43,23 @@ export class ExpenseDetailComponent {
 
   constructor() {
     this._initExpense();
+  }
+
+  get headerActions(): HeaderAction[] {
+    return [
+      {
+        icon: 'edit',
+        label: 'Edit',
+        color: 'primary',
+        onClick: () => this.onEdit(),
+      },
+      {
+        icon: 'delete',
+        label: 'Delete',
+        color: 'warn',
+        onClick: () => this.onDelete(),
+      },
+    ];
   }
 
   onEdit(): void {
