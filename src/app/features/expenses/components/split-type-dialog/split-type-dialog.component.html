@@ -1,15 +1,9 @@
 <div class="dialog-container">
-  <div class="header">
-    <button
-      type="button"
-      mat-icon-button
-      aria-label="splitTypeDialog.close"
-      (click)="closeDialog()"
-    >
-      <mat-icon>arrow_back</mat-icon>
-    </button>
-    <h2>{{ 'splitTypeDialog.title' | translate }}</h2>
-  </div>
+  <app-header
+    [title]="'splitTypeDialog.title' | translate"
+    [showBack]="true"
+    (back)="closeDialog()"
+  ></app-header>
 
   <mat-nav-list>
     @for (option of options; track option) {
