@@ -4,34 +4,14 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding: 0 8px;
   color: var(--app-text);
   font-size: 16px;
+  padding: 1rem;
 }
 
-.expense-detail {
-  padding: 16px;
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    h2 {
-      margin: 0;
-      font-weight: 600;
-      font-size: 20px;
-      flex-grow: 1;
-      text-align: center;
-    }
-
-    .actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    button[mat-icon-button] {
-      color: var(--app-text);
-    }
-  }
+.loading-spinner {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

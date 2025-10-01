@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { catchError, of } from 'rxjs';
 
 import { ExpensesComponent } from '@features/expenses/expenses/expenses.component';
+import { GroupActionButtonsComponent } from '@features/groups/group-action-buttons/group-action-buttons.component';
 import { GroupActionsModalComponent } from '@features/groups/group-actions-modal/group-actions-modal.component';
 import { GroupDetailWithExpenses } from '@models/group-detail.model';
 import { GroupType } from '@models/group-type.enum';
@@ -13,6 +14,7 @@ import { AuthService } from '@services/auth.service';
 import { DialogService } from '@services/dialog.service';
 import { GroupService } from '@services/group.service';
 import { LayoutService } from '@services/layout.service';
+import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 import { getGroupImage } from '@shared/helpers/group-type-image-map';
 import { CurrencySymbolPipe } from '@shared/pipes/currency-symbol.pipe';
 import { SharedMaterialModule } from '@shared/shared-material.module';
@@ -27,6 +29,8 @@ import { SharedMaterialModule } from '@shared/shared-material.module';
     TranslateModule,
     RouterModule,
     CurrencySymbolPipe,
+    GroupActionButtonsComponent,
+    SpinnerComponent,
   ],
   templateUrl: './group-detail.component.html',
   styleUrls: ['./group-detail.component.scss'],

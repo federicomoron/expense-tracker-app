@@ -32,10 +32,11 @@ export class CalendarDialogComponent {
     this.dialogRef.close();
   }
 
-  confirm(): void {
-    this.dialogRef.close(this.selectedDate);
+  onDateSelected(date: Date | null): void {
+    if (date) {
+      this.dialogRef.close(date);
+    }
   }
-
   isDateValid(d: Date | null): boolean {
     const today = new Date();
     today.setHours(0, 0, 0, 0);

@@ -1,0 +1,17 @@
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.spinner {
+  &.mat-progress-spinner circle {
+    stroke: var(--app-primary);
+  }
+}
+
+:host-context(.white) .spinner {
+  &.mat-progress-spinner circle {
+    stroke: white;
+  }
+}

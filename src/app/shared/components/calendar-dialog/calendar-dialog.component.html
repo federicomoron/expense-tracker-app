@@ -9,16 +9,10 @@
     <mat-icon>arrow_back</mat-icon>
   </button>
 
-  @if (showCalendar) {
-    <mat-calendar [(selected)]="selectedDate" [dateFilter]="isDateValid"></mat-calendar>
-  }
-
-  <div class="actions">
-    <button mat-button (click)="close()">
-      {{ 'calendar.cancel' | translate }}
-    </button>
-    <button mat-button color="primary" (click)="confirm()">
-      {{ 'calendar.accept' | translate }}
-    </button>
-  </div>
+  <mat-calendar
+    [(selected)]="selectedDate"
+    [startAt]="selectedDate"
+    [dateFilter]="isDateValid"
+    (selectedChange)="onDateSelected($event)"
+  ></mat-calendar>
 </div>
