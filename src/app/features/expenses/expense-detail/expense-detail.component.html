@@ -1,29 +1,27 @@
-<div class="layout-content expense-detail-container">
-  <app-header
-    [title]="'expenseDetail.title' | translate"
-    [showBack]="true"
-    [actions]="headerActions"
-    (back)="closeDialog()"
-  ></app-header>
+<app-header
+  [title]="'expenseDetail.title' | translate"
+  [showBack]="true"
+  [actions]="headerActions"
+  (back)="closeDialog()"
+></app-header>
 
-  @if (expense()) {
-    <div class="expense-content">
-      <p>
-        <strong>{{ 'expenseDetail.description' | translate }}:</strong>
-        {{ expense()?.description }}
-      </p>
-      <p>
-        <strong>{{ 'expenseDetail.total' | translate }}:</strong>
-        {{ expense()?.total | currency: expense()?.currency }}
-      </p>
-      <p>
-        <strong>{{ 'expenseDetail.date' | translate }}:</strong>
-        {{ expense()?.createdAt | date }}
-      </p>
-    </div>
-  } @else {
-    <div class="loading-spinner">
-      <app-spinner size="large"></app-spinner>
-    </div>
-  }
-</div>
+@if (expense()) {
+  <div class="expense-content">
+    <p>
+      <strong>{{ 'expenseDetail.description' | translate }}:</strong>
+      {{ expense()?.description }}
+    </p>
+    <p>
+      <strong>{{ 'expenseDetail.total' | translate }}:</strong>
+      {{ expense()?.total | currency: expense()?.currency }}
+    </p>
+    <p>
+      <strong>{{ 'expenseDetail.date' | translate }}:</strong>
+      {{ expense()?.createdAt | date }}
+    </p>
+  </div>
+} @else {
+  <div class="loading-spinner">
+    <app-spinner size="large"></app-spinner>
+  </div>
+}
