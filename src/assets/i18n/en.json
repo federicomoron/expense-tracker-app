@@ -63,7 +63,7 @@
     "no_pending_balances": "No pending balances",
     "you_owe": "You owe",
     "owes_you": "owes you",
-    "new_group": "New Group",
+    "new_group": "New group",
     "errorFetching": "Error fetching groups. Please try again.",
     "errorCreating": "There was an error creating the group",
     "settled_hidden": "Settled groups are hidden",
@@ -79,7 +79,13 @@
     "youOwe": "You owe",
     "owesYou": "owes you",
     "addExpense": "Add new expense",
-    "errorLoading": "Could not load group details. Try again later."
+    "errorLoading": "Could not load group details. Try again later.",
+    "totals": "Totals",
+    "totalGroup": "Total group",
+    "yourPart": "Your part",
+    "noExpenses": "No expenses yet",
+    "loading": "Loading...",
+    "noGroup": "Group not found"
   },
   "groupForm": {
     "title": "New Group",
