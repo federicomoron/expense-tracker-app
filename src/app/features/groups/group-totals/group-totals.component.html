@@ -1,0 +1,38 @@
+<div class="group-totals-screen">
+  <!-- Header -->
+  <app-header
+    [title]="'groupDetail.totals' | translate"
+    [showBack]="true"
+    (back)="goBack()"
+  ></app-header>
+
+  <div class="group-totals-content">
+    @if (loading()) {
+      <div class="loading-spinner">
+        <div class="custom-spinner"></div>
+      </div>
+    } @else {
+      @if (!group()) {
+        <div class="empty">{{ 'groupDetail.noGroup' | translate }}</div>
+      } @else {
+        <h2 class="group-name">{{ group()?.name }}</h2>
+
+        @if (hasExpenses()) {
+          <div class="totals-summary">
+            <div class="total-item">
+              <span>{{ 'groupDetail.totalGroup' | translate }}</span>
+              <strong>{{ totalAmount() | number: '1.2-2' }}</strong>
+            </div>
+
+            <div class="total-item">
+              <span>{{ 'groupDetail.yourPart' | translate }}</span>
+              <strong>{{ yourPart() | number: '1.2-2' }}</strong>
+            </div>
+          </div>
+        } @else {
+          <div class="empty">{{ 'groupDetail.noExpenses' | translate }}</div>
+        }
+      }
+    }
+  </div>
+</div>
