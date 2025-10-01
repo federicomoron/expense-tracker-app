@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
-import { SharedMaterialModule } from '@config/shared/shared-material.module';
+import { SharedMaterialModule } from '@shared/shared-material.module';
 
 @Component({
   selector: 'app-spinner',
