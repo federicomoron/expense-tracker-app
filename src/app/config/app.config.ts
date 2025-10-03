@@ -10,6 +10,7 @@ import {
   provideZoneChangeDetection,
 } from '@angular/core';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
@@ -77,6 +78,10 @@ export const appConfig: ApplicationConfig = {
       provide: MAT_DATE_LOCALE,
       useFactory: (i18nService: I18nService) => i18nService.getCurrentLocale(),
       deps: [I18nService],
+    },
+    {
+      provide: MAT_DIALOG_DEFAULT_OPTIONS,
+      useValue: { autoFocus: false },
     },
   ],
 };
