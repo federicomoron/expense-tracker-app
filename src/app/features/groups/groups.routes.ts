@@ -13,12 +13,5 @@ const routes: Routes = [
     loadComponent: () =>
       import('./group-detail/group-detail.component').then((m) => m.GroupDetailComponent),
   },
-  {
-    path: ':id/totals',
-    canActivate: [groupGuard],
-    loadComponent: () =>
-      import('./group-totals/group-totals.component').then((m) => m.GroupTotalsComponent),
-  },
 ];
-
 export default routes;
