@@ -225,6 +225,34 @@
     "cancel": "Cancelar",
     "accept": "Aceptar"
   },
+  "month": {
+    "0": "ENE",
+    "1": "FEB",
+    "2": "MAR",
+    "3": "ABR",
+    "4": "MAY",
+    "5": "JUN",
+    "6": "JUL",
+    "7": "AGO",
+    "8": "SEP",
+    "9": "OCT",
+    "10": "NOV",
+    "11": "DIC"
+  },
+  "monthFull": {
+    "0": "Enero",
+    "1": "Febrero",
+    "2": "Marzo",
+    "3": "Abril",
+    "4": "Mayo",
+    "5": "Junio",
+    "6": "Julio",
+    "7": "Agosto",
+    "8": "Septiembre",
+    "9": "Octubre",
+    "10": "Noviembre",
+    "11": "Diciembre"
+  },
   "paidByQuickDialog": {
     "title": "¿Cómo se dividió este gasto?",
     "youPaidEqual": "Tú pagaste, dividido a partes iguales",
