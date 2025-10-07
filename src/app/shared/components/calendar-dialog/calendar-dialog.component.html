@@ -9,10 +9,35 @@
     <mat-icon>arrow_back</mat-icon>
   </button>
 
-  <mat-calendar
-    [(selected)]="selectedDate"
-    [startAt]="selectedDate"
-    [dateFilter]="isDateValid"
-    (selectedChange)="onDateSelected($event)"
-  ></mat-calendar>
+  @if (showDayCalendar) {
+    <mat-calendar
+      [startAt]="selectedDate()"
+      (selectedChange)="onDateSelected($event)"
+    ></mat-calendar>
+  } @else {
+    <div class="month-picker-header">
+      <button mat-icon-button (click)="changeYear(-1)">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <span class="year-label">{{ selectedYear() }}</span>
+      <button mat-icon-button (click)="changeYear(1)">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+
+    <div class="month-grid">
+      @for (monthIndex of months; track $index) {
+        <button
+          mat-stroked-button
+          color="primary"
+          type="button"
+          [disabled]="!isMonthEnabled(monthIndex)"
+          (click)="onMonthSelected(monthIndex)"
+          class="month-btn"
+        >
+          {{ monthIndex | monthName: 'short' }}
+        </button>
+      }
+    </div>
+  }
 </div>
