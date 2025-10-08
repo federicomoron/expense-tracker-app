@@ -1,37 +1,133 @@
 .group-totals-content {
   padding: 16px;
   color: var(--app-text);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 
   .group-name {
     font-size: 1.3rem;
     font-weight: 600;
-    margin-bottom: 16px;
+    margin-bottom: 4px;
+    text-align: center;
+    color: var(--app-text);
   }
 
-  .totals-title {
-    font-size: 1.1rem;
-    color: var(--app-text-secondary);
-    margin-bottom: 16px;
+  .currency-selector-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
+
+    .currency-btn {
+      font-weight: 500;
+      border-radius: 8px;
+      text-transform: none;
+      padding: 4px 12px;
+      background-color: var(--app-surface);
+      border: 1px solid var(--app-border);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 1.1rem;
+      min-width: 60px;
+      justify-content: center;
+    }
+  }
+
+  .view-mode-toggle {
+    .toggle-group {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+
+      .mat-button-toggle {
+        flex: 1;
+        text-align: center;
+        padding: 2px 2px;
+        color: var(--app-text);
+      }
+
+      .month-toggle .month-selector-group {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        color: var(--app-text);
+
+        button.mat-icon-button {
+          flex: 0 0 24px;
+          height: 24px;
+          padding: 0;
+        }
+
+        .month-label-btn {
+          flex: 1 1 auto;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 2px;
+          padding: 2px 4px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-size: 0.7rem;
+          cursor: pointer;
+        }
+
+        .dropdown-icon {
+          font-size: 1.9em;
+        }
+      }
+    }
   }
 
   .totals-summary {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding: 12px;
+    padding: 16px;
     background-color: var(--app-surface);
     border: 1px solid var(--app-border);
-    border-radius: 8px;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 
     .total-item {
       display: flex;
       justify-content: space-between;
       font-size: 0.95rem;
       font-weight: 500;
+      color: var(--app-text);
+
+      span {
+        color: var(--app-text-secondary);
+      }
 
       strong {
         font-weight: 600;
+        color: var(--app-primary);
       }
+    }
+  }
+
+  .chart-wrapper {
+    position: relative;
+
+    .empty-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--app-text-secondary);
+      font-size: 0.95rem;
+      background: var(--app-surface);
+      z-index: 1;
+    }
+
+    canvas {
+      max-width: 280px;
+      max-height: 280px;
     }
   }
 
@@ -63,4 +159,76 @@
       transform: rotate(360deg);
     }
   }
+
+  @media (min-width: 600px) {
+    .totals-summary {
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 20px 24px;
+
+      .total-item {
+        flex: 1;
+        text-align: center;
+        flex-direction: column;
+        gap: 4px;
+
+        span {
+          font-size: 0.9rem;
+        }
+
+        strong {
+          font-size: 1.1rem;
+        }
+      }
+    }
+
+    .chart-wrapper {
+      canvas {
+        max-width: 340px;
+        max-height: 340px;
+      }
+    }
+  }
+}
+
+:host ::ng-deep .mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after,
+:host ::ng-deep .mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-indeterminate::after {
+  color: var(--app-text) !important;
+}
+
+:host ::ng-deep .mat-button-toggle-checked .mat-pseudo-checkbox {
+  display: none !important;
+}
+
+:host ::ng-deep .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+  padding: 0 0px !important;
+}
+
+:host
+  ::ng-deep
+  .mat-button-toggle-checked
+  .mat-button-toggle-button:has(.mat-button-toggle-checkbox-wrapper) {
+  padding-left: 0px !important;
+}
+
+:host ::ng-deep .mat-button-toggle .mat-pseudo-checkbox,
+:host ::ng-deep .mat-button-toggle .mat-button-toggle-checkbox-wrapper {
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+}
+
+:host-context(.dark-theme)
+  .mat-button-toggle-group
+  .mat-button-toggle:not(.mat-button-toggle-checked) {
+  background-color: var(--app-surface-secondary, #1e1e1e) !important;
+  color: var(--app-text-secondary, #ccc) !important;
+  border: 1px solid var(--app-border, #333) !important;
+}
+
+:host-context(.dark-theme) .mat-button-toggle-checked {
+  background-color: var(--app-primary, #1976d2) !important;
+  color: #fff !important;
 }
