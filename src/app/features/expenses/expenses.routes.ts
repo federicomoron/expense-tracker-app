@@ -11,16 +11,15 @@ const routes: Routes = [
   },
   {
     path: ':expenseId/edit',
+    canActivate: [authGuard, groupGuard],
     loadComponent: () =>
       import('./expense-form/expense-form.component').then((m) => m.ExpenseFormComponent),
-    canActivate: [authGuard, groupGuard],
   },
   {
     path: ':expenseId',
+    canActivate: [authGuard, groupGuard],
     loadComponent: () =>
       import('./expense-detail/expense-detail.component').then((m) => m.ExpenseDetailComponent),
-    canActivate: [authGuard, groupGuard],
   },
 ];
-
 export default routes;

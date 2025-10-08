@@ -1,13 +1,16 @@
 import { Routes } from '@angular/router';
 
-import { ROUTES } from '@constants/routes';
+import { NAVIGATION_ROUTES } from '@constants/routes';
 import { authGuard } from '@core/guards/auth.guard';
+import { groupGuard } from '@core/guards/group.guard';
+import { loginGuard } from '@core/guards/login.guard';
 import { AppLayoutComponent } from '@layouts/app-layout/app-layout.component';
 import { FullscreenLayoutComponent } from '@layouts/fulllscreen-layout/fullscreen-layout.component';
 
 export const routes: Routes = [
+  // Layout without footer
   {
-    path: ROUTES.NEW_GROUP,
+    path: 'groups/new',
     component: FullscreenLayoutComponent,
     children: [
       {
@@ -20,22 +23,54 @@ export const routes: Routes = [
     ],
   },
   {
-    path: '',
-    loadChildren: () => import('@features/auth/auth.routes').then((m) => m.default),
+    path: 'groups/:id/totals',
+    component: FullscreenLayoutComponent,
+    canActivate: [authGuard, groupGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('@features/groups/group-totals/group-totals.component').then(
+            (m) => m.GroupTotalsComponent,
+          ),
+      },
+    ],
   },
+  {
+    path: 'groups/:groupId/expenses',
+    component: FullscreenLayoutComponent,
+    canActivateChild: [authGuard, groupGuard],
+    children: [
+      {
+        path: 'new',
+        loadComponent: () =>
+          import('@features/expenses/expense-form/expense-form.component').then(
+            (m) => m.ExpenseFormComponent,
+          ),
+      },
+      {
+        path: ':expenseId',
+        loadComponent: () =>
+          import('@features/expenses/expense-detail/expense-detail.component').then(
+            (m) => m.ExpenseDetailComponent,
+          ),
+      },
+      {
+        path: ':expenseId/edit',
+        loadComponent: () =>
+          import('@features/expenses/expense-form/expense-form.component').then(
+            (m) => m.ExpenseFormComponent,
+          ),
+      },
+    ],
+  },
+  // Layout with header + footer
   {
     path: '',
     component: AppLayoutComponent,
     canActivateChild: [authGuard],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'groups' },
-      {
-        path: ROUTES.NEW_GROUP,
-        loadComponent: () =>
-          import('@features/groups/group-form/group-form.component').then(
-            (m) => m.GroupFormComponent,
-          ),
-      },
       {
         path: 'groups',
         loadChildren: () => import('@features/groups/groups.routes').then((m) => m.default),
@@ -48,13 +83,22 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'groups/:groupId/expenses',
-    component: FullscreenLayoutComponent,
-    canActivate: [authGuard],
-    loadChildren: () => import('@features/expenses/expenses.routes').then((m) => m.default),
+    path: '',
+    children: [
+      {
+        path: 'login',
+        canActivate: [loginGuard],
+        loadComponent: () =>
+          import('@features/auth/login/login.component').then((m) => m.LoginComponent),
+      },
+      {
+        path: 'register',
+        loadComponent: () =>
+          import('@features/auth/register/register.component').then((m) => m.RegisterComponent),
+      },
+    ],
   },
-  {
-    path: '**',
-    redirectTo: 'groups',
-  },
+
+  // Catch all
+  { path: '**', redirectTo: NAVIGATION_ROUTES.GROUPS },
 ];

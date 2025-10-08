@@ -186,3 +186,22 @@ export function getPaidBy(exp: Expense | ExpenseExtended): ExpenseUser[] {
     (exp as ExpenseExtended).paidBy || exp.participants?.filter((p) => Number(p.amount) > 0) || []
   );
 }
+
+/**
+ * Sums the total of all expenses
+ */
+export function sumExpenses(expenses: Expense[]): number {
+  return expenses.reduce((sum, e) => sum + Number(e.total), 0);
+}
+
+/**
+ * Sums the part corresponding to the current user
+ */
+export function sumYourPart(expenses: Expense[], userId: number | null): number {
+  if (!userId) return 0;
+
+  return expenses.reduce((sum, e) => {
+    const p = e.participants?.find((x) => x.userId === userId);
+    return sum + (p ? Number(p.amount) : 0);
+  }, 0);
+}
