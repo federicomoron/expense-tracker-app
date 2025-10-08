@@ -108,3 +108,19 @@ export const EXPENSE_CATEGORIES: readonly ExpenseCategory[] = [
     keywords: [],
   },
 ];
+
+export const CATEGORY_COLORS: Record<string, string> = {
+  Food: '#FF7043',
+  Restaurant: '#FF8A65',
+  Greengrocery: '#66BB6A',
+  Meat: '#EF5350',
+  Rent: '#8D6E63',
+  Gas: '#FFA726',
+  Electricity: '#FFD54F',
+  Water: '#29B6F6',
+  Car: '#5C6BC0',
+  Healthcare: '#AB47BC',
+  Clothes: '#26A69A',
+  Entertainment: '#FFCA28',
+  Other: '#9E9E9E',
+};

@@ -85,7 +85,8 @@
     "yourPart": "Tu parte",
     "noExpenses": "No hay gastos aún",
     "loading": "Cargando...",
-    "noGroup": "Grupo no encontrado"
+    "noGroup": "Grupo no encontrado",
+    "viewAllTime": "Todo el tiempo"
   },
   "groupForm": {
     "title": "Nuevo grupo",
@@ -224,6 +225,34 @@
   "calendar": {
     "cancel": "Cancelar",
     "accept": "Aceptar"
+  },
+  "month": {
+    "0": "ENE",
+    "1": "FEB",
+    "2": "MAR",
+    "3": "ABR",
+    "4": "MAY",
+    "5": "JUN",
+    "6": "JUL",
+    "7": "AGO",
+    "8": "SEP",
+    "9": "OCT",
+    "10": "NOV",
+    "11": "DIC"
+  },
+  "monthFull": {
+    "0": "enero",
+    "1": "febrero",
+    "2": "marzo",
+    "3": "abril",
+    "4": "mayo",
+    "5": "junio",
+    "6": "julio",
+    "7": "agosto",
+    "8": "septiembre",
+    "9": "octubre",
+    "10": "noviembre",
+    "11": "diciembre"
   },
   "paidByQuickDialog": {
     "title": "¿Cómo se dividió este gasto?",

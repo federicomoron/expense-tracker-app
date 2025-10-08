@@ -85,7 +85,8 @@
     "yourPart": "Your part",
     "noExpenses": "No expenses yet",
     "loading": "Loading...",
-    "noGroup": "Group not found"
+    "noGroup": "Group not found",
+    "viewAllTime": "All time"
   },
   "groupForm": {
     "title": "New Group",
@@ -224,6 +225,34 @@
   "calendar": {
     "cancel": "Cancel",
     "accept": "Confirm"
+  },
+  "month": {
+    "0": "JAN",
+    "1": "FEB",
+    "2": "MAR",
+    "3": "APR",
+    "4": "MAY",
+    "5": "JUN",
+    "6": "JUL",
+    "7": "AUG",
+    "8": "SEP",
+    "9": "OCT",
+    "10": "NOV",
+    "11": "DEC"
+  },
+  "monthFull": {
+    "0": "january",
+    "1": "february",
+    "2": "march",
+    "3": "april",
+    "4": "may",
+    "5": "june",
+    "6": "july",
+    "7": "august",
+    "8": "september",
+    "9": "october",
+    "10": "november",
+    "11": "december"
   },
   "paidByQuickDialog": {
     "title": "How was this expense split?",
