@@ -6,19 +6,67 @@
 ></app-header>
 
 @if (expense()) {
-  <div class="expense-content">
-    <p>
-      <strong>{{ 'expenseDetail.description' | translate }}:</strong>
-      {{ expense()?.description }}
-    </p>
-    <p>
-      <strong>{{ 'expenseDetail.total' | translate }}:</strong>
-      {{ expense()?.total | currency: expense()?.currency }}
-    </p>
-    <p>
-      <strong>{{ 'expenseDetail.date' | translate }}:</strong>
-      {{ expense()?.createdAt | date }}
-    </p>
+  @let e = expense()!;
+
+  <div class="expense-detail-wrapper">
+    <div class="expense-header">
+      <div class="expense-icon">
+        <mat-icon>receipt_long</mat-icon>
+      </div>
+      <div class="expense-info">
+        <h2 class="expense-description">{{ e.description }}</h2>
+        <p class="expense-date">{{ e.createdAt | date: 'mediumDate' }}</p>
+      </div>
+    </div>
+
+    <!-- Total expense -->
+    <div class="expense-summary">
+      <div class="expense-amount">
+        {{ e.currency | currencySymbol }}{{ e.total | number: '1.2-2' }}
+      </div>
+
+      <!-- Information about who paid -->
+      <div class="expense-paid">
+        @if (e.paidBy && e.paidBy.length === 1) {
+          @let paid = e.paidBy!;
+          <p>
+            @if (paid[0].userId === currentUserId) {
+              {{ 'expenseDetail.youPaid' | translate }} {{ e.currency | currencySymbol
+              }}{{ paid[0].amount | number: '1.2-2' }}
+            } @else {
+              <strong>{{ 'expenseDetail.paidBy' | translate }}:</strong>
+              {{ e.payerName }} {{ e.currency | currencySymbol
+              }}{{ paid[0].amount | number: '1.2-2' }}
+            }
+          </p>
+        } @else if (e.paidBy && e.paidBy.length > 1) {
+          <p>
+            <strong>{{ 'expenseDetail.paidBy' | translate }}:</strong>
+            @for (payer of e.paidBy; track payer.userId) {
+              {{ payer.userId === currentUserId ? ('You' | translate) : getUserName(payer.userId) }}
+              ({{ e.currency | currencySymbol }}{{ payer.amount | number: '1.2-2' }})
+            }
+          </p>
+        }
+      </div>
+    </div>
+
+    <!-- List of participants -->
+    @if (participantsBreakdown.length > 0) {
+      <div class="participants-section">
+        <h3>{{ 'expenseDetail.participants' | translate }}</h3>
+        <ul>
+          @for (p of participantsBreakdown; track p.userId) {
+            <li>
+              <span class="name">{{ p.name }}</span>
+              <span class="amount"
+                >{{ e.currency | currencySymbol }}{{ p.amount | number: '1.2-2' }}</span
+              >
+            </li>
+          }
+        </ul>
+      </div>
+    }
   </div>
 } @else {
   <div class="loading-spinner">

@@ -159,7 +159,14 @@
     "title": "Expense Details",
     "description": "Description",
     "total": "Total",
-    "date": "Date"
+    "date": "Date",
+    "category": "Category",
+    "noCategory": "No category",
+    "paidBy": "Paid by",
+    "unknownPayer": "Unknown payer",
+    "participants": "Participants",
+    "unknownUser": "Unknown user",
+    "youPaid": "You paid"
   },
   "paidByDialog": {
     "title": "Select who paid",

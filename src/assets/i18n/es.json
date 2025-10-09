@@ -159,7 +159,14 @@
     "title": "Detalle del gasto",
     "description": "Descripción",
     "total": "Total",
-    "date": "Fecha"
+    "date": "Fecha",
+    "category": "Categoría",
+    "noCategory": "Sin categoría",
+    "paidBy": "Pagado por",
+    "unknownPayer": "Pagador desconocido",
+    "participants": "Participantes",
+    "unknownUser": "Usuario desconocido",
+    "youPaid": "Vos pagaste"
   },
   "paidByDialog": {
     "title": "Seleccioná quién pagó",

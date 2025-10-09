@@ -41,6 +41,7 @@ export interface ExpenseExtended extends Expense {
   readonly paidBy?: ExpenseUser[];
   readonly splits?: ExpenseUser[];
   readonly optionId?: PaidByOptionId;
+  readonly payerName?: string;
 }
 
 export interface ExpenseCategory {
