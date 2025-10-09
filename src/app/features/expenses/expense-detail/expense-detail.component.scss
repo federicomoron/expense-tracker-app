@@ -1,12 +1,116 @@
 @use 'shared/styles/dialog-common.scss';
 
-.expense-content {
+.expense-detail-wrapper {
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.expense-header {
+  display: flex;
+  align-items: center;
   gap: 12px;
-  color: var(--app-text);
-  font-size: 16px;
-  padding: 1rem;
+  width: 100%;
+  max-width: 480px;
+
+  .expense-icon {
+    background-color: rgba(var(--app-primary-rgb), 0.1);
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+      color: var(--app-primary);
+      font-size: 28px;
+    }
+  }
+
+  .expense-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .expense-description {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin: 0;
+      color: var(--app-text);
+    }
+
+    .expense-date {
+      font-size: 0.875rem;
+      color: var(--app-muted);
+      margin-top: 2px;
+    }
+  }
+}
+
+.expense-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  .expense-amount {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--app-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .expense-paid {
+    font-size: 0.95rem;
+    color: var(--app-muted);
+
+    strong {
+      color: var(--app-text);
+      font-weight: 500;
+    }
+  }
+}
+
+.participants-section {
+  width: 100%;
+  max-width: 480px;
+
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--app-text);
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      background-color: rgba(var(--app-text-rgb), 0.04);
+      padding: 8px 12px;
+      border-radius: 8px;
+
+      .name {
+        font-weight: 500;
+        color: var(--app-text);
+      }
+
+      .amount {
+        font-weight: 600;
+        color: var(--app-primary);
+      }
+    }
+  }
 }
 
 .loading-spinner {

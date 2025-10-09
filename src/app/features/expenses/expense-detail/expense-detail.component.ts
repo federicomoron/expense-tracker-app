@@ -3,7 +3,9 @@ import { Component, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { Expense, ExpenseExtended, ExpenseUser } from '@core/models/expenses.model';
+import { EnrichedExpenseUser, ExpenseForDetail } from '@models/expense-detail.model';
+import { Expense, ExpenseExtended, ExpenseUser } from '@models/expenses.model';
+import { GroupMember } from '@models/group-detail.model';
 import { HeaderAction } from '@models/header-action.model';
 import { ApiErrorService } from '@services/api-error.service';
 import { AuthService } from '@services/auth.service';
@@ -16,19 +18,29 @@ import { EXPENSE_CATEGORIES } from '@shared/data/expense-categories';
 import {
   detectQuickOptionFromParticipants,
   findGroupIdInRoute,
+  getPaidBy,
+  resolvePayerNameFromExpense,
 } from '@shared/helpers/expense.utils';
+import { CurrencySymbolPipe } from '@shared/pipes/currency-symbol.pipe';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 import { ConfirmDialogComponent } from '@shared/ui/dialogs/confirm-dialog.component';
 
 @Component({
   selector: 'app-expense-detail',
   standalone: true,
-  imports: [CommonModule, SharedMaterialModule, TranslateModule, HeaderComponent, SpinnerComponent],
+  imports: [
+    CommonModule,
+    SharedMaterialModule,
+    TranslateModule,
+    HeaderComponent,
+    SpinnerComponent,
+    CurrencySymbolPipe,
+  ],
   templateUrl: './expense-detail.component.html',
   styleUrls: ['./expense-detail.component.scss'],
 })
 export class ExpenseDetailComponent {
-  readonly expense = signal<Expense | null>(null);
+  readonly expense = signal<ExpenseForDetail | null>(null);
 
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -38,11 +50,92 @@ export class ExpenseDetailComponent {
   private readonly uiMessage = inject(UiMessageService);
   private readonly expenseService = inject(ExpenseService);
   private readonly dialogService = inject(DialogService);
+  readonly currentUser = this.authService.currentUser;
 
   readonly currentUserId = this.authService.currentUser()?.id ?? undefined;
 
   constructor() {
     this._initExpense();
+  }
+
+  get participantsWithoutPayers(): EnrichedExpenseUser[] {
+    const e = this.expense();
+    if (!e?.participants) return [];
+
+    const paid = e.paidBy ?? [];
+    return e.participants.filter((p) => !paid.some((pay) => pay.userId === p.userId));
+  }
+
+  get participantsBreakdown(): EnrichedExpenseUser[] {
+    const e = this.expense();
+    if (!e) return [];
+
+    const participants = e.participants ?? [];
+    const splits = e.splits ?? [];
+
+    const participantsMap = new Map<number, EnrichedExpenseUser>();
+    const participantsAmount = new Map<number, number>();
+
+    for (const p of participants) {
+      const existing = participantsMap.get(p.userId);
+      if (!existing) {
+        participantsMap.set(p.userId, { ...p } as EnrichedExpenseUser);
+        participantsAmount.set(p.userId, Number(p.amount) || 0);
+      } else {
+        participantsAmount.set(
+          p.userId,
+          (participantsAmount.get(p.userId) || 0) + Number(p.amount || 0),
+        );
+      }
+    }
+
+    const splitsMap = new Map<number, number>(splits.map((s) => [s.userId, Number(s.amount)]));
+
+    const userIds = new Set<number>();
+    for (const id of participantsMap.keys()) userIds.add(id);
+    for (const id of splitsMap.keys()) userIds.add(id);
+
+    const sharesMap = new Map<number, number>();
+    for (const p of participants) {
+      const amt = Number(p.amount) || 0;
+      if (amt <= 0) {
+        sharesMap.set(p.userId, (sharesMap.get(p.userId) || 0) + amt);
+      }
+    }
+
+    const orderedIds: number[] = [];
+    for (const p of participants) if (!orderedIds.includes(p.userId)) orderedIds.push(p.userId);
+
+    const result: EnrichedExpenseUser[] = [];
+    for (const uid of Array.from(userIds)) {
+      const part = participantsMap.get(uid);
+      const name =
+        uid === this.currentUserId
+          ? this.translate.instant('common.you')
+          : (part?.name ?? `User #${uid}`);
+
+      let amount: number;
+      if (splitsMap.has(uid)) {
+        amount = splitsMap.get(uid)!;
+      } else if (sharesMap.has(uid)) {
+        amount = sharesMap.get(uid)!;
+      } else {
+        amount = participantsAmount.get(uid) ?? 0;
+      }
+
+      result.push({ userId: uid, name, amount });
+    }
+
+    result.sort((a, b) => {
+      const ai = orderedIds.indexOf(a.userId);
+      const bi = orderedIds.indexOf(b.userId);
+      if (ai === bi) return a.userId - b.userId;
+      if (ai === -1) return 1;
+      if (bi === -1) return -1;
+      return ai - bi;
+    });
+
+    return result;
   }
 
   get headerActions(): HeaderAction[] {
@@ -192,39 +285,76 @@ export class ExpenseDetailComponent {
     void this.router.navigate(['/groups', expense?.groupId ?? '']);
   }
 
+  getUserName(userId: number): string {
+    const currentGroup = (window as any).currentGroupDetail;
+    if (currentGroup?.members) {
+      const member = currentGroup.members.find((m: any) => m.userId === userId);
+      if (member) return member.name;
+    }
+
+    if (this.currentUser()?.id === userId) return this.currentUser()?.name ?? `User #${userId}`;
+    return `User #${userId}`;
+  }
+
   private _initExpense(): void {
     const expenseFromState = history.state?.expense as Expense | null;
     const routeGroupId = findGroupIdInRoute(this.route);
 
-    if (expenseFromState) {
-      this.expense.set({ ...expenseFromState, groupId: routeGroupId });
-      return;
-    }
-
-    const expenseIdParam = this.route.snapshot.paramMap.get('expenseId');
-    const expenseId = expenseIdParam ? +expenseIdParam : null;
-
-    if (!expenseId) {
-      void this.router.navigate(['/groups', routeGroupId]);
-      return;
-    }
-
-    const groupDetail = history.state?.group as { expenses?: Expense[] } | undefined;
     let found: Expense | undefined;
 
-    if (groupDetail?.expenses) {
-      found = groupDetail.expenses.find((e) => e.id === expenseId);
-    }
-
-    if (!found && (window as any).currentGroupDetail?.expenses) {
-      const currentGroup = (window as any).currentGroupDetail as { expenses?: Expense[] };
-      found = currentGroup.expenses?.find((e) => e.id === expenseId);
-    }
-
-    if (found) {
-      this.expense.set({ ...found, groupId: routeGroupId });
+    if (expenseFromState) {
+      found = expenseFromState;
     } else {
-      void this.router.navigate(['/groups', routeGroupId]);
+      const expenseIdParam = this.route.snapshot.paramMap.get('expenseId');
+      const expenseId = expenseIdParam ? +expenseIdParam : null;
+      if (!expenseId) {
+        void this.router.navigate(['/groups', routeGroupId]);
+        return;
+      }
+
+      const groupDetail = history.state?.group as { expenses?: Expense[] } | undefined;
+      if (groupDetail?.expenses) found = groupDetail.expenses.find((e) => e.id === expenseId);
+      if (!found && (window as any).currentGroupDetail?.expenses) {
+        const currentGroup = (window as any).currentGroupDetail;
+        found = currentGroup.expenses?.find((e: Expense) => e.id === expenseId);
+      }
     }
+
+    if (!found) {
+      void this.router.navigate(['/groups', routeGroupId]);
+      return;
+    }
+
+    const currentGroup = (window as any).currentGroupDetail;
+    const members: GroupMember[] = currentGroup?.members ?? [];
+    const enrichedParticipants: EnrichedExpenseUser[] = (found.participants || []).map((p) => {
+      if (p.userId === this.currentUserId)
+        return { ...p, name: this.translate.instant('common.you') };
+      const member = members.find((m) => m.userId === p.userId);
+      return { ...p, name: member?.name ?? `User #${p.userId}` };
+    });
+
+    const payerName = resolvePayerNameFromExpense(found, members, this.currentUserId);
+
+    let category = found.category;
+    if (!category && found.description) {
+      const desc = found.description.toLowerCase();
+      const matchedCategory = EXPENSE_CATEGORIES.find(
+        (c: any) =>
+          c.label.toLowerCase() === desc ||
+          c.key.toLowerCase() === desc ||
+          (c.keywords && c.keywords.some((k: string) => desc.includes(k))),
+      );
+      if (matchedCategory) category = matchedCategory.key;
+    }
+
+    this.expense.set({
+      ...found,
+      groupId: routeGroupId,
+      participants: enrichedParticipants,
+      paidBy: getPaidBy(found),
+      payerName,
+      category,
+    } as ExpenseForDetail);
   }
 }

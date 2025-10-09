@@ -12,6 +12,7 @@
   @if (showDayCalendar) {
     <mat-calendar
       [startAt]="selectedDate()"
+      [dateFilter]="isDateEnabled"
       (selectedChange)="onDateSelected($event)"
     ></mat-calendar>
   } @else {

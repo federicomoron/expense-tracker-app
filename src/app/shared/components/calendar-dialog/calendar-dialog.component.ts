@@ -69,4 +69,9 @@ export class CalendarDialogComponent {
   getMonthLabel(monthIndex: number): string {
     return this.translate.instant(`month.${monthIndex}`);
   }
+
+  isDateEnabled = (date: Date | null): boolean => {
+    if (!date) return false;
+    return date <= this.today;
+  };
 }
