@@ -109,7 +109,10 @@ export class ExpenseDetailComponent {
     const result: EnrichedExpenseUser[] = [];
     for (const uid of Array.from(userIds)) {
       const part = participantsMap.get(uid);
-      const name = uid === this.currentUserId ? 'You' : (part?.name ?? `User #${uid}`);
+      const name =
+        uid === this.currentUserId
+          ? this.translate.instant('common.you')
+          : (part?.name ?? `User #${uid}`);
 
       let amount: number;
       if (splitsMap.has(uid)) {
@@ -325,7 +328,8 @@ export class ExpenseDetailComponent {
     const currentGroup = (window as any).currentGroupDetail;
     const members: GroupMember[] = currentGroup?.members ?? [];
     const enrichedParticipants: EnrichedExpenseUser[] = (found.participants || []).map((p) => {
-      if (p.userId === this.currentUserId) return { ...p, name: 'You' };
+      if (p.userId === this.currentUserId)
+        return { ...p, name: this.translate.instant('common.you') };
       const member = members.find((m) => m.userId === p.userId);
       return { ...p, name: member?.name ?? `User #${p.userId}` };
     });

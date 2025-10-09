@@ -116,7 +116,8 @@
   "common": {
     "close": "Cerrar",
     "confirm": "Confirmar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "you": "Vos"
   },
   "groupType": {
     "trip": "Viaje",
