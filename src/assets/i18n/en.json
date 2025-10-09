@@ -116,7 +116,8 @@
   "common": {
     "close": "Close",
     "confirm": "Confirm",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "you": "You"
   },
   "groupType": {
     "trip": "Trip",
@@ -159,7 +160,14 @@
     "title": "Expense Details",
     "description": "Description",
     "total": "Total",
-    "date": "Date"
+    "date": "Date",
+    "category": "Category",
+    "noCategory": "No category",
+    "paidBy": "Paid by",
+    "unknownPayer": "Unknown payer",
+    "participants": "Participants",
+    "unknownUser": "Unknown user",
+    "youPaid": "You paid"
   },
   "paidByDialog": {
     "title": "Select who paid",
