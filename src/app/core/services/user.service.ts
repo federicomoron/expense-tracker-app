@@ -2,18 +2,20 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { API_ENDPOINTS } from '@constants/api-endpoints';
-import { environment } from '@environments/environment';
 import { RegisterPayload, RegisterResponse } from '@models/user.model';
+import { EnvironmentService } from '@services/environment.service';
 import { HttpService } from '@services/http.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
   private http = inject(HttpService);
-  private readonly API_URL = environment.apiUrl;
+  private readonly env = inject(EnvironmentService);
+
+  private readonly apiUrl = this.env.apiUrl;
 
   register(data: RegisterPayload): Observable<RegisterResponse> {
     return this.http.post<RegisterResponse, RegisterPayload>(
-      `${this.API_URL}${API_ENDPOINTS.REGISTER}`,
+      `${this.apiUrl}${API_ENDPOINTS.REGISTER}`,
       data,
     );
   }
