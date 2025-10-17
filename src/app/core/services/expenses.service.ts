@@ -3,15 +3,16 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { API_ENDPOINTS } from '@constants/api-endpoints';
-import { environment } from '@environments/environment';
 import { ExpenseRequest, ExpenseResponse } from '@models/expenses.model';
+import { EnvironmentService } from '@services/environment.service';
 import { HttpService } from '@services/http.service';
 
 @Injectable({ providedIn: 'root' })
 export class ExpenseService {
   private readonly http = inject(HttpService);
+  private readonly env = inject(EnvironmentService);
 
-  private readonly apiUrl = environment.apiUrl;
+  private readonly apiUrl = this.env.apiUrl;
 
   createExpense(expense: ExpenseRequest): Observable<ExpenseResponse> {
     return this.http.post<ExpenseResponse, ExpenseRequest>(
@@ -29,9 +30,7 @@ export class ExpenseService {
 
   deleteExpense(expenseId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/expenses/${expenseId}`, {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
     });
   }
 }
