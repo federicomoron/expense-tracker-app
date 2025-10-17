@@ -28,6 +28,8 @@ jobs:
     name: 🔧 Build Angular App
     runs-on: ubuntu-latest
     needs: lint
+    env:
+      API_URL: ${{ vars.API_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
