@@ -3,10 +3,10 @@ import { map, Observable, tap } from 'rxjs';
 
 import { API_ENDPOINTS } from '@constants/api-endpoints';
 import { STORAGE_KEYS } from '@constants/storage-keys';
-import { environment } from '@environments/environment';
 import { GroupDetailResponse, GroupDetailWithExpenses } from '@models/group-detail.model';
 import { CreateGroupPayload, CreateGroupResponse } from '@models/group-request.model';
 import { Group } from '@models/group.model';
+import { EnvironmentService } from '@services/environment.service';
 import { HttpService } from '@services/http.service';
 
 @Injectable({ providedIn: 'root' })
@@ -20,9 +20,10 @@ export class GroupService {
     return this.groups().find((group) => group.id === groupId) ?? null;
   });
 
-  private http = inject(HttpService);
+  private readonly http = inject(HttpService);
+  private readonly env = inject(EnvironmentService);
 
-  private readonly apiUrl = environment.apiUrl;
+  private readonly apiUrl = this.env.apiUrl;
 
   setActiveGroup(groupId: number) {
     this._activeGroupId.set(groupId);
@@ -36,8 +37,7 @@ export class GroupService {
       }>(`${this.apiUrl}${API_ENDPOINTS.GET_GROUPS}`)
       .pipe(
         tap((res) => {
-          const groups = res.data.groups;
-          this._groupsSignal.set(groups);
+          this._groupsSignal.set(res.data.groups);
           this.saveToStorage();
         }),
       );
@@ -62,9 +62,7 @@ export class GroupService {
       >(`${this.apiUrl}${API_ENDPOINTS.CREATE_GROUP}`, group)
       .pipe(
         tap((response) => {
-          if (response.success) {
-            this.addGroup(response.data);
-          }
+          if (response.success) this.addGroup(response.data);
         }),
       );
   }
