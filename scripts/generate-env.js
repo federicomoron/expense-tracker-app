@@ -81,7 +81,6 @@ function main() {
   // merge: process.env takes precedence
   const merged = Object.assign({}, envFromFile, envFromProcess);
 
-  // normalize keys (strip VITE_ prefix)
   const normalizedAll = normalize(merged);
 
   // Filter: only export keys that were intentionally meant for the client.
