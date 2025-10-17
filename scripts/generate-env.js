@@ -118,10 +118,19 @@ function main() {
       normalizedAll.VITE_API_URL
     );
     if (!hasApiUrl) {
-      console.error(
-        'Missing required environment variable: API_URL or VITE_API_URL (required for production builds)',
-      );
-      process.exit(2);
+      // If running in GitHub Actions as a pull_request from a fork, secrets/envs may be unavailable.
+      const githubEvent = process.env.GITHUB_EVENT_NAME || '';
+      const isGithubPr = githubEvent === 'pull_request' || !!process.env.GITHUB_HEAD_REF;
+      if (isGithubPr) {
+        console.warn(
+          'Warning: Missing API_URL or VITE_API_URL, but running inside a GitHub pull_request build — skipping strict production validation.',
+        );
+      } else {
+        console.error(
+          'Missing required environment variable: API_URL or VITE_API_URL (required for production builds)',
+        );
+        process.exit(2);
+      }
     }
   }
 }
