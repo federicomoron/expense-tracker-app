@@ -1,8 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  Signal,
+  signal,
+} from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { forkJoin } from 'rxjs';
+import { merge } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { NAVIGATION_ROUTES } from '@constants/routes';
 import { GroupFormComponent } from '@features/groups/group-form/group-form.component';
@@ -20,6 +29,7 @@ import { SharedMaterialModule } from '@shared/shared-material.module';
 @Component({
   selector: 'app-groups',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     SharedMaterialModule,
     RouterModule,
@@ -39,8 +49,10 @@ export class GroupsComponent implements OnInit {
   private readonly dialogService = inject(DialogService);
 
   readonly showForm = signal(false);
+  readonly isLoading = signal(true);
   readonly showSettledGroups = signal(localStorage.getItem('showSettledGroups') === 'true');
   private readonly _groupDetails = signal<Record<number, GroupDetailWithExpenses>>({});
+  private readonly _detailsCache = new Map<number, Signal<GroupDetailWithExpenses | undefined>>();
 
   readonly groups = computed(() => this.groupService.groups());
   readonly hasAnyDetail = computed(() => Object.keys(this._groupDetails()).length > 0);
@@ -70,12 +82,21 @@ export class GroupsComponent implements OnInit {
   readonly currentUser = this.authService.currentUser;
   readonly currentUserId = this.currentUser()?.id ?? 0;
 
-  getGroupDetails = (id: number) => computed(() => this._groupDetails()[id] ?? undefined);
+  getGroupDetails(id: number): Signal<GroupDetailWithExpenses | undefined> {
+    if (!this._detailsCache.has(id)) {
+      this._detailsCache.set(
+        id,
+        computed(() => this._groupDetails()[id]),
+      );
+    }
+    return this._detailsCache.get(id)!;
+  }
 
   ngOnInit(): void {
     this.groupService.fetchGroups().subscribe({
       next: () => this.loadGroupDetails(),
       error: (err) => {
+        this.isLoading.set(false);
         console.error('Error fetching groups', err);
         this.apiErrorService.handleError(err);
       },
@@ -107,15 +128,25 @@ export class GroupsComponent implements OnInit {
 
   private loadGroupDetails(): void {
     const groups = this.groups();
-    if (groups.length === 0) return;
+    if (groups.length === 0) {
+      this.isLoading.set(false);
+      return;
+    }
 
-    const requests = groups.map((g) => this.groupService.getGroupDetail(g.id));
-    forkJoin(requests).subscribe((details) => {
-      const detailsMap: Record<number, GroupDetailWithExpenses> = {};
-      details.forEach((detail) => {
-        detailsMap[detail.id] = detail;
-      });
-      this._groupDetails.set(detailsMap);
+    const requests = groups.map((g) =>
+      this.groupService.getGroupDetail(g.id).pipe(
+        tap((detail) => {
+          this._groupDetails.update((map) => ({ ...map, [detail.id]: detail }));
+        }),
+      ),
+    );
+
+    merge(...requests).subscribe({
+      error: (err) => {
+        this.isLoading.set(false);
+        console.error('Error loading group details', err);
+      },
+      complete: () => this.isLoading.set(false),
     });
   }
 

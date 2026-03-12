@@ -26,7 +26,16 @@ export const groupGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
     return of(false);
   }
 
-  const groups$ = groupService.fetchGroups().pipe(
+  const existingGroups = groupService.groups();
+  if (existingGroups.length > 0) {
+    const belongsToGroup = existingGroups.some((g) => g.id === groupId);
+    if (!belongsToGroup) {
+      void router.navigate([NAVIGATION_ROUTES.GROUPS]);
+    }
+    return of(belongsToGroup);
+  }
+
+  return groupService.fetchGroups().pipe(
     map(() => {
       const groups = groupService.groups();
       const belongsToGroup = groups.some((g) => g.id === groupId);
@@ -42,6 +51,4 @@ export const groupGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
       return of(false);
     }),
   );
-
-  return groups$;
 };

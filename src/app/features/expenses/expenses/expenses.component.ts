@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 import { ExpenseFormComponent } from '@features/expenses/expense-form/expense-form.component';
+import { User } from '@models/auth.model';
 import { Expense, ExpenseExtended, ExpenseUser } from '@models/expenses.model';
 import { GroupMember } from '@models/group-detail.model';
 import { ApiErrorService } from '@services/api-error.service';
@@ -21,12 +22,20 @@ import {
 import { CurrencySymbolPipe } from '@shared/pipes/currency-symbol.pipe';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 
+interface ProcessedExpense extends Expense {
+  readonly paidByText: string;
+  readonly userLent: number;
+  readonly lendLabel: string;
+  readonly categoryIcon: string;
+}
+
 @Component({
   selector: 'app-expenses',
   standalone: true,
   imports: [CommonModule, SharedMaterialModule, TranslateModule, CurrencySymbolPipe],
   templateUrl: './expenses.component.html',
   styleUrls: ['./expenses.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExpensesComponent {
   Math = Math;
@@ -39,26 +48,36 @@ export class ExpensesComponent {
   private readonly dialogService = inject(DialogService);
   private readonly uiMessage = inject(UiMessageService);
 
-  @Input() expenses: Expense[] = [];
-  @Input() loading = false;
-  @Input() groupMembers: ReadonlyArray<{ userId: number; name: string }> = [];
-  @Input() groupId: number | undefined;
-  @Output() expenseDeleted = new EventEmitter<number>();
+  readonly expenses = input<Expense[]>([]);
+  readonly loading = input(false);
+  readonly groupMembers = input<ReadonlyArray<{ userId: number; name: string }>>([]);
+  readonly groupId = input<number | undefined>();
+  readonly expenseDeleted = output<number>();
 
-  totalAmount = 0;
+  private readonly currentUser = computed(() => this.authService.currentUser());
 
-  ngOnInit() {
-    this.calculateTotal();
-  }
+  readonly processedExpenses = computed(() => {
+    const expenses = this.expenses();
+    const user = this.currentUser();
+    const members = this.groupMembers();
 
-  get currentUser() {
-    return this.authService.currentUser();
-  }
+    return expenses.map(
+      (exp) =>
+        ({
+          ...exp,
+          paidByText: this.computePaidByText(exp, user, members),
+          userLent: this.computeUserLent(exp, user, members),
+          lendLabel: this.computeLendLabel(exp, user, members),
+          categoryIcon: this.computeCategoryIcon(exp.description || ''),
+        }) as ProcessedExpense,
+    );
+  });
 
-  get groupedExpenses() {
-    const map = new Map<string, Expense[]>();
+  readonly groupedExpenses = computed(() => {
+    const expenses = this.processedExpenses();
+    const map = new Map<string, ProcessedExpense[]>();
 
-    for (const exp of this.expenses) {
+    for (const exp of expenses) {
       const date = new Date(exp.createdAt);
       const month = date.toLocaleString('default', { month: 'long' });
       const year = date.getFullYear();
@@ -69,14 +88,18 @@ export class ExpensesComponent {
     }
 
     return Array.from(map.entries());
-  }
+  });
+
+  readonly totalAmount = computed(() =>
+    this.expenses().reduce((sum, e) => sum + Number(e.total), 0),
+  );
 
   openExpenseDetail(expense: Expense) {
-    void this.router.navigate(['/groups', this.groupId, 'expenses', expense.id]);
+    void this.router.navigate(['/groups', this.groupId(), 'expenses', expense.id]);
   }
 
   openExpenseForm(expense: Expense) {
-    const currentUserId = this.currentUser?.id;
+    const currentUserId = this.currentUser()?.id;
     const optionId =
       (expense as any).optionId ?? detectQuickOptionFromParticipants(expense, currentUserId);
 
@@ -99,9 +122,7 @@ export class ExpensesComponent {
       next: () => {
         const message = this.apiErrorService.handleError('expenses.deletedSuccess');
         this.uiMessage.showSuccess(message);
-        this.expenses = this.expenses.filter((e) => e.id !== expense.id);
         this.expenseDeleted.emit(expense.id!);
-        this.calculateTotal();
       },
       error: (err) => {
         const message = this.apiErrorService.handleError(err);
@@ -110,16 +131,14 @@ export class ExpensesComponent {
     });
   }
 
-  calculateTotal() {
-    this.totalAmount = this.expenses.reduce((sum, e) => sum + Number(e.total), 0);
-  }
-
-  /** Returns a human-readable string describing who paid */
-  getPaidByText(exp: Expense): string {
+  private computePaidByText(
+    exp: Expense,
+    user: User | null,
+    members: ReadonlyArray<{ userId: number; name: string }>,
+  ): string {
     const paidBy: ExpenseUser[] = getPaidBy(exp);
     if (!paidBy.length) return '';
 
-    const user = this.currentUser;
     const symbol = CURRENCY_SYMBOLS[exp.currency.toUpperCase()] || exp.currency;
 
     if (paidBy.length === 1) {
@@ -127,7 +146,7 @@ export class ExpensesComponent {
 
       const name = resolvePayerNameFromExpense(
         { ...exp, paidBy: [onlyPayer] } as ExpenseExtended,
-        [...this.groupMembers] as GroupMember[],
+        [...members] as GroupMember[],
         user?.id,
       );
 
@@ -149,7 +168,7 @@ export class ExpensesComponent {
       .map((p: ExpenseUser) =>
         resolvePayerNameFromExpense(
           { ...exp, participants: [p] } as ExpenseExtended,
-          [...this.groupMembers] as GroupMember[],
+          [...members] as GroupMember[],
           user?.id,
         ),
       )
@@ -164,8 +183,11 @@ export class ExpensesComponent {
     });
   }
 
-  getUserLent(exp: Expense, _optionId?: string): number {
-    const user = this.currentUser;
+  private computeUserLent(
+    exp: Expense,
+    user: User | null,
+    members: ReadonlyArray<{ userId: number; name: string }>,
+  ): number {
     if (!user) return 0;
 
     const paidBy: ExpenseUser[] =
@@ -197,7 +219,7 @@ export class ExpensesComponent {
       }
     }
 
-    const validUserIds = this.groupMembers.map((m) => m.userId);
+    const validUserIds = members.map((m) => m.userId);
     const uniqueParticipants = new Map<number, number>();
     for (const p of exp.participants ?? []) {
       if (!validUserIds.includes(p.userId)) continue;
@@ -209,24 +231,18 @@ export class ExpensesComponent {
     return userPaid - userShare;
   }
 
-  getLendLabel(exp: Expense, optionId?: string): string {
-    const lent = this.getUserLent(exp, optionId);
+  private computeLendLabel(
+    exp: Expense,
+    user: User | null,
+    members: ReadonlyArray<{ userId: number; name: string }>,
+  ): string {
+    const lent = this.computeUserLent(exp, user, members);
     if (lent > 0) return this.translate.instant('expenses.youLent');
     if (lent < 0) return this.translate.instant('expenses.youBorrowed');
     return '';
   }
 
-  getUserPaid(exp: Expense): number {
-    const user = this.currentUser;
-    if (!user) return 0;
-    const paidBy: ExpenseUser[] =
-      (exp as ExpenseExtended).paidBy ||
-      exp.participants?.filter((p) => Number(p.amount) > 0) ||
-      [];
-    return paidBy.find((p) => p.userId === user.id)?.amount || 0;
-  }
-
-  getCategoryIconFromDescription(description: string): string {
+  private computeCategoryIcon(description: string): string {
     if (!description) return '/assets/category-default.svg';
     const desc = description.toLowerCase();
 

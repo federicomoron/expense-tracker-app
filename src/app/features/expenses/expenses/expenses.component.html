@@ -1,11 +1,11 @@
-@if (loading) {
+@if (loading()) {
   <div class="loading">{{ 'expenses.loading' | translate }}</div>
 } @else {
-  @if (expenses.length === 0) {
+  @if (expenses().length === 0) {
     <div class="empty">{{ 'expenses.empty' | translate }}</div>
   } @else {
     <div class="expenses-list">
-      @for (entry of groupedExpenses; track entry[0]) {
+      @for (entry of groupedExpenses(); track entry[0]) {
         <div class="month-header">{{ entry[0] }}</div>
 
         @for (exp of entry[1]; track exp.id) {
@@ -16,31 +16,27 @@
             </div>
 
             <div class="expense-icon">
-              <img
-                [src]="getCategoryIconFromDescription(exp.description || '')"
-                alt="{{ 'expenses.iconAlt' | translate }}"
-              />
+              <img [src]="exp.categoryIcon" alt="{{ 'expenses.iconAlt' | translate }}" />
             </div>
 
             <div class="expense-info">
               <div class="expense-description">{{ exp.description }}</div>
-              <div class="expense-paid-by">{{ getPaidByText(exp) }}</div>
+              <div class="expense-paid-by">{{ exp.paidByText }}</div>
             </div>
 
             <div class="expense-lend">
               <div
                 class="expense-lend-label"
                 [ngClass]="{
-                  positive: getUserLent(exp) > 0,
-                  negative: getUserLent(exp) < 0,
+                  positive: exp.userLent > 0,
+                  negative: exp.userLent < 0,
                 }"
               >
-                {{ getLendLabel(exp) }}
+                {{ exp.lendLabel }}
               </div>
 
               <div class="expense-lend-amount">
-                {{ exp.currency | currencySymbol
-                }}{{ Math.abs(getUserLent(exp)) | number: '1.2-2' }}
+                {{ exp.currency | currencySymbol }}{{ Math.abs(exp.userLent) | number: '1.2-2' }}
               </div>
             </div>
           </div>
