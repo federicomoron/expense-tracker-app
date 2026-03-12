@@ -1,8 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { catchError, of } from 'rxjs';
 
 import { ExpensesComponent } from '@features/expenses/expenses/expenses.component';
 import { GroupActionButtonsComponent } from '@features/groups/group-action-buttons/group-action-buttons.component';
@@ -34,6 +40,7 @@ import { SharedMaterialModule } from '@shared/shared-material.module';
   ],
   templateUrl: './group-detail.component.html',
   styleUrls: ['./group-detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GroupDetailComponent implements OnInit {
   private readonly apiErrorService = inject(ApiErrorService);
@@ -92,19 +99,14 @@ export class GroupDetailComponent implements OnInit {
     void this.router.navigate(['/groups', this.groupId(), 'expenses', 'new']);
   }
 
-  removeExpenseLocally() {
-    const id = this.groupId();
-    this.groupService
-      .getGroupDetail(id)
-      .pipe(
-        catchError((err) => {
-          this.apiErrorService.handleError(err);
-          return of(null);
-        }),
-      )
-      .subscribe((g) => {
-        if (g) this.group.set(g);
-      });
+  removeExpenseLocally(expenseId: number) {
+    this.group.update((g) => {
+      if (!g) return g;
+      return {
+        ...g,
+        expenses: g.expenses?.filter((e) => e.id !== expenseId) ?? [],
+      };
+    });
   }
 
   openGroupActionsModal() {
