@@ -37,7 +37,7 @@ export class AccountComponent {
 
   toggleLang(): void {
     const newLang = this.i18n.currentLang === 'en' ? 'es' : 'en';
-    this.i18n.setLanguage(newLang);
+    void this.i18n.setLanguage(newLang);
     localStorage.setItem('app_lang', newLang);
   }
 
