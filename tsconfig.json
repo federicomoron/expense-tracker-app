@@ -2,6 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
+    "rootDir": "./src",
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -15,25 +16,23 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
-    "baseUrl": "./",
     "paths": {
-      "@config/*": ["src/app/config/*"],
-      "@constants/*": ["src/app/core/constants/*"],
-      "@core/*": ["src/app/core/*"],
-      "@environments/*": ["src/environments/*"],
-      "@features/*": ["src/app/features/*"],
-      "@layouts/*": ["src/app/layouts/*"],
-      "@models/*": ["src/app/core/models/*"],
-      "@routes/*": ["src/app/routes/*"],
-      "@services/*": ["src/app/core/services/*"],
-      "@shared/*": ["src/app/shared/*"]
+      "@config/*": ["./src/app/config/*"],
+      "@constants/*": ["./src/app/core/constants/*"],
+      "@core/*": ["./src/app/core/*"],
+      "@environments/*": ["./src/environments/*"],
+      "@features/*": ["./src/app/features/*"],
+      "@layouts/*": ["./src/app/layouts/*"],
+      "@models/*": ["./src/app/core/models/*"],
+      "@routes/*": ["./src/app/routes/*"],
+      "@services/*": ["./src/app/core/services/*"],
+      "@shared/*": ["./src/app/shared/*"]
     }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true,
-    "enableControlFlow": true
+    "strictTemplates": true
   }
 }
