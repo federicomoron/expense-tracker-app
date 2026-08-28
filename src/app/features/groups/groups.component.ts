@@ -99,6 +99,7 @@ export class GroupsComponent implements OnInit {
     this.groupService.fetchGroups().subscribe({
       next: () => this.loadGroupDetails(),
       error: (err) => {
+        this.isLoading.set(false);
         console.error('Error fetching groups', err);
         const message = this.apiErrorService.handleError(err);
         this.uiMessage.showError(message);
