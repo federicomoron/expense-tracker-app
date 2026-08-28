@@ -20,9 +20,12 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { apiErrorInterceptor } from '@core/interceptors/api-error.interceptor';
 import { authTokenInterceptor } from '@core/interceptors/auth-token.interceptor';
 import { routes } from '@routes/app.routes';
+import { ApiStatusService } from '@services/api-status.service';
 import { AuthService } from '@services/auth.service';
+import { connectivityInitializer } from '@services/connectivity-init';
 import { i18nInitializer } from '@services/i18n-init';
 import { I18nService } from '@services/i18n.service';
+import { PendingExpensesService } from '@services/pending-expenses.service';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, '/assets/i18n/', '.json');
@@ -67,6 +70,12 @@ export const appConfig: ApplicationConfig = {
       provide: APP_INITIALIZER,
       useFactory: initAuthFactory,
       deps: [AuthService],
+      multi: true,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: connectivityInitializer,
+      deps: [ApiStatusService, PendingExpensesService],
       multi: true,
     },
     {

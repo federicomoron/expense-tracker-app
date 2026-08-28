@@ -9,7 +9,11 @@
         <div class="month-header">{{ entry[0] }}</div>
 
         @for (exp of entry[1]; track exp.id) {
-          <div class="expense-row" (click)="openExpenseDetail(exp)">
+          <div
+            class="expense-row"
+            [class.expense-row-pending]="exp.isPending"
+            (click)="openExpenseDetail(exp)"
+          >
             <div class="expense-date">
               {{ exp.createdAt | date: 'dd' }}<br />
               {{ exp.createdAt | date: 'MMM' }}
@@ -20,7 +24,14 @@
             </div>
 
             <div class="expense-info">
-              <div class="expense-description">{{ exp.description }}</div>
+              <div class="expense-description">
+                {{ exp.description }}
+                @if (exp.isPending) {
+                  <span class="expense-pending-badge">{{
+                    'expenses.pendingSync' | translate
+                  }}</span>
+                }
+              </div>
               <div class="expense-paid-by">{{ exp.paidByText }}</div>
             </div>
 

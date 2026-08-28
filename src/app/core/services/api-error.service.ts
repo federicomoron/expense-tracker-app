@@ -54,7 +54,7 @@ export class ApiErrorService {
 
   /** Convert HttpErrorResponse to BackendError format */
   private parseBackendError(error: HttpErrorResponse): BackendError {
-    const type = error.status ? ApiErrorService.mapStatusToType(error.status) : 'UNKNOWN_ERROR';
+    const type = ApiErrorService.mapStatusToType(error.status);
     const body = error.error || {};
     return {
       type: body?.error?.type || type,
@@ -83,6 +83,7 @@ export class ApiErrorService {
 
   /** Map HTTP codes to error types */
   private static mapStatusToType(statusCode: number): string {
+    if (statusCode === 0) return 'NETWORK_ERROR';
     if (statusCode >= 500) return 'INTERNAL_SERVER_ERROR';
     if (statusCode === 422) return 'UNPROCESSABLE_ENTITY';
     if (statusCode === 409) return 'CONFLICT';
