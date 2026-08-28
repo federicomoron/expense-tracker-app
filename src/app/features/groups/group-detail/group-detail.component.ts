@@ -13,6 +13,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ExpensesComponent } from '@features/expenses/expenses/expenses.component';
 import { GroupActionButtonsComponent } from '@features/groups/group-action-buttons/group-action-buttons.component';
 import { GroupActionsModalComponent } from '@features/groups/group-actions-modal/group-actions-modal.component';
+import { Expense } from '@models/expenses.model';
 import { GroupDetailWithExpenses } from '@models/group-detail.model';
 import { GroupType } from '@models/group-type.enum';
 import { ApiErrorService } from '@services/api-error.service';
@@ -20,6 +21,8 @@ import { AuthService } from '@services/auth.service';
 import { DialogService } from '@services/dialog.service';
 import { GroupService } from '@services/group.service';
 import { LayoutService } from '@services/layout.service';
+import { PendingExpensesService } from '@services/pending-expenses.service';
+import { UiMessageService } from '@services/ui-message.service';
 import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 import { getGroupImage } from '@shared/helpers/group-type-image-map';
 import { CurrencySymbolPipe } from '@shared/pipes/currency-symbol.pipe';
@@ -50,10 +53,13 @@ export class GroupDetailComponent implements OnInit {
   private readonly groupService = inject(GroupService);
   private readonly authService = inject(AuthService);
   private readonly dialogService = inject(DialogService);
+  private readonly pendingExpensesService = inject(PendingExpensesService);
+  private readonly uiMessage = inject(UiMessageService);
 
   readonly groupId = signal(Number(this.route.snapshot.paramMap.get('id')));
   readonly group = signal<GroupDetailWithExpenses | null>(null);
   readonly loading = signal(true);
+  readonly offlineMode = signal(false);
 
   readonly currentUser = this.authService.currentUser;
   readonly GroupType = GroupType;
@@ -73,7 +79,23 @@ export class GroupDetailComponent implements OnInit {
     return g.balanceSummary.filter((b) => b.amount !== 0);
   });
 
-  readonly expenses = computed(() => this.group()?.expenses ?? []);
+  private readonly pendingExpenses = this.pendingExpensesService.getPendingForGroup(this.groupId());
+
+  readonly expenses = computed<Expense[]>(() => {
+    const pendingAsExpenses: Expense[] = this.pendingExpenses().map((p) => ({
+      id: this.hashLocalId(p.localId),
+      groupId: p.groupId,
+      description: p.request.description,
+      total: p.request.total,
+      currency: p.request.currency,
+      createdAt: p.request.createdAt ?? p.createdAt,
+      updatedAt: p.createdAt,
+      participants: p.request.splits,
+      isPending: true,
+    }));
+
+    return [...pendingAsExpenses, ...(this.group()?.expenses ?? [])];
+  });
 
   ngOnInit() {
     this.layout.disableTopPadding();
@@ -85,8 +107,15 @@ export class GroupDetailComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error loading group detail', err);
+        const message = this.apiErrorService.handleError(err);
+        this.uiMessage.showError(message);
+
+        const cached = this.groupService.getCachedGroupDetail(this.groupId());
+        if (cached) {
+          this.group.set(cached);
+          this.offlineMode.set(true);
+        }
         this.loading.set(false);
-        this.apiErrorService.handleError(err);
       },
     });
   }
@@ -107,6 +136,14 @@ export class GroupDetailComponent implements OnInit {
         expenses: g.expenses?.filter((e) => e.id !== expenseId) ?? [],
       };
     });
+  }
+
+  private hashLocalId(localId: string): number {
+    let hash = 0;
+    for (let i = 0; i < localId.length; i++) {
+      hash = (hash * 31 + localId.charCodeAt(i)) | 0;
+    }
+    return hash;
   }
 
   openGroupActionsModal() {

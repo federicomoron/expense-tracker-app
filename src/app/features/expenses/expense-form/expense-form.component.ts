@@ -14,10 +14,13 @@ import { ExpenseExtended, ExpenseRequest, ExpenseUser } from '@models/expenses.m
 import { GroupDetail } from '@models/group-detail.model';
 import { HeaderAction } from '@models/header-action.model';
 import { ApiErrorService } from '@services/api-error.service';
+import { ApiStatusService } from '@services/api-status.service';
 import { AuthService } from '@services/auth.service';
 import { DialogService } from '@services/dialog.service';
 import { ExpenseService } from '@services/expenses.service';
 import { GroupService } from '@services/group.service';
+import { PendingExpensesService } from '@services/pending-expenses.service';
+import { UiMessageService } from '@services/ui-message.service';
 import { FooterComponent } from '@shared/components/footer/footer.component';
 import { HeaderComponent } from '@shared/components/header/header.component';
 import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
@@ -54,6 +57,9 @@ export class ExpenseFormComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly groupService = inject(GroupService);
   private readonly apiErrorService = inject(ApiErrorService);
+  private readonly apiStatus = inject(ApiStatusService);
+  private readonly pendingExpensesService = inject(PendingExpensesService);
+  private readonly uiMessage = inject(UiMessageService);
   private readonly translate = inject(TranslateService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly dialogService = inject(DialogService);
@@ -73,7 +79,7 @@ export class ExpenseFormComponent implements OnInit {
   expenseId: number | null = null;
   isEditMode = false;
   selectedPayer: { userId: number; name: string } | null = null;
-  isSubmitting = false;
+  readonly isSubmitting = signal(false);
 
   expenseForm: FormGroup = this.fb.group({
     description: ['', [Validators.required, Validators.minLength(2), nonEmpty]],
@@ -89,7 +95,7 @@ export class ExpenseFormComponent implements OnInit {
         label: 'expenseForm.save',
         icon: 'check',
         onClick: () => this.submitExpense(),
-        showSpinner: this.isSubmitting,
+        showSpinner: this.isSubmitting(),
         spinnerColor: 'white',
       },
     ];
@@ -332,21 +338,47 @@ export class ExpenseFormComponent implements OnInit {
       paidBy,
       splits,
       optionId: selectedOption.id,
+      clientRequestId: crypto.randomUUID(),
     };
 
-    this.isSubmitting = true;
+    if (!this.isEditMode && !this.apiStatus.isApiReachable()) {
+      this.pendingExpensesService.add(expenseRequest);
+      this.uiMessage.showInfo(this.translate.instant('expenseForm.savedOffline'), false);
+      void this.router.navigate(['/groups', this.groupId]);
+      return;
+    }
+
+    this.isSubmitting.set(true);
 
     const obs$ = this.isEditMode
       ? this.expenseService.updateExpense(this.expenseId!, expenseRequest)
       : this.expenseService.createExpense(expenseRequest);
 
     obs$.subscribe({
-      next: () => void this.router.navigate(['/groups', this.groupId]),
+      next: () => {
+        this.groupService.invalidateGroupDetail(this.groupId);
+        void this.router.navigate(['/groups', this.groupId]);
+      },
       error: (error) => {
-        this.apiErrorService.handleError(error);
-        this.isSubmitting = false;
+        if (!this.isEditMode && this.isNetworkError(error)) {
+          this.pendingExpensesService.add(expenseRequest);
+          this.uiMessage.showInfo(this.translate.instant('expenseForm.savedOffline'), false);
+          void this.router.navigate(['/groups', this.groupId]);
+          this.isSubmitting.set(false);
+          return;
+        }
+
+        const message = this.apiErrorService.handleError(error);
+        this.uiMessage.showError(message);
+        this.isSubmitting.set(false);
       },
     });
+  }
+
+  private isNetworkError(error: unknown): boolean {
+    return (
+      error instanceof Object && 'status' in error && (error as { status: number }).status === 0
+    );
   }
 
   openCurrencySelector() {

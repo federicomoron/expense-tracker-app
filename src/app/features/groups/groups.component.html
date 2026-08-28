@@ -1,3 +1,9 @@
+@if (offlineMode()) {
+  <div class="offline-banner">
+    {{ 'groups.offlineCachedData' | translate }}
+  </div>
+}
+
 @if (groups().length === 0) {
   <div class="groups-empty">
     <p class="placeholder">

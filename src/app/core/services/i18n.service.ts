@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class I18nService {
@@ -13,10 +14,10 @@ export class I18nService {
     return this.translate.currentLang || this.translate.getDefaultLang();
   }
 
-  setLanguage(lang: string) {
-    this.translate.use(lang);
+  setLanguage(lang: string): Promise<unknown> {
     localStorage.setItem('lang', lang);
     this.langChange.set(lang);
+    return firstValueFrom(this.translate.use(lang));
   }
 
   getCurrentLocale(): string {
@@ -29,14 +30,13 @@ export class I18nService {
     }
   }
 
+  ensureLoaded(): Promise<unknown> {
+    return firstValueFrom(this.translate.use(this.getSavedLang() || 'en'));
+  }
+
   private init(): void {
     this.translate.addLangs(['en', 'es']);
     this.translate.setDefaultLang('en');
-
-    const savedLang = this.getSavedLang();
-    if (savedLang) {
-      this.setLanguage(savedLang);
-    }
   }
 
   private getSavedLang(): string | null {

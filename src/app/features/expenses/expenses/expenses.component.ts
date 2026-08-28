@@ -95,6 +95,7 @@ export class ExpensesComponent {
   );
 
   openExpenseDetail(expense: Expense) {
+    if (expense.isPending) return;
     void this.router.navigate(['/groups', this.groupId(), 'expenses', expense.id]);
   }
 

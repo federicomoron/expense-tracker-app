@@ -1,10 +1,5 @@
 import { I18nService } from '@services/i18n.service';
 
-export function i18nInitializer(i18nService: I18nService): () => void {
-  return () => {
-    const lang = localStorage.getItem('lang');
-    if (lang) {
-      i18nService.setLanguage(lang);
-    }
-  };
+export function i18nInitializer(i18nService: I18nService): () => Promise<unknown> {
+  return () => i18nService.ensureLoaded();
 }

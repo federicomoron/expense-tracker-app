@@ -7,6 +7,7 @@ import { GROUP_TYPE_OPTIONS, GroupType } from '@models/group-type.enum';
 import { HeaderAction } from '@models/header-action.model';
 import { ApiErrorService } from '@services/api-error.service';
 import { GroupService } from '@services/group.service';
+import { UiMessageService } from '@services/ui-message.service';
 import { HeaderComponent } from '@shared/components/header/header.component';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 
@@ -30,6 +31,7 @@ export class GroupFormComponent {
   private groupService = inject(GroupService);
   private router = inject(Router);
   private apiErrorService = inject(ApiErrorService);
+  private uiMessage = inject(UiMessageService);
   private translate = inject(TranslateService);
 
   groupTypeOptions = GROUP_TYPE_OPTIONS;
@@ -65,7 +67,9 @@ export class GroupFormComponent {
       .subscribe({
         next: () => void this.router.navigate([NAVIGATION_ROUTES.GROUPS]),
         error: (err) => {
-          this.apiErrorService.handleError(err);
+          const message = this.apiErrorService.handleError(err);
+          this.uiMessage.showError(message);
+          this.isSubmitting = false;
         },
       });
   }

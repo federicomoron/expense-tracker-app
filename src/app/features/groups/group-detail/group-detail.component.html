@@ -4,6 +4,12 @@
       <app-spinner [diameter]="72"></app-spinner>
     </div>
   } @else if (group()) {
+    @if (offlineMode()) {
+      <div class="offline-banner">
+        {{ 'groupDetail.offlineCachedData' | translate }}
+      </div>
+    }
+
     <!-- Banner -->
     <div class="group-banner-container">
       <img
@@ -62,7 +68,7 @@
 
     <!-- Expense list -->
     <app-expenses
-      [expenses]="group()?.expenses ?? []"
+      [expenses]="expenses()"
       [groupMembers]="group()?.members ?? []"
       (expenseDeleted)="removeExpenseLocally($event)"
       [groupId]="group()?.id"

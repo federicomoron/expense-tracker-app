@@ -21,6 +21,7 @@ import { ApiErrorService } from '@services/api-error.service';
 import { AuthService } from '@services/auth.service';
 import { DialogService } from '@services/dialog.service';
 import { GroupService } from '@services/group.service';
+import { UiMessageService } from '@services/ui-message.service';
 import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 import { getGroupImage } from '@shared/helpers/group-type-image-map';
 import { CurrencySymbolPipe } from '@shared/pipes/currency-symbol.pipe';
@@ -47,9 +48,11 @@ export class GroupsComponent implements OnInit {
   private readonly groupService = inject(GroupService);
   private readonly router = inject(Router);
   private readonly dialogService = inject(DialogService);
+  private readonly uiMessage = inject(UiMessageService);
 
   readonly showForm = signal(false);
   readonly isLoading = signal(true);
+  readonly offlineMode = signal(false);
   readonly showSettledGroups = signal(localStorage.getItem('showSettledGroups') === 'true');
   private readonly _groupDetails = signal<Record<number, GroupDetailWithExpenses>>({});
   private readonly _detailsCache = new Map<number, Signal<GroupDetailWithExpenses | undefined>>();
@@ -98,7 +101,15 @@ export class GroupsComponent implements OnInit {
       error: (err) => {
         this.isLoading.set(false);
         console.error('Error fetching groups', err);
-        this.apiErrorService.handleError(err);
+        const message = this.apiErrorService.handleError(err);
+        this.uiMessage.showError(message);
+
+        if (this.groups().length > 0) {
+          this.offlineMode.set(true);
+          this.loadGroupDetails();
+        } else {
+          this.isLoading.set(false);
+        }
       },
     });
   }
@@ -156,7 +167,8 @@ export class GroupsComponent implements OnInit {
         if (res.success) this.showForm.set(false);
       },
       error: (err) => {
-        this.apiErrorService.handleError(err);
+        const message = this.apiErrorService.handleError(err);
+        this.uiMessage.showError(message);
       },
     });
   }
