@@ -14,6 +14,24 @@
   &:last-child {
     border-bottom: none;
   }
+
+  &.expense-row-pending {
+    cursor: default;
+    opacity: 0.75;
+  }
+}
+
+.expense-pending-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--app-warning, #b26a00);
+  background-color: var(--app-warning-bg, rgba(178, 106, 0, 0.12));
+  vertical-align: middle;
 }
 
 .expense-date {

@@ -3,4 +3,6 @@ export const STORAGE_KEYS = {
   CURRENT_USER: 'currentUser',
   AUTH_TOKEN: 'authToken',
   GROUPS: 'groups',
+  GROUP_DETAILS: 'groupDetails',
+  PENDING_EXPENSES: 'pendingExpenses',
 };

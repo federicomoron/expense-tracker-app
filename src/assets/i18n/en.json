@@ -72,7 +72,8 @@
     "hide_settled_groups": "Hide settled groups",
     "they_owe_you": "They owe you",
     "no_groups": "You don't have any groups yet",
-    "create_first_group": "Create your first group"
+    "create_first_group": "Create your first group",
+    "offlineCachedData": "You're offline. Showing the last saved data."
   },
   "groupDetail": {
     "theyOweYou": "They owe you",
@@ -86,7 +87,8 @@
     "noExpenses": "No expenses yet",
     "loading": "Loading...",
     "noGroup": "Group not found",
-    "viewAllTime": "All time"
+    "viewAllTime": "All time",
+    "offlineCachedData": "You're offline. Showing the last saved data."
   },
   "groupForm": {
     "title": "New Group",
@@ -135,7 +137,8 @@
     "youBorrowed": "You borrowed",
     "deletedSuccess": "Expense deleted successfully.",
     "deleteError": "Error deleting expense.",
-    "equalParts": "Equal parts"
+    "equalParts": "Equal parts",
+    "pendingSync": "Pending sync"
   },
   "expenseForm": {
     "back": "Go back",
@@ -154,7 +157,8 @@
     "optionOtherPaidEqual": "Paid by {{name}}, split equally",
     "optionOtherIsOwed": "You owe the total amount",
     "nonEmpty": "This field is required",
-    "invalidAmount": "Amount must be greater than 0"
+    "invalidAmount": "Amount must be greater than 0",
+    "savedOffline": "No connection. The expense was saved and will sync automatically when you're back online."
   },
   "expenseDetail": {
     "title": "Expense Details",
@@ -277,6 +281,7 @@
   },
   "error": {
     "unknown": "An unknown error occurred",
+    "network_error": "🚨 The API is not reachable. Some actions may fail.",
     "user_not_found": "User not found",
     "already_member": "User is already a member of the group",
     "unauthorized": "You are not authorized",

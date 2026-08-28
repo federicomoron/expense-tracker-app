@@ -13,6 +13,7 @@ import { HttpService } from '@services/http.service';
 export class GroupService {
   private _groupsSignal = signal<Group[]>(this.loadFromStorage());
   private _activeGroupId = signal<number | null>(null);
+  private readonly _groupDetailCache = this.loadGroupDetailsFromStorage();
 
   readonly groups = computed(() => this._groupsSignal());
   readonly activeGroup = computed(() => {
@@ -52,6 +53,7 @@ export class GroupService {
   clearGroups() {
     this._groupsSignal.set([]);
     this.saveToStorage();
+    this.saveGroupDetailsToStorage();
   }
 
   createGroup(group: CreateGroupPayload): Observable<CreateGroupResponse> {
@@ -70,7 +72,22 @@ export class GroupService {
   getGroupDetail(groupId: number): Observable<GroupDetailWithExpenses> {
     return this.http
       .get<GroupDetailResponse>(`${this.apiUrl}${API_ENDPOINTS.GET_GROUP_DETAIL(groupId)}`)
-      .pipe(map((res) => res.data));
+      .pipe(
+        map((res) => res.data),
+        tap((detail) => {
+          this._groupDetailCache.set(groupId, detail);
+          this.saveGroupDetailsToStorage();
+        }),
+      );
+  }
+
+  getCachedGroupDetail(groupId: number): GroupDetailWithExpenses | null {
+    return this._groupDetailCache.get(groupId) ?? null;
+  }
+
+  invalidateGroupDetail(groupId: number): void {
+    this._groupDetailCache.delete(groupId);
+    this.saveGroupDetailsToStorage();
   }
 
   uploadImage(file: File): Observable<string> {
@@ -126,5 +143,22 @@ export class GroupService {
 
   private saveToStorage() {
     localStorage.setItem(STORAGE_KEYS.GROUPS, JSON.stringify(this._groupsSignal()));
+  }
+
+  private loadGroupDetailsFromStorage(): Map<number, GroupDetailWithExpenses> {
+    const stored = localStorage.getItem(STORAGE_KEYS.GROUP_DETAILS);
+    try {
+      const parsed: [number, GroupDetailWithExpenses][] = stored ? JSON.parse(stored) : [];
+      return new Map(Array.isArray(parsed) ? parsed : []);
+    } catch {
+      return new Map();
+    }
+  }
+
+  private saveGroupDetailsToStorage() {
+    localStorage.setItem(
+      STORAGE_KEYS.GROUP_DETAILS,
+      JSON.stringify(Array.from(this._groupDetailCache.entries())),
+    );
   }
 }

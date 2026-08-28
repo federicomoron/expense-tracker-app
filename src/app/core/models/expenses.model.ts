@@ -14,6 +14,7 @@ export interface Expense {
   }>;
   readonly category?: string;
   readonly iconUrl?: string;
+  readonly isPending?: boolean;
 }
 
 export interface ExpenseUser {
@@ -30,6 +31,7 @@ export interface ExpenseRequest {
   paidBy: ExpenseUser[];
   splits: ExpenseUser[];
   optionId?: PaidByOptionId;
+  clientRequestId: string;
 }
 
 export interface ExpenseResponse {
@@ -42,6 +44,13 @@ export interface ExpenseExtended extends Expense {
   readonly splits?: ExpenseUser[];
   readonly optionId?: PaidByOptionId;
   readonly payerName?: string;
+}
+
+export interface PendingExpense {
+  readonly localId: string;
+  readonly groupId: number;
+  readonly request: ExpenseRequest;
+  readonly createdAt: string;
 }
 
 export interface ExpenseCategory {

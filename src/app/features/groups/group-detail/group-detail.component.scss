@@ -4,6 +4,16 @@
   position: relative;
 }
 
+.offline-banner {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--app-warning, #b26a00);
+  background-color: var(--app-warning-bg, rgba(178, 106, 0, 0.12));
+}
+
 .group-title {
   font-size: 20px;
   font-weight: 600;

@@ -1,3 +1,13 @@
+.offline-banner {
+  margin: 1rem 1rem 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--app-warning, #b26a00);
+  background-color: var(--app-warning-bg, rgba(178, 106, 0, 0.12));
+}
+
 .groups-container {
   position: relative;
   padding: 1rem 1rem 6rem;
