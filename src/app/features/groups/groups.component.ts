@@ -99,14 +99,13 @@ export class GroupsComponent implements OnInit {
     this.groupService.fetchGroups().subscribe({
       next: () => this.loadGroupDetails(),
       error: (err) => {
-        this.isLoading.set(false);
         console.error('Error fetching groups', err);
         const message = this.apiErrorService.handleError(err);
         this.uiMessage.showError(message);
 
         if (this.groups().length > 0) {
           this.offlineMode.set(true);
-          this.loadGroupDetails();
+          this.loadCachedGroupDetails();
         } else {
           this.isLoading.set(false);
         }
@@ -159,6 +158,16 @@ export class GroupsComponent implements OnInit {
       },
       complete: () => this.isLoading.set(false),
     });
+  }
+
+  private loadCachedGroupDetails(): void {
+    const details: Record<number, GroupDetailWithExpenses> = {};
+    for (const g of this.groups()) {
+      const cached = this.groupService.getCachedGroupDetail(g.id);
+      if (cached) details[g.id] = cached;
+    }
+    this._groupDetails.set(details);
+    this.isLoading.set(false);
   }
 
   private addGroup(data: { name: string; type: GroupType }): void {
