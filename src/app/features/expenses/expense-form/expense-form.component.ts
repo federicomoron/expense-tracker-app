@@ -11,7 +11,7 @@ import { PaidByDialogComponent } from '@features/expenses/components/paid-by-dia
 import { PaidByQuickDialogComponent } from '@features/expenses/components/paid-by-quick-dialog/paid-by-quick-dialog.component';
 import { SplitSelectorComponent } from '@features/expenses/components/split-selector/split-selector.component';
 import { ExpenseExtended, ExpenseRequest, ExpenseUser } from '@models/expenses.model';
-import { GroupDetail } from '@models/group-detail.model';
+import { GroupDetail, GroupDetailWithExpenses } from '@models/group-detail.model';
 import { HeaderAction } from '@models/header-action.model';
 import { ApiErrorService } from '@services/api-error.service';
 import { ApiStatusService } from '@services/api-status.service';
@@ -112,125 +112,131 @@ export class ExpenseFormComponent implements OnInit {
     this.groupId = groupId;
 
     this.groupService.getGroupDetail(this.groupId).subscribe({
-      next: (group) => {
-        this.group = group;
-
-        let expenseFromState = history.state?.expense as ExpenseExtended | undefined;
-
-        if (!expenseFromState && this.isEditMode) {
-          expenseFromState = group.expenses?.find((e) => e.id === this.expenseId);
-        }
-
-        if (!expenseFromState) {
-          this.isEditMode = false;
-          this.selectedPaidByOption = {
-            id: 'you_paid_equal',
-            label: this.translate.instant('paidByQuickDialog.youPaidEqual'),
-          };
-          this.selectedOptionIdForSplit = 'you_paid_equal';
-
-          const currentUserId = this.authService.currentUser()?.id;
-          if (currentUserId) {
-            const member = this.group?.members.find((m) => m.userId === currentUserId);
-            this.selectedPayer = member
-              ? { userId: member.userId, name: member.name }
-              : { userId: currentUserId, name: '' };
-          }
-
-          setTimeout(() => {
-            if (this.splitSelectorComponent) {
-              this.splitSelectorComponent.selectedOption.set(this.selectedPaidByOption);
-              if (this.selectedPayer) {
-                this.splitSelectorComponent.setPayer(this.selectedPayer.userId);
-              }
-            }
-          }, 60);
-        } else {
-          this.isEditMode = true;
-          this.expenseToEdit.set(expenseFromState);
-          this.expenseId = expenseFromState.id;
-
-          this.expenseForm.patchValue({
-            description: expenseFromState.description,
-            total: expenseFromState.total,
-            currency: expenseFromState.currency,
-            createdAt: new Date(expenseFromState.createdAt),
-            category: expenseFromState.category || '',
-          });
-
-          if (expenseFromState.category) {
-            this.updateCategoryIcon(expenseFromState.category);
-          }
-
-          const currentUserId = this.authService.currentUser()?.id;
-          let optionId = expenseFromState.optionId as PaidByOptionId | undefined;
-          if (!optionId) {
-            optionId = detectQuickOptionFromParticipants(expenseFromState, currentUserId);
-          }
-
-          let payerId: number | undefined;
-          if (expenseFromState.paidBy && expenseFromState.paidBy.length > 0) {
-            payerId = expenseFromState.paidBy[0].userId;
-          } else if (expenseFromState.participants && expenseFromState.participants.length > 0) {
-            const payer = expenseFromState.participants.find((p) => Number(p.amount) > 0);
-            payerId = payer?.userId;
-          }
-
-          let payerName = '';
-          if (payerId) {
-            const member = group.members.find((m) => m.userId === payerId);
-            payerName = member?.name ?? '';
-          }
-
-          const newLabel = this.mapOptionIdToLabel(optionId!, payerName);
-          this.selectedPaidByOption = { id: optionId!, label: newLabel };
-          this.selectedOptionIdForSplit = optionId!;
-
-          if (payerId) {
-            const member = group.members.find((m) => m.userId === payerId);
-            this.selectedPayer = member ? { userId: member.userId, name: member.name } : null;
-          }
-
-          setTimeout(() => {
-            if (this.splitSelectorComponent) {
-              this.splitSelectorComponent.selectedPayer.set(null);
-              if (this.selectedPayer) {
-                this.splitSelectorComponent.setPayer(this.selectedPayer.userId);
-              }
-              this.splitSelectorComponent.selectedOption.set(this.selectedPaidByOption);
-              this.cdr.detectChanges();
-            }
-          }, 60);
-        }
-
-        this.expenseForm.get('description')?.valueChanges.subscribe((desc: string) => {
-          const lowerDesc = desc?.toLowerCase() || '';
-          const matchedCategory = EXPENSE_CATEGORIES.find(
-            (c) =>
-              c.label.toLowerCase() === lowerDesc ||
-              c.key.toLowerCase() === lowerDesc ||
-              c.keywords?.some((k) => lowerDesc.includes(k)),
-          );
-
-          if (matchedCategory) {
-            this.selectedCategory.set(matchedCategory.key);
-            this.selectedCategoryLabel.set(matchedCategory.label);
-            this.selectedCategoryIcon.set(matchedCategory.icon);
-          } else {
-            this.selectedCategory.set(null);
-            this.selectedCategoryLabel.set(null);
-            this.selectedCategoryIcon.set('/assets/category-default.svg');
-          }
-
-          this.expenseForm.patchValue(
-            { category: matchedCategory?.key || null },
-            { emitEvent: false },
-          );
-        });
-      },
+      next: (group) => this.applyGroupToForm(group),
       error: (err) => {
-        this.apiErrorService.handleError(err);
+        console.error('Error loading group for expense form', err);
+        const cached = this.groupService.getCachedGroupDetail(this.groupId);
+        if (cached) {
+          this.applyGroupToForm(cached);
+        } else {
+          const message = this.apiErrorService.handleError(err);
+          this.uiMessage.showError(message);
+        }
       },
+    });
+  }
+
+  private applyGroupToForm(group: GroupDetailWithExpenses): void {
+    this.group = group;
+
+    let expenseFromState = history.state?.expense as ExpenseExtended | undefined;
+
+    if (!expenseFromState && this.isEditMode) {
+      expenseFromState = group.expenses?.find((e) => e.id === this.expenseId);
+    }
+
+    if (!expenseFromState) {
+      this.isEditMode = false;
+      this.selectedPaidByOption = {
+        id: 'you_paid_equal',
+        label: this.translate.instant('paidByQuickDialog.youPaidEqual'),
+      };
+      this.selectedOptionIdForSplit = 'you_paid_equal';
+
+      const currentUserId = this.authService.currentUser()?.id;
+      if (currentUserId) {
+        const member = this.group?.members.find((m) => m.userId === currentUserId);
+        this.selectedPayer = member
+          ? { userId: member.userId, name: member.name }
+          : { userId: currentUserId, name: '' };
+      }
+
+      setTimeout(() => {
+        if (this.splitSelectorComponent) {
+          this.splitSelectorComponent.selectedOption.set(this.selectedPaidByOption);
+          if (this.selectedPayer) {
+            this.splitSelectorComponent.setPayer(this.selectedPayer.userId);
+          }
+        }
+      }, 60);
+    } else {
+      this.isEditMode = true;
+      this.expenseToEdit.set(expenseFromState);
+      this.expenseId = expenseFromState.id;
+
+      this.expenseForm.patchValue({
+        description: expenseFromState.description,
+        total: expenseFromState.total,
+        currency: expenseFromState.currency,
+        createdAt: new Date(expenseFromState.createdAt),
+        category: expenseFromState.category || '',
+      });
+
+      if (expenseFromState.category) {
+        this.updateCategoryIcon(expenseFromState.category);
+      }
+
+      const currentUserId = this.authService.currentUser()?.id;
+      let optionId = expenseFromState.optionId as PaidByOptionId | undefined;
+      if (!optionId) {
+        optionId = detectQuickOptionFromParticipants(expenseFromState, currentUserId);
+      }
+
+      let payerId: number | undefined;
+      if (expenseFromState.paidBy && expenseFromState.paidBy.length > 0) {
+        payerId = expenseFromState.paidBy[0].userId;
+      } else if (expenseFromState.participants && expenseFromState.participants.length > 0) {
+        const payer = expenseFromState.participants.find((p) => Number(p.amount) > 0);
+        payerId = payer?.userId;
+      }
+
+      let payerName = '';
+      if (payerId) {
+        const member = group.members.find((m) => m.userId === payerId);
+        payerName = member?.name ?? '';
+      }
+
+      const newLabel = this.mapOptionIdToLabel(optionId!, payerName);
+      this.selectedPaidByOption = { id: optionId!, label: newLabel };
+      this.selectedOptionIdForSplit = optionId!;
+
+      if (payerId) {
+        const member = group.members.find((m) => m.userId === payerId);
+        this.selectedPayer = member ? { userId: member.userId, name: member.name } : null;
+      }
+
+      setTimeout(() => {
+        if (this.splitSelectorComponent) {
+          this.splitSelectorComponent.selectedPayer.set(null);
+          if (this.selectedPayer) {
+            this.splitSelectorComponent.setPayer(this.selectedPayer.userId);
+          }
+          this.splitSelectorComponent.selectedOption.set(this.selectedPaidByOption);
+          this.cdr.detectChanges();
+        }
+      }, 60);
+    }
+
+    this.expenseForm.get('description')?.valueChanges.subscribe((desc: string) => {
+      const lowerDesc = desc?.toLowerCase() || '';
+      const matchedCategory = EXPENSE_CATEGORIES.find(
+        (c) =>
+          c.label.toLowerCase() === lowerDesc ||
+          c.key.toLowerCase() === lowerDesc ||
+          c.keywords?.some((k) => lowerDesc.includes(k)),
+      );
+
+      if (matchedCategory) {
+        this.selectedCategory.set(matchedCategory.key);
+        this.selectedCategoryLabel.set(matchedCategory.label);
+        this.selectedCategoryIcon.set(matchedCategory.icon);
+      } else {
+        this.selectedCategory.set(null);
+        this.selectedCategoryLabel.set(null);
+        this.selectedCategoryIcon.set('/assets/category-default.svg');
+      }
+
+      this.expenseForm.patchValue({ category: matchedCategory?.key || null }, { emitEvent: false });
     });
   }
 
