@@ -49,7 +49,11 @@
       "light": "☀️ Claro",
       "dark": "🌙 Oscuro",
       "system": "🖥️ Sistema"
-    }
+    },
+    "claimableGuestsTitle": "Membresías para reclamar",
+    "claim": "Reclamar",
+    "guestClaimed": "Membresía reclamada correctamente",
+    "errorClaimingGuest": "Error al reclamar la membresía"
   },
   "footer": {
     "date": "Fecha",
@@ -109,7 +113,14 @@
     "groupDeleted": "Grupo eliminado correctamente",
     "errorDeleting": "Error eliminando el grupo",
     "alreadyMember": "El usuario ya es miembro del grupo",
-    "emailLabel": "Correo electrónico"
+    "emailLabel": "Correo electrónico",
+    "modeEmail": "Con cuenta",
+    "modeGuest": "Sin cuenta",
+    "guestNameLabel": "Nombre",
+    "guestEmailHintLabel": "Email (opcional, para vincular su cuenta más adelante)",
+    "guestBadge": "Sin cuenta",
+    "guestAdded": "Persona agregada al grupo",
+    "errorAddingGuest": "Error agregando a la persona"
   },
   "confirmDeleteGroup": {
     "title": "Confirmar eliminación",

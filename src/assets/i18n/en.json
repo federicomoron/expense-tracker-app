@@ -49,7 +49,11 @@
       "light": "☀️ Light",
       "dark": "🌙 Dark",
       "system": "🖥️ System"
-    }
+    },
+    "claimableGuestsTitle": "Memberships to claim",
+    "claim": "Claim",
+    "guestClaimed": "Membership claimed successfully",
+    "errorClaimingGuest": "Error claiming the membership"
   },
   "footer": {
     "date": "Date",
@@ -109,7 +113,14 @@
     "groupDeleted": "Group deleted successfully",
     "errorDeleting": "Error deleting group",
     "alreadyMember": "User is already a member of the group",
-    "emailLabel": "Email"
+    "emailLabel": "Email",
+    "modeEmail": "With account",
+    "modeGuest": "Without account",
+    "guestNameLabel": "Name",
+    "guestEmailHintLabel": "Email (optional, to link their account later)",
+    "guestBadge": "No account",
+    "guestAdded": "Member added to the group",
+    "errorAddingGuest": "Error adding member"
   },
   "confirmDeleteGroup": {
     "title": "Confirm delete",

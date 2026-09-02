@@ -20,7 +20,9 @@ import { ConfirmDialogComponent } from '@shared/ui/dialogs/confirm-dialog.compon
   styleUrls: ['./group-actions-modal.component.scss'],
 })
 export class GroupActionsModalComponent implements OnInit {
-  public readonly members = signal<{ name: string; email: string; invitedUserId?: number }[]>([]);
+  public readonly members = signal<
+    { name: string; email: string; invitedUserId?: number; isGuest: boolean }[]
+  >([]);
   public readonly isLoading = signal(true);
 
   public readonly dialogRef = inject(MatDialogRef<GroupActionsModalComponent>);
@@ -84,6 +86,7 @@ export class GroupActionsModalComponent implements OnInit {
           name: member.name,
           email: '',
           invitedUserId: member.userId,
+          isGuest: member.isGuest,
         }));
 
         this.members.set([...confirmed]);

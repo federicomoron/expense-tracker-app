@@ -9,6 +9,8 @@ import { UiMessageService } from '@services/ui-message.service';
 import { HeaderComponent } from '@shared/components/header/header.component';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 
+type AddMemberMode = 'email' | 'guest';
+
 @Component({
   selector: 'app-add-member-dialog',
   standalone: true,
@@ -18,7 +20,10 @@ import { SharedMaterialModule } from '@shared/shared-material.module';
 })
 export class AddMemberDialogComponent {
   readonly isSubmitting = signal(false);
+  readonly mode = signal<AddMemberMode>('email');
   readonly email = signal('');
+  readonly name = signal('');
+  readonly claimEmail = signal('');
 
   public readonly dialogRef = inject(MatDialogRef<AddMemberDialogComponent>);
   public readonly data = inject(MAT_DIALOG_DATA) as { groupId: number };
@@ -39,12 +44,29 @@ export class AddMemberDialogComponent {
     ];
   }
 
+  get isSubmitDisabled(): boolean {
+    return this.mode() === 'email' ? !this.email() : !this.name();
+  }
+
+  setMode(mode: AddMemberMode): void {
+    this.mode.set(mode);
+  }
+
   addMember(): void {
-    if (!this.email() || this.isSubmitting()) return;
+    if (this.isSubmitDisabled || this.isSubmitting()) return;
 
     this.isSubmitting.set(true);
 
-    this.groupService.addMember(this.data.groupId, this.email()).subscribe({
+    const request$ =
+      this.mode() === 'email'
+        ? this.groupService.addMember(this.data.groupId, this.email())
+        : this.groupService.addGuestMember(
+            this.data.groupId,
+            this.name(),
+            this.claimEmail() || undefined,
+          );
+
+    request$.subscribe({
       next: (res) => {
         this.isSubmitting.set(false);
         if (res.success) {
@@ -55,7 +77,7 @@ export class AddMemberDialogComponent {
         }
       },
       error: (err) => {
-        console.error('Error sending invitation', err);
+        console.error('Error adding member', err);
         this.isSubmitting.set(false);
         const message = this.apiErrorService.handleError(err);
         this.uiMessage.showError(message);
@@ -70,5 +92,15 @@ export class AddMemberDialogComponent {
   updateEmail(event: Event) {
     const target = event.target as HTMLInputElement;
     this.email.set(target.value);
+  }
+
+  updateName(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.name.set(target.value);
+  }
+
+  updateClaimEmail(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.claimEmail.set(target.value);
   }
 }

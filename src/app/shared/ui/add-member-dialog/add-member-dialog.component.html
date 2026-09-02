@@ -7,9 +7,31 @@
     (back)="close()"
   ></app-header>
 
-  <!-- Input -->
+  <!-- Mode toggle -->
   <div class="content">
-    <label class="flat-input-label">{{ 'groupActions.emailLabel' | translate }}</label>
-    <input class="flat-input" [value]="email()" (input)="updateEmail($event)" type="email" />
+    <div class="mode-toggle">
+      <button type="button" [class.active]="mode() === 'email'" (click)="setMode('email')">
+        {{ 'groupActions.modeEmail' | translate }}
+      </button>
+      <button type="button" [class.active]="mode() === 'guest'" (click)="setMode('guest')">
+        {{ 'groupActions.modeGuest' | translate }}
+      </button>
+    </div>
+
+    @if (mode() === 'email') {
+      <label class="flat-input-label">{{ 'groupActions.emailLabel' | translate }}</label>
+      <input class="flat-input" [value]="email()" (input)="updateEmail($event)" type="email" />
+    } @else {
+      <label class="flat-input-label">{{ 'groupActions.guestNameLabel' | translate }}</label>
+      <input class="flat-input" [value]="name()" (input)="updateName($event)" type="text" />
+
+      <label class="flat-input-label">{{ 'groupActions.guestEmailHintLabel' | translate }}</label>
+      <input
+        class="flat-input"
+        [value]="claimEmail()"
+        (input)="updateClaimEmail($event)"
+        type="email"
+      />
+    }
   </div>
 </div>
