@@ -94,6 +94,30 @@
   }
 }
 
+.claimable-guests {
+  margin-bottom: 0.5rem;
+
+  h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--app-text);
+    margin: 0 0 0.6rem 0;
+  }
+}
+
+.claimable-guest-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.claimable-guest-name {
+  font-size: 0.95rem;
+  color: var(--app-text);
+}
+
 .pwa-button {
   display: block;
   margin-bottom: 1.5rem;

@@ -12,6 +12,28 @@
     </div>
 
     <mat-divider class="account-divider"></mat-divider>
+
+    @if (claimableGuests().length > 0) {
+      <div class="claimable-guests">
+        <h3>{{ 'account.claimableGuestsTitle' | translate }}</h3>
+        @for (guest of claimableGuests(); track guest.userId) {
+          <div class="claimable-guest-row">
+            <span class="claimable-guest-name">{{ guest.name }}</span>
+            <button
+              type="button"
+              mat-stroked-button
+              color="primary"
+              [disabled]="claimingUserId() === guest.userId"
+              (click)="claimGuest(guest.userId)"
+            >
+              {{ 'account.claim' | translate }}
+            </button>
+          </div>
+        }
+      </div>
+      <mat-divider class="account-divider"></mat-divider>
+    }
+
     <div class="lang-container">
       <button type="button" (click)="toggleLang()" class="lang-toggle" aria-label="Change language">
         <img
