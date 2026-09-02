@@ -76,6 +76,22 @@ export class AuthService {
     this._isSessionRestored.set(true);
   }
 
+  getClaimableGuests() {
+    const apiUrl = this.getApiUrl();
+    return this.http.get<{ success: boolean; data: { userId: number; name: string }[] }>(
+      `${apiUrl}${API_ENDPOINTS.CLAIMABLE_GUESTS}`,
+    );
+  }
+
+  claimGuestMembership(guestUserId: number) {
+    const apiUrl = this.getApiUrl();
+    const payload = { guestUserId };
+    return this.http.post<{ success: boolean; message: string }, typeof payload>(
+      `${apiUrl}${API_ENDPOINTS.CLAIM_GUEST_MEMBERSHIP}`,
+      payload,
+    );
+  }
+
   private getApiUrl(): string {
     return this.env.apiUrl || 'http://localhost:4200/api';
   }

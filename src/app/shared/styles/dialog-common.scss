@@ -110,6 +110,44 @@ mat-list-item {
   color: var(--app-text);
 }
 
+.guest-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--app-muted);
+  background-color: rgba(var(--app-text-rgb), 0.08);
+  vertical-align: middle;
+}
+
+.mode-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1rem;
+
+  button {
+    flex: 1;
+    border: 1px solid var(--app-primary);
+    background: transparent;
+    color: var(--app-primary);
+    border-radius: var(--app-radius);
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+
+    &.active {
+      background-color: var(--app-primary);
+      color: var(--app-on-primary, #fff);
+    }
+  }
+}
+
 .flat-input-label {
   font-size: 12px;
   color: var(--app-muted);

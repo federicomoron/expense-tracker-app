@@ -125,6 +125,14 @@ export class GroupService {
     );
   }
 
+  addGuestMember(groupId: number, name: string, claimEmail?: string) {
+    const payload = { name, claimEmail };
+    return this.http.post<{ success: boolean; message: string }, typeof payload>(
+      `${this.apiUrl}${API_ENDPOINTS.ADD_GUEST_MEMBER(groupId)}`,
+      payload,
+    );
+  }
+
   getGroupInvitations(groupId: number) {
     return this.http
       .get<{ success: boolean; data: any[] }>(`${this.apiUrl}${API_ENDPOINTS.GET_INVITATIONS}`)
