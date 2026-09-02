@@ -11,7 +11,12 @@
         (click)="choose(member)"
         [class.selected]="selected()?.userId === member.userId"
       >
-        <span class="member-name">{{ member.name }}</span>
+        <span class="member-name">
+          {{ member.name }}
+          @if (member.isGuest) {
+            <span class="guest-badge">{{ 'groupActions.guestBadge' | translate }}</span>
+          }
+        </span>
       </mat-list-item>
     }
   </mat-nav-list>

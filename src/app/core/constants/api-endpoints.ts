@@ -11,4 +11,7 @@ export const API_ENDPOINTS = {
   GET_INVITATIONS: '/invitations/all',
   ACCEPT_INVITATION: '/invitations/accept',
   REJECT_INVITATION: '/invitations/reject',
+  ADD_GUEST_MEMBER: (groupId: number) => `/groups/${groupId}/members/guest`,
+  CLAIMABLE_GUESTS: '/users/claimable-guests',
+  CLAIM_GUEST_MEMBERSHIP: '/users/claim-guest',
 };

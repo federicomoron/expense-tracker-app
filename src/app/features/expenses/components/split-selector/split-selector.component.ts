@@ -6,6 +6,7 @@ import { PaidByOption, PaidByOptionId } from '@core/models/paid-by-option.model'
 import { PaidByDialogComponent } from '@features/expenses/components/paid-by-dialog/paid-by-dialog.component';
 import { PaidByQuickDialogComponent } from '@features/expenses/components/paid-by-quick-dialog/paid-by-quick-dialog.component';
 import { SplitTypeDialogComponent } from '@features/expenses/components/split-type-dialog/split-type-dialog.component';
+import { GroupMember } from '@models/group-detail.model';
 import { AuthService } from '@services/auth.service';
 import { DialogService } from '@services/dialog.service';
 import { getDefaultPaidByLabel, getPaidByLabelFromId } from '@shared/helpers/expense.utils';
@@ -23,12 +24,12 @@ export class SplitSelectorComponent {
   private readonly dialogService = inject(DialogService);
   private readonly translate = inject(TranslateService);
 
-  private _groupMembers: { userId: number; name: string }[] = [];
+  private _groupMembers: GroupMember[] = [];
 
   @Output() payerChanged = new EventEmitter<{ userId: number; name: string } | PaidByOption>();
 
   @Input()
-  set groupMembers(members: readonly { userId: number; name: string }[]) {
+  set groupMembers(members: readonly GroupMember[]) {
     this._groupMembers = [...members];
 
     // Update selected option label if it depends on other member
@@ -41,7 +42,7 @@ export class SplitSelectorComponent {
     }
   }
 
-  get groupMembers(): { userId: number; name: string }[] {
+  get groupMembers(): GroupMember[] {
     return this._groupMembers;
   }
 

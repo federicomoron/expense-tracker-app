@@ -25,8 +25,12 @@
           @for (member of members(); track member.invitedUserId ?? member.email) {
             <mat-list-item>
               <div class="member-info">
-                <span class="member-name">{{ member.name }}</span>
-                <span class="member-email">{{ member.email }}</span>
+                <span class="member-name">
+                  {{ member.name }}
+                  @if (member.isGuest) {
+                    <span class="guest-badge">{{ 'groupActions.guestBadge' | translate }}</span>
+                  }
+                </span>
               </div>
             </mat-list-item>
           }

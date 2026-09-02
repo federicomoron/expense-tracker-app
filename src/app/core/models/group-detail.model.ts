@@ -3,6 +3,7 @@ import { Expense } from '@models/expenses.model';
 export interface GroupMember {
   readonly userId: number;
   readonly name: string;
+  readonly isGuest: boolean;
 }
 
 export interface GroupMemberBalance extends GroupMember {
