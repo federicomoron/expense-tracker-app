@@ -5,4 +5,5 @@ export const STORAGE_KEYS = {
   GROUPS: 'groups',
   GROUP_DETAILS: 'groupDetails',
   PENDING_EXPENSES: 'pendingExpenses',
+  PENDING_PAYMENTS: 'pendingPayments',
 };
