@@ -8,10 +8,11 @@
       @for (entry of groupedExpenses(); track entry[0]) {
         <div class="month-header">{{ entry[0] }}</div>
 
-        @for (exp of entry[1]; track exp.id) {
+        @for (exp of entry[1]; track exp.type + '-' + exp.id) {
           <div
             class="expense-row"
             [class.expense-row-pending]="exp.isPending"
+            [class.expense-row-payment]="exp.type === 'payment'"
             (click)="openExpenseDetail(exp)"
           >
             <div class="expense-date">
@@ -20,31 +21,52 @@
             </div>
 
             <div class="expense-icon">
-              <img [src]="exp.categoryIcon" alt="{{ 'expenses.iconAlt' | translate }}" />
+              @if (exp.type === 'payment') {
+                <mat-icon class="payment-icon">sync_alt</mat-icon>
+              } @else {
+                <img [src]="exp.categoryIcon" alt="{{ 'expenses.iconAlt' | translate }}" />
+              }
             </div>
 
             <div class="expense-info">
-              <div class="expense-description">
-                {{ exp.description }}
-                @if (exp.isPending) {
-                  <span class="expense-pending-badge">{{
-                    'expenses.pendingSync' | translate
-                  }}</span>
-                }
-              </div>
-              <div class="expense-paid-by">{{ exp.paidByText }}</div>
+              @if (exp.type === 'expense') {
+                <div class="expense-description">
+                  {{ exp.description }}
+                  @if (exp.isPending) {
+                    <span class="expense-pending-badge">{{
+                      'expenses.pendingSync' | translate
+                    }}</span>
+                  }
+                </div>
+              } @else {
+                <div class="expense-description">
+                  {{ exp.paidByText }}
+                  @if (exp.isPending) {
+                    <span class="expense-pending-badge">{{
+                      'expenses.pendingSync' | translate
+                    }}</span>
+                  }
+                </div>
+              }
+              @if (exp.type === 'expense') {
+                <div class="expense-paid-by">{{ exp.paidByText }}</div>
+              }
             </div>
 
             <div class="expense-lend">
-              <div
-                class="expense-lend-label"
-                [ngClass]="{
-                  positive: exp.userLent > 0,
-                  negative: exp.userLent < 0,
-                }"
-              >
-                {{ exp.lendLabel }}
-              </div>
+              @if (exp.type === 'expense') {
+                <div
+                  class="expense-lend-label"
+                  [ngClass]="{
+                    positive: exp.userLent > 0,
+                    negative: exp.userLent < 0,
+                  }"
+                >
+                  {{ exp.lendLabel }}
+                </div>
+              } @else {
+                <div class="expense-lend-label">{{ exp.lendLabel }}</div>
+              }
 
               <div class="expense-lend-amount">
                 {{ exp.currency | currencySymbol }}{{ Math.abs(exp.userLent) | number: '1.2-2' }}

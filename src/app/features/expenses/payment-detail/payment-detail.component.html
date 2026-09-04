@@ -1,0 +1,30 @@
+<app-header
+  [title]="'paymentDetail.title' | translate"
+  [showBack]="true"
+  [actions]="headerActions"
+  (back)="closeDialog()"
+></app-header>
+
+@if (payment()) {
+  @let p = payment()!;
+
+  <div class="payment-detail-wrapper">
+    <div class="settle-summary">
+      <div class="member-avatar">{{ getInitials(p.fromName) }}</div>
+      <mat-icon>arrow_forward</mat-icon>
+      <div class="member-avatar">{{ getInitials(p.toName) }}</div>
+    </div>
+
+    <p class="payment-names">{{ p.fromName }} → {{ p.toName }}</p>
+
+    <div class="payment-amount">
+      {{ p.currency | currencySymbol }}{{ p.amount | number: '1.2-2' }}
+    </div>
+
+    <p class="payment-date">{{ p.createdAt | date: 'mediumDate' }}</p>
+  </div>
+} @else {
+  <div class="loading-spinner">
+    <app-spinner size="large"></app-spinner>
+  </div>
+}

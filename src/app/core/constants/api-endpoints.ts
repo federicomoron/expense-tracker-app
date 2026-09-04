@@ -14,4 +14,7 @@ export const API_ENDPOINTS = {
   ADD_GUEST_MEMBER: (groupId: number) => `/groups/${groupId}/members/guest`,
   CLAIMABLE_GUESTS: '/users/claimable-guests',
   CLAIM_GUEST_MEMBERSHIP: '/users/claim-guest',
+  CREATE_PAYMENT: '/payments/create',
+  UPDATE_PAYMENT: (paymentId: number) => `/payments/${paymentId}`,
+  DELETE_PAYMENT: (paymentId: number) => `/payments/${paymentId}`,
 };

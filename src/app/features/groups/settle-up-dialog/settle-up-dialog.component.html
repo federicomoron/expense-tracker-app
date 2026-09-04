@@ -1,0 +1,95 @@
+<div class="dialog-container">
+  <!-- Header -->
+  <app-header
+    [title]="(isEditing ? 'settleUp.editTitle' : 'settleUp.title') | translate"
+    [showBack]="true"
+    (back)="close()"
+  ></app-header>
+
+  <div class="content">
+    <div class="settle-summary">
+      <div class="member-avatar">{{ getInitials(fromName) }}</div>
+      <mat-icon>arrow_forward</mat-icon>
+      <div class="member-avatar">{{ getInitials(toName) }}</div>
+    </div>
+
+    @if (!hasPreset) {
+      <label class="flat-input-label">{{ 'settleUp.fromLabel' | translate }}</label>
+      <mat-form-field appearance="fill" class="member-select">
+        <mat-select [value]="fromUserId()" (selectionChange)="setFromUserId($event)">
+          @for (m of fromOptions; track m.userId) {
+            <mat-option [value]="m.userId">{{ m.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <label class="flat-input-label">{{ 'settleUp.toLabel' | translate }}</label>
+      <mat-form-field appearance="fill" class="member-select">
+        <mat-select [value]="toUserId()" (selectionChange)="setToUserId($event)">
+          @for (m of toOptions; track m.userId) {
+            <mat-option [value]="m.userId">{{ m.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <label class="flat-input-label">{{ 'settleUp.currencyLabel' | translate }}</label>
+      <div class="mode-toggle">
+        <button type="button" [class.active]="currency() === 'ARS'" (click)="setCurrency('ARS')">
+          ARS
+        </button>
+        <button type="button" [class.active]="currency() === 'USD'" (click)="setCurrency('USD')">
+          USD
+        </button>
+      </div>
+    }
+
+    <div class="amount-display">
+      <span class="currency-symbol">{{ currency() | currencySymbol }}</span>
+      <input
+        #amountInput
+        class="amount-input"
+        type="number"
+        min="0.01"
+        step="0.01"
+        [value]="amount()"
+        (input)="updateAmount($event)"
+      />
+      <button
+        type="button"
+        class="edit-amount-button"
+        [attr.aria-label]="'settleUp.amountLabel' | translate"
+        (click)="amountInput.focus()"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+    </div>
+
+    @if (hasPreset) {
+      <button type="button" class="full-amount-button" (click)="useFullAmount()">
+        {{ 'settleUp.useFullAmount' | translate }}
+      </button>
+    }
+
+    <div class="info-banner">
+      <mat-icon>info</mat-icon>
+      <span>{{ 'settleUp.infoBanner' | translate }}</span>
+    </div>
+  </div>
+
+  <div class="submit-bar">
+    <button
+      type="button"
+      mat-raised-button
+      color="primary"
+      class="submit-button"
+      [disabled]="isSubmitDisabled || isSubmitting()"
+      (click)="submit()"
+    >
+      @if (isSubmitting()) {
+        <app-spinner [diameter]="20"></app-spinner>
+      } @else {
+        {{ (isEditing ? 'settleUp.saveChanges' : 'settleUp.submit') | translate }}
+      }
+    </button>
+  </div>
+</div>

@@ -13,15 +13,17 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ExpensesComponent } from '@features/expenses/expenses/expenses.component';
 import { GroupActionButtonsComponent } from '@features/groups/group-action-buttons/group-action-buttons.component';
 import { GroupActionsModalComponent } from '@features/groups/group-actions-modal/group-actions-modal.component';
-import { Expense } from '@models/expenses.model';
+import { GroupBalancesDialogComponent } from '@features/groups/group-balances-dialog/group-balances-dialog.component';
 import { GroupDetailWithExpenses } from '@models/group-detail.model';
 import { GroupType } from '@models/group-type.enum';
+import { GroupActivityItem } from '@models/payment.model';
 import { ApiErrorService } from '@services/api-error.service';
 import { AuthService } from '@services/auth.service';
 import { DialogService } from '@services/dialog.service';
 import { GroupService } from '@services/group.service';
 import { LayoutService } from '@services/layout.service';
 import { PendingExpensesService } from '@services/pending-expenses.service';
+import { PendingPaymentsService } from '@services/pending-payments.service';
 import { UiMessageService } from '@services/ui-message.service';
 import { SpinnerComponent } from '@shared/components/spinner/spinner.component';
 import { getGroupImage } from '@shared/helpers/group-type-image-map';
@@ -54,6 +56,7 @@ export class GroupDetailComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly dialogService = inject(DialogService);
   private readonly pendingExpensesService = inject(PendingExpensesService);
+  private readonly pendingPaymentsService = inject(PendingPaymentsService);
   private readonly uiMessage = inject(UiMessageService);
 
   readonly groupId = signal(Number(this.route.snapshot.paramMap.get('id')));
@@ -69,7 +72,7 @@ export class GroupDetailComponent implements OnInit {
     const g = this.group();
     const userId = this.currentUser()?.id;
     if (!g || !userId) return [];
-    return g.memberBalances.filter((mb) => mb.userId === userId);
+    return g.memberBalances.filter((mb) => mb.userId !== userId && mb.amount !== 0);
   });
 
   readonly filteredSummary = computed(() => {
@@ -80,10 +83,12 @@ export class GroupDetailComponent implements OnInit {
   });
 
   private readonly pendingExpenses = this.pendingExpensesService.getPendingForGroup(this.groupId());
+  private readonly pendingPayments = this.pendingPaymentsService.getPendingForGroup(this.groupId());
 
-  readonly expenses = computed<Expense[]>(() => {
-    const pendingAsExpenses: Expense[] = this.pendingExpenses().map((p) => ({
-      id: this.hashLocalId(p.localId),
+  readonly activity = computed<GroupActivityItem[]>(() => {
+    const pendingAsExpenses: GroupActivityItem[] = this.pendingExpenses().map((p) => ({
+      type: 'expense',
+      id: this.hashLocalId(`expense:${p.localId}`),
       groupId: p.groupId,
       description: p.request.description,
       total: p.request.total,
@@ -94,16 +99,40 @@ export class GroupDetailComponent implements OnInit {
       isPending: true,
     }));
 
-    return [...pendingAsExpenses, ...(this.group()?.expenses ?? [])];
+    const pendingAsPayments: GroupActivityItem[] = this.pendingPayments().map((p) => ({
+      type: 'payment',
+      id: this.hashLocalId(`payment:${p.localId}`),
+      groupId: p.groupId,
+      fromUserId: p.request.fromUserId,
+      toUserId: p.request.toUserId,
+      amount: p.request.amount,
+      currency: p.request.currency,
+      title: p.request.title,
+      createdAt: p.request.createdAt ?? p.createdAt,
+      updatedAt: p.createdAt,
+      participants: [
+        { userId: p.request.fromUserId, amount: p.request.amount },
+        { userId: p.request.toUserId, amount: -p.request.amount },
+      ],
+      isPending: true,
+    }));
+
+    return [...pendingAsExpenses, ...pendingAsPayments, ...(this.group()?.activity ?? [])];
   });
 
   ngOnInit() {
     this.layout.disableTopPadding();
+    this.loadGroupDetail();
+  }
+
+  private loadGroupDetail() {
+    this.loading.set(true);
     this.groupService.getGroupDetail(this.groupId()).subscribe({
       next: (data) => {
         this.group.set(data as GroupDetailWithExpenses);
         (window as any).currentGroupDetail = data;
         this.loading.set(false);
+        this.offlineMode.set(false);
       },
       error: (err) => {
         console.error('Error loading group detail', err);
@@ -133,7 +162,7 @@ export class GroupDetailComponent implements OnInit {
       if (!g) return g;
       return {
         ...g,
-        expenses: g.expenses?.filter((e) => e.id !== expenseId) ?? [],
+        activity: g.activity.filter((item) => !(item.type === 'expense' && item.id === expenseId)),
       };
     });
   }
@@ -150,6 +179,22 @@ export class GroupDetailComponent implements OnInit {
     this.dialogService.openFullScreen(GroupActionsModalComponent, {
       groupId: this.groupId(),
       groupName: this.group()?.name,
+    });
+  }
+
+  openGroupBalances() {
+    const g = this.group();
+    if (!g) return;
+
+    const dialogRef = this.dialogService.openFullScreen(GroupBalancesDialogComponent, {
+      groupId: this.groupId(),
+      members: g.members,
+      memberBalances: this.filteredMemberBalances(),
+      balanceSummary: this.filteredSummary(),
+    });
+
+    dialogRef.afterClosed().subscribe((result: { created?: boolean } | undefined) => {
+      if (result?.created) this.loadGroupDetail();
     });
   }
 }
