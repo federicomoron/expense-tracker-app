@@ -64,6 +64,20 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'groups/:groupId/payments/:paymentId',
+    component: FullscreenLayoutComponent,
+    canActivateChild: [authGuard, groupGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('@features/expenses/payment-detail/payment-detail.component').then(
+            (m) => m.PaymentDetailComponent,
+          ),
+      },
+    ],
+  },
   // Layout with header + footer
   {
     path: '',

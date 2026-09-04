@@ -1,3 +1,4 @@
+import { HttpHeaders } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { map, Observable, tap } from 'rxjs';
 
@@ -6,6 +7,7 @@ import { STORAGE_KEYS } from '@constants/storage-keys';
 import { GroupDetailResponse, GroupDetailWithExpenses } from '@models/group-detail.model';
 import { CreateGroupPayload, CreateGroupResponse } from '@models/group-request.model';
 import { Group } from '@models/group.model';
+import { CreatePaymentPayload, PaymentResponse, UpdatePaymentPayload } from '@models/payment.model';
 import { EnvironmentService } from '@services/environment.service';
 import { HttpService } from '@services/http.service';
 
@@ -131,6 +133,32 @@ export class GroupService {
       `${this.apiUrl}${API_ENDPOINTS.ADD_GUEST_MEMBER(groupId)}`,
       payload,
     );
+  }
+
+  createPayment(payload: CreatePaymentPayload): Observable<PaymentResponse> {
+    return this.http
+      .post<
+        PaymentResponse,
+        CreatePaymentPayload
+      >(`${this.apiUrl}${API_ENDPOINTS.CREATE_PAYMENT}`, payload)
+      .pipe(tap(() => this.invalidateGroupDetail(payload.groupId)));
+  }
+
+  updatePayment(paymentId: number, payload: UpdatePaymentPayload): Observable<PaymentResponse> {
+    return this.http
+      .put<
+        PaymentResponse,
+        UpdatePaymentPayload
+      >(`${this.apiUrl}${API_ENDPOINTS.UPDATE_PAYMENT(paymentId)}`, payload)
+      .pipe(tap((res) => this.invalidateGroupDetail(res.data.groupId)));
+  }
+
+  deletePayment(paymentId: number, groupId: number): Observable<void> {
+    return this.http
+      .delete<void>(`${this.apiUrl}${API_ENDPOINTS.DELETE_PAYMENT(paymentId)}`, {
+        headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      })
+      .pipe(tap(() => this.invalidateGroupDetail(groupId)));
   }
 
   getGroupInvitations(groupId: number) {

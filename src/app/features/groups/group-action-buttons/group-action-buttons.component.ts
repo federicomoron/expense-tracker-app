@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -16,6 +16,7 @@ export class GroupActionButtonsComponent {
   private router = inject(Router);
 
   @Input() groupId!: number;
+  @Output() settleUp = new EventEmitter<void>();
 
   goToTotals() {
     void this.router.navigate(['/groups', this.groupId, 'totals']);

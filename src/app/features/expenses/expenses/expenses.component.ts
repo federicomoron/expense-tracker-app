@@ -7,6 +7,7 @@ import { ExpenseFormComponent } from '@features/expenses/expense-form/expense-fo
 import { User } from '@models/auth.model';
 import { Expense, ExpenseExtended, ExpenseUser } from '@models/expenses.model';
 import { GroupMember } from '@models/group-detail.model';
+import { GroupActivityItem } from '@models/payment.model';
 import { ApiErrorService } from '@services/api-error.service';
 import { AuthService } from '@services/auth.service';
 import { DialogService } from '@services/dialog.service';
@@ -23,11 +24,25 @@ import { CurrencySymbolPipe } from '@shared/pipes/currency-symbol.pipe';
 import { SharedMaterialModule } from '@shared/shared-material.module';
 
 interface ProcessedExpense extends Expense {
+  readonly type: 'expense';
   readonly paidByText: string;
   readonly userLent: number;
   readonly lendLabel: string;
   readonly categoryIcon: string;
 }
+
+interface ProcessedPayment {
+  readonly id: number;
+  readonly type: 'payment';
+  readonly currency: string;
+  readonly createdAt: string;
+  readonly paidByText: string;
+  readonly userLent: number;
+  readonly lendLabel: string;
+  readonly isPending?: boolean;
+}
+
+type ProcessedActivityItem = ProcessedExpense | ProcessedPayment;
 
 @Component({
   selector: 'app-expenses',
@@ -48,7 +63,7 @@ export class ExpensesComponent {
   private readonly dialogService = inject(DialogService);
   private readonly uiMessage = inject(UiMessageService);
 
-  readonly expenses = input<Expense[]>([]);
+  readonly expenses = input<GroupActivityItem[]>([]);
   readonly loading = input(false);
   readonly groupMembers = input<ReadonlyArray<{ userId: number; name: string }>>([]);
   readonly groupId = input<number | undefined>();
@@ -57,46 +72,99 @@ export class ExpensesComponent {
   private readonly currentUser = computed(() => this.authService.currentUser());
 
   readonly processedExpenses = computed(() => {
-    const expenses = this.expenses();
+    const items = this.expenses();
     const user = this.currentUser();
     const members = this.groupMembers();
 
-    return expenses.map(
-      (exp) =>
-        ({
-          ...exp,
-          paidByText: this.computePaidByText(exp, user, members),
-          userLent: this.computeUserLent(exp, user, members),
-          lendLabel: this.computeLendLabel(exp, user, members),
-          categoryIcon: this.computeCategoryIcon(exp.description || ''),
-        }) as ProcessedExpense,
-    );
+    return items.map((item): ProcessedActivityItem => {
+      if (item.type === 'payment') return this.processPayment(item, members);
+      return {
+        ...item,
+        type: 'expense',
+        paidByText: this.computePaidByText(item, user, members),
+        userLent: this.computeUserLent(item, user, members),
+        lendLabel: this.computeLendLabel(item, user, members),
+        categoryIcon: this.computeCategoryIcon(item.description || ''),
+      };
+    });
   });
 
   readonly groupedExpenses = computed(() => {
     const expenses = this.processedExpenses();
-    const map = new Map<string, ProcessedExpense[]>();
+    const map = new Map<
+      string,
+      { label: string; year: number; month: number; items: ProcessedActivityItem[] }
+    >();
 
     for (const exp of expenses) {
       const date = new Date(exp.createdAt);
-      const month = date.toLocaleString('default', { month: 'long' });
       const year = date.getFullYear();
-      const key = `${this.capitalizeFirstLetter(month)} ${year}`;
+      const month = date.getMonth();
+      const key = `${year}-${month}`;
 
-      if (!map.has(key)) map.set(key, []);
-      map.get(key)!.push(exp);
+      if (!map.has(key)) {
+        const label = `${this.capitalizeFirstLetter(
+          date.toLocaleString('default', { month: 'long' }),
+        )} ${year}`;
+        map.set(key, { label, year, month, items: [] });
+      }
+      map.get(key)!.items.push(exp);
     }
 
-    return Array.from(map.entries());
+    return Array.from(map.values())
+      .sort((a, b) => b.year - a.year || b.month - a.month)
+      .map((group): [string, ProcessedActivityItem[]] => [
+        group.label,
+        group.items.sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        ),
+      ]);
   });
 
   readonly totalAmount = computed(() =>
-    this.expenses().reduce((sum, e) => sum + Number(e.total), 0),
+    this.expenses()
+      .filter((item): item is Expense & { type: 'expense' } => item.type === 'expense')
+      .reduce((sum, e) => sum + Number(e.total), 0),
   );
 
-  openExpenseDetail(expense: Expense) {
-    if (expense.isPending) return;
-    void this.router.navigate(['/groups', this.groupId(), 'expenses', expense.id]);
+  openExpenseDetail(item: ProcessedActivityItem) {
+    if (item.isPending) return;
+
+    if (item.type === 'payment') {
+      void this.router.navigate(['/groups', this.groupId(), 'payments', item.id]);
+      return;
+    }
+
+    void this.router.navigate(['/groups', this.groupId(), 'expenses', item.id]);
+  }
+
+  private processPayment(
+    payment: Extract<GroupActivityItem, { type: 'payment' }>,
+    members: ReadonlyArray<{ userId: number; name: string }>,
+  ): ProcessedPayment {
+    const fromName = this.resolveMemberName(payment.fromUserId, members);
+    const toName = this.resolveMemberName(payment.toUserId, members);
+
+    return {
+      id: payment.id,
+      type: 'payment',
+      currency: payment.currency,
+      createdAt: payment.createdAt,
+      paidByText: this.translate.instant('expenses.paymentLine', {
+        from: fromName,
+        to: toName,
+      }),
+      userLent: Number(payment.amount),
+      lendLabel: this.translate.instant('expenses.paymentLabel'),
+      isPending: payment.isPending,
+    };
+  }
+
+  private resolveMemberName(
+    userId: number,
+    members: ReadonlyArray<{ userId: number; name: string }>,
+  ): string {
+    return members.find((m) => m.userId === userId)?.name ?? '';
   }
 
   openExpenseForm(expense: Expense) {

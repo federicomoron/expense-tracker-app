@@ -26,6 +26,7 @@ import { connectivityInitializer } from '@services/connectivity-init';
 import { i18nInitializer } from '@services/i18n-init';
 import { I18nService } from '@services/i18n.service';
 import { PendingExpensesService } from '@services/pending-expenses.service';
+import { PendingPaymentsService } from '@services/pending-payments.service';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, '/assets/i18n/', '.json');
@@ -75,7 +76,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_INITIALIZER,
       useFactory: connectivityInitializer,
-      deps: [ApiStatusService, PendingExpensesService],
+      deps: [ApiStatusService, PendingExpensesService, PendingPaymentsService],
       multi: true,
     },
     {

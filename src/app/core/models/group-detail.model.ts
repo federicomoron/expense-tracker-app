@@ -1,4 +1,4 @@
-import { Expense } from '@models/expenses.model';
+import { GroupActivityItem } from '@models/payment.model';
 
 export interface GroupMember {
   readonly userId: number;
@@ -23,7 +23,7 @@ export interface GroupDetail {
 }
 
 export interface GroupDetailWithExpenses extends GroupDetail {
-  readonly expenses?: Expense[];
+  readonly activity: GroupActivityItem[];
   readonly imageUrl?: string;
 }
 

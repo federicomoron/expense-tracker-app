@@ -82,6 +82,7 @@
   "groupDetail": {
     "theyOweYou": "Te deben",
     "youOwe": "Debes",
+    "youOweTo": "Debes a",
     "owesYou": "te debe",
     "addExpense": "Agregar nuevo gasto",
     "errorLoading": "No se pudieron cargar los detalles del grupo. Intentá más tarde.",
@@ -92,7 +93,8 @@
     "loading": "Cargando...",
     "noGroup": "Grupo no encontrado",
     "viewAllTime": "Todo el tiempo",
-    "offlineCachedData": "Sin conexión. Mostrando los últimos datos guardados."
+    "offlineCachedData": "Sin conexión. Mostrando los últimos datos guardados.",
+    "settleUp": "Saldos"
   },
   "groupForm": {
     "title": "Nuevo grupo",
@@ -120,7 +122,8 @@
     "guestEmailHintLabel": "Email (opcional, para vincular su cuenta más adelante)",
     "guestBadge": "Sin cuenta",
     "guestAdded": "Persona agregada al grupo",
-    "errorAddingGuest": "Error agregando a la persona"
+    "errorAddingGuest": "Error agregando a la persona",
+    "recordPayment": "Registrar un pago"
   },
   "confirmDeleteGroup": {
     "title": "Confirmar eliminación",
@@ -149,7 +152,9 @@
     "deletedSuccess": "Gasto eliminado correctamente.",
     "deleteError": "Error al eliminar el gasto.",
     "equalParts": "a partes iguales",
-    "pendingSync": "Pendiente de sincronizar"
+    "pendingSync": "Pendiente de sincronizar",
+    "paymentLine": "{{from}} le pagó a {{to}}",
+    "paymentLabel": "Pago"
   },
   "expenseForm": {
     "back": "Volver",
@@ -184,9 +189,34 @@
     "unknownUser": "Usuario desconocido",
     "youPaid": "Vos pagaste"
   },
+  "paymentDetail": {
+    "title": "Detalle del pago",
+    "deletedSuccess": "Pago eliminado correctamente"
+  },
   "paidByDialog": {
     "title": "Seleccioná quién pagó",
     "back": "Atrás"
+  },
+  "settleUp": {
+    "title": "Saldar cuenta",
+    "editTitle": "Editar pago",
+    "fromLabel": "Quién pagó",
+    "toLabel": "A quién",
+    "currencyLabel": "Moneda",
+    "amountLabel": "Monto",
+    "useFullAmount": "Usar el monto total",
+    "submit": "Registrar",
+    "saveChanges": "Guardar cambios",
+    "success": "Pago registrado correctamente",
+    "updateSuccess": "Pago actualizado correctamente",
+    "savedOffline": "Sin conexión. El pago se guardó y se sincronizará automáticamente cuando vuelva la conexión.",
+    "defaultTitle": "Pago de {{from}} a {{to}}",
+    "infoBanner": "Estás registrando un pago que se realizó fuera de la app. No se va a mover dinero real."
+  },
+  "balances": {
+    "title": "Saldos",
+    "settleDebt": "Liquidar deuda",
+    "empty": "No tenés saldos pendientes"
   },
   "splitSelector": {
     "paidBy": "Pagado por",
@@ -244,6 +274,10 @@
   "confirmDelete": {
     "title": "Eliminar gasto",
     "message": "¿Estás seguro de que querés eliminar este gasto?"
+  },
+  "confirmDeletePayment": {
+    "title": "Eliminar pago",
+    "message": "¿Estás seguro de que querés eliminar este pago?"
   },
   "calendar": {
     "cancel": "Cancelar",

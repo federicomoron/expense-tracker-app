@@ -132,7 +132,10 @@ export class ExpenseFormComponent implements OnInit {
     let expenseFromState = history.state?.expense as ExpenseExtended | undefined;
 
     if (!expenseFromState && this.isEditMode) {
-      expenseFromState = group.expenses?.find((e) => e.id === this.expenseId);
+      expenseFromState = group.activity?.find(
+        (item): item is ExpenseExtended & { type: 'expense' } =>
+          item.type === 'expense' && item.id === this.expenseId,
+      );
     }
 
     if (!expenseFromState) {

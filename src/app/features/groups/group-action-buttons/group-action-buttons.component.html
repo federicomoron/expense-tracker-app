@@ -1,3 +1,9 @@
-<button mat-raised-button color="accent" (click)="goToTotals()">
-  {{ 'groupDetail.totals' | translate }}
-</button>
+<div class="group-action-buttons">
+  <button mat-raised-button color="accent" (click)="goToTotals()">
+    {{ 'groupDetail.totals' | translate }}
+  </button>
+
+  <button mat-raised-button color="primary" (click)="settleUp.emit()">
+    {{ 'groupDetail.settleUp' | translate }}
+  </button>
+</div>
