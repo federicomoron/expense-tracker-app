@@ -82,6 +82,7 @@
   "groupDetail": {
     "theyOweYou": "They owe you",
     "youOwe": "You owe",
+    "youOweTo": "You owe",
     "owesYou": "owes you",
     "addExpense": "Add new expense",
     "errorLoading": "Could not load group details. Try again later.",
@@ -92,7 +93,8 @@
     "loading": "Loading...",
     "noGroup": "Group not found",
     "viewAllTime": "All time",
-    "offlineCachedData": "You're offline. Showing the last saved data."
+    "offlineCachedData": "You're offline. Showing the last saved data.",
+    "settleUp": "Balances"
   },
   "groupForm": {
     "title": "New Group",
@@ -120,7 +122,8 @@
     "guestEmailHintLabel": "Email (optional, to link their account later)",
     "guestBadge": "No account",
     "guestAdded": "Member added to the group",
-    "errorAddingGuest": "Error adding member"
+    "errorAddingGuest": "Error adding member",
+    "recordPayment": "Record a payment"
   },
   "confirmDeleteGroup": {
     "title": "Confirm delete",
@@ -149,7 +152,9 @@
     "deletedSuccess": "Expense deleted successfully.",
     "deleteError": "Error deleting expense.",
     "equalParts": "Equal parts",
-    "pendingSync": "Pending sync"
+    "pendingSync": "Pending sync",
+    "paymentLine": "{{from}} paid {{to}}",
+    "paymentLabel": "Payment"
   },
   "expenseForm": {
     "back": "Go back",
@@ -184,9 +189,34 @@
     "unknownUser": "Unknown user",
     "youPaid": "You paid"
   },
+  "paymentDetail": {
+    "title": "Payment details",
+    "deletedSuccess": "Payment deleted successfully"
+  },
   "paidByDialog": {
     "title": "Select who paid",
     "back": "Back"
+  },
+  "settleUp": {
+    "title": "Settle up",
+    "editTitle": "Edit payment",
+    "fromLabel": "Who paid",
+    "toLabel": "To whom",
+    "currencyLabel": "Currency",
+    "amountLabel": "Amount",
+    "useFullAmount": "Use full amount",
+    "submit": "Record",
+    "saveChanges": "Save changes",
+    "success": "Payment recorded successfully",
+    "updateSuccess": "Payment updated successfully",
+    "savedOffline": "No connection. The payment was saved and will sync automatically when you're back online.",
+    "defaultTitle": "Payment from {{from}} to {{to}}",
+    "infoBanner": "You're recording a payment that happened outside the app. No real money will move."
+  },
+  "balances": {
+    "title": "Balances",
+    "settleDebt": "Settle debt",
+    "empty": "You have no pending balances"
   },
   "splitSelector": {
     "paidBy": "Paid by",
@@ -244,6 +274,10 @@
   "confirmDelete": {
     "title": "Delete Expense",
     "message": "Are you sure you want to delete this expense?"
+  },
+  "confirmDeletePayment": {
+    "title": "Delete payment",
+    "message": "Are you sure you want to delete this payment?"
   },
   "calendar": {
     "cancel": "Cancel",
