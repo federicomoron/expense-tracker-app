@@ -35,47 +35,28 @@
 .member-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 8px;
+  gap: 6px;
+  padding: 6px 0;
   font-size: 14px;
-  border: 1px solid var(--app-border);
-  background-color: var(--app-bg);
   color: var(--app-text);
-
-  &.positive {
-    background-color: rgba(46, 125, 50, 0.1);
-    color: var(--app-success);
-  }
-
-  &.negative {
-    background-color: rgba(198, 40, 40, 0.1);
-    color: var(--app-error);
-  }
 }
 
 .chip {
-  padding: 4px 8px;
-  border-radius: 12px;
   font-weight: 500;
-  font-size: 13px;
-  background-color: var(--app-surface);
+  font-size: 14px;
   color: var(--app-muted);
 
   &.positive {
-    background-color: rgba(46, 125, 50, 0.1);
     color: var(--app-success);
   }
 
   &.negative {
-    background-color: rgba(198, 40, 40, 0.1);
     color: var(--app-error);
   }
 }
 
 .summary-amount,
 .member-amount {
-  margin-left: auto;
   font-weight: bold;
 }
 
@@ -102,27 +83,23 @@
 }
 
 .summary-chip {
-  padding: 6px 10px;
-  border-radius: 16px;
-  font-size: 13px;
-  background-color: var(--app-surface);
+  font-size: 18px;
+  font-weight: 600;
   color: var(--app-muted);
   display: flex;
   align-items: center;
   gap: 4px;
 
   &.positive {
-    background-color: rgba(46, 125, 50, 0.1);
     color: var(--app-success);
   }
 
   &.negative {
-    background-color: rgba(198, 40, 40, 0.1);
     color: var(--app-error);
   }
 
   strong {
-    font-weight: 600;
+    font-weight: 700;
   }
 }
 

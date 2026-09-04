@@ -1,0 +1,64 @@
+<div class="dialog-container">
+  <!-- Header -->
+  <app-header
+    [title]="'balances.title' | translate"
+    [showBack]="true"
+    (back)="close()"
+  ></app-header>
+
+  <div class="content">
+    @if (data.memberBalances.length >= 2) {
+      @for (b of data.balanceSummary; track b.currency) {
+        <div class="summary-chip" [ngClass]="{ positive: b.amount > 0, negative: b.amount < 0 }">
+          @if (b.amount > 0) {
+            {{ 'groupDetail.theyOweYou' | translate }}
+          } @else {
+            {{ 'groupDetail.youOwe' | translate }}
+          }
+          <strong>
+            {{ b.currency | currencySymbol }}
+            {{ (b.amount > 0 ? b.amount : -b.amount) | number: '1.2-2' }}
+          </strong>
+        </div>
+      }
+    }
+
+    <ul class="balances-list">
+      @for (mb of data.memberBalances; track mb.userId) {
+        <li class="balance-item">
+          <div class="balance-info">
+            <span class="chip" [ngClass]="{ positive: mb.amount > 0, negative: mb.amount < 0 }">
+              @if (mb.amount > 0) {
+                {{ mb.name }} {{ 'groupDetail.owesYou' | translate }}
+              } @else {
+                {{ 'groupDetail.youOweTo' | translate }} {{ mb.name }}
+              }
+            </span>
+            <span class="balance-amount">
+              {{ mb.currency | currencySymbol }}
+              {{ (mb.amount > 0 ? mb.amount : -mb.amount) | number: '1.2-2' }}
+            </span>
+          </div>
+          <button type="button" mat-stroked-button color="primary" (click)="settleDebt(mb)">
+            {{ 'balances.settleDebt' | translate }}
+          </button>
+        </li>
+      }
+    </ul>
+
+    @if (data.memberBalances.length === 0) {
+      <p class="empty-balances">{{ 'balances.empty' | translate }}</p>
+    }
+
+    <button
+      type="button"
+      mat-raised-button
+      color="accent"
+      class="record-payment-button"
+      (click)="registerPayment()"
+    >
+      <mat-icon>sync_alt</mat-icon>
+      {{ 'groupActions.recordPayment' | translate }}
+    </button>
+  </div>
+</div>

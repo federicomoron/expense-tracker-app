@@ -1,0 +1,76 @@
+@use 'shared/styles/dialog-common.scss';
+
+.summary-chip {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--app-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 20px;
+
+  &.positive {
+    color: var(--app-success);
+  }
+
+  &.negative {
+    color: var(--app-error);
+  }
+}
+
+.balances-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.balance-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--app-border);
+}
+
+.balance-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chip {
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--app-muted);
+
+  &.positive {
+    color: var(--app-success);
+  }
+
+  &.negative {
+    color: var(--app-error);
+  }
+}
+
+.balance-amount {
+  font-weight: 700;
+  color: var(--app-text);
+  font-size: 14px;
+}
+
+.empty-balances {
+  color: var(--app-muted);
+  text-align: center;
+  padding: 24px 0;
+}
+
+.record-payment-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}

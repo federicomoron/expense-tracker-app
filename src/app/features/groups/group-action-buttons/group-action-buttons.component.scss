@@ -1,0 +1,10 @@
+.group-action-buttons {
+  display: flex;
+  gap: 8px;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+}
