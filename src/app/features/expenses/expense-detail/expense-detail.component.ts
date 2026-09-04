@@ -312,11 +312,17 @@ export class ExpenseDetailComponent {
         return;
       }
 
-      const groupDetail = history.state?.group as { expenses?: Expense[] } | undefined;
-      if (groupDetail?.expenses) found = groupDetail.expenses.find((e) => e.id === expenseId);
-      if (!found && (window as any).currentGroupDetail?.expenses) {
+      const groupDetail = history.state?.group as { activity?: { type: string }[] } | undefined;
+      if (groupDetail?.activity) {
+        found = groupDetail.activity.find(
+          (e: any) => e.type === 'expense' && e.id === expenseId,
+        ) as Expense | undefined;
+      }
+      if (!found && (window as any).currentGroupDetail?.activity) {
         const currentGroup = (window as any).currentGroupDetail;
-        found = currentGroup.expenses?.find((e: Expense) => e.id === expenseId);
+        found = currentGroup.activity?.find(
+          (e: any) => e.type === 'expense' && e.id === expenseId,
+        ) as Expense | undefined;
       }
     }
 

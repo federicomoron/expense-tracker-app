@@ -19,6 +19,10 @@
     cursor: default;
     opacity: 0.75;
   }
+
+  &.expense-row-payment {
+    cursor: default;
+  }
 }
 
 .expense-pending-badge {
@@ -53,6 +57,13 @@
   flex-shrink: 0;
 
   img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .payment-icon {
+    color: var(--app-muted);
+    font-size: 20px;
     width: 20px;
     height: 20px;
   }

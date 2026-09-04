@@ -177,7 +177,9 @@ export class GroupTotalsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private filteredExpenses(): Expense[] {
-    const expenses = this.group()?.expenses ?? [];
+    const expenses = (this.group()?.activity ?? []).filter(
+      (item): item is Expense & { type: 'expense' } => item.type === 'expense',
+    );
     const filtered = expenses.filter((e) => e.currency === this.currency());
 
     if (this.viewMode() === 'all') return filtered;
